@@ -6,8 +6,16 @@ import {
   ServerStackIcon,
   RectangleStackIcon,
   ComputerDesktopIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications, Modules } from "@/pages/dashboard";
+import { 
+  Home, 
+  Profile, 
+  Tables, 
+  Notifications, 
+  Modules,
+  Team, 
+} from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 import { element } from "prop-types";
 
@@ -48,6 +56,12 @@ export const routes = [
         name: "modules",
         path: "/modules",
         element: <Modules />,
+      },
+      {
+        icon: <UserGroupIcon {...icon} />,
+        name: "team",
+        path: "/team",
+        element: <Team />,
       },
     ],
   },
