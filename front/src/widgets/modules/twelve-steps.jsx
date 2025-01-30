@@ -8,6 +8,13 @@ import {
     Option
 } from "@material-tailwind/react";
 
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+
 import { questions } from "@/data";
 import { useMaterialTailwindController } from "@/context";
 
@@ -20,6 +27,7 @@ export function TwelveSteps() {
     const [startDateError, setStartDateError] = React.useState("");
     const [endDateError, setEndDateError] = React.useState("");
     const [questionSet, setQuestionSet] = React.useState("set 1");
+    const [selectedDateTime, setSelectedDateTime] = React.useState(null);
 
     const [controller] = useMaterialTailwindController();
     const { sidenavColor } = controller;
@@ -88,6 +96,16 @@ export function TwelveSteps() {
                                 className: "before:content-none after:content-none",
                             }}
                         />
+                        <div className="mb-4">
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DateTimePicker
+                                    label="Seleccionar fecha y hora"
+                                    value={selectedDateTime}
+                                    onChange={(newDateTime) => setSelectedDateTime(newDateTime)}
+                                    format="DD/MM/YYYY HH:mm"
+                                />
+                            </LocalizationProvider>
+                        </div>
                     </div>
                     <Button className="mt-6" fullWidth color={sidenavColor}>
                         Guardar
