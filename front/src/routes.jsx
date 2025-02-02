@@ -15,6 +15,7 @@ import {
   Notifications, 
   Modules,
   Team, 
+  ProfileNew,
 } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 import { element } from "prop-types";
@@ -38,6 +39,12 @@ export const routes = [
         name: "profile",
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        icon: <UserCircleIcon {...icon} />,
+        name: "profile2",
+        path: "/profile2",
+        element: <ProfileNew />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
