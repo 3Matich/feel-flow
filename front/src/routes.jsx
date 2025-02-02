@@ -7,6 +7,7 @@ import {
   RectangleStackIcon,
   ComputerDesktopIcon,
   UserGroupIcon,
+  UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import { 
   Home, 
@@ -16,6 +17,7 @@ import {
   Modules,
   Team, 
   ProfileNew,
+  Teams,
 } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 import { element } from "prop-types";
@@ -69,6 +71,12 @@ export const routes = [
         name: "team",
         path: "/team",
         element: <Team />,
+      },
+      {
+        icon: <UserPlusIcon {...icon} />,
+        name: "teams",
+        path: "/teams",
+        element: <Teams />,
       },
     ],
   },
