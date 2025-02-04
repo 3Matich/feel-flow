@@ -19,7 +19,7 @@ import {
   ProfileNew,
   Teams,
 } from "@/pages/dashboard";
-import { SignIn, SignUp } from "@/pages/auth";
+import { SignIn, SignUp, SignInNew } from "@/pages/auth";
 import { element } from "prop-types";
 
 const icon = {
@@ -89,6 +89,12 @@ export const routes = [
         name: "sign in",
         path: "/sign-in",
         element: <SignIn />,
+      },
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "sign in new",
+        path: "/sign-in-new",
+        element: <SignInNew />,
       },
       {
         icon: <RectangleStackIcon {...icon} />,
