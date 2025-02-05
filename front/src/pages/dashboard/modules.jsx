@@ -12,6 +12,7 @@ import {
     Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import { TwelveSteps } from "@/widgets/modules/twelve-steps";
+import { Kudos } from "@/widgets/modules/kudos";
 
 export function Modules() {
     const data = [
@@ -32,9 +33,7 @@ export function Modules() {
             label: "Kudos",
             value: "settings",
             icon: Cog6ToothIcon,
-            element: `We're not always in the position that we want to be at.
-      We're constantly growing. We're constantly making mistakes. We're
-      constantly trying to express ourselves and actualize our dreams.`,
+            element: <Kudos />,
         },
     ];
     return (
