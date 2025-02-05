@@ -13,6 +13,11 @@ import {
 } from "@heroicons/react/24/solid";
 import { TwelveSteps } from "@/widgets/modules/twelve-steps";
 import { Kudos } from "@/widgets/modules/kudos";
+import { 
+    TwelveSteps,
+    NikoNiko,
+    Kudos,
+} from "@/widgets/modules";
 
 export function Modules() {
     const data = [
@@ -26,8 +31,7 @@ export function Modules() {
             label: "Niko Niko",
             value: "profile",
             icon: UserCircleIcon,
-            element: `Because it's about motivating the doers. Because I'm here
-      to follow my dreams and inspire other people to follow their dreams, too.`,
+            element: <NikoNiko />,
         },
         {
             label: "Kudos",

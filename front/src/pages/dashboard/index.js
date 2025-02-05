@@ -5,3 +5,4 @@ export * from "@/pages/dashboard/notifications";
 export * from "@/pages/dashboard/modules";
 export * from "@/pages/dashboard/team";
 export * from "@/pages/dashboard/profileNew";
+export * from "@/pages/dashboard/teams";
