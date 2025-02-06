@@ -11,8 +11,6 @@ import {
     UserCircleIcon,
     Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import { TwelveSteps } from "@/widgets/modules/twelve-steps";
-import { Kudos } from "@/widgets/modules/kudos";
 import { 
     TwelveSteps,
     NikoNiko,
