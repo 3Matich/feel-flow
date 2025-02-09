@@ -9,3 +9,4 @@ export * from "@/data/authors-table-data";
 export * from "@/data/twelve-steps-questions";
 export * from "@/data/team-members-data";
 export * from "@/data/profile-data";
+export * from "@/data/teamsData";  

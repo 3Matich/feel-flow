@@ -50,7 +50,7 @@ export function Navbar({ brandName, routes, action }) {
             variant="small"
             className="mr-4 ml-2 cursor-pointer py-1.5 font-bold"
           >
-            {brandName}
+            
           </Typography>
         </Link>
         <div className="hidden lg:block">{navList}</div>
