@@ -36,7 +36,7 @@ export function TwelveSteps() {
     today.setHours(0, 0, 0, 0);
     console.log(questions[1]);
     return (
-        <div className="flex gap-7">
+        <div className="flex gap-7 text-green-500 dark:text-red-500">
             <Card color="transparent" shadow={false}>
                 <Typography variant="h4" color="blue-gray">
                     Configurar Módulo 12 Pasos de la Felicidad
@@ -113,6 +113,41 @@ export function TwelveSteps() {
                 </form>
             </Card>
             <Card color="transparent" shadow={false}>
+                <Typography variant="h4" className="mb-3">
+                    Descripción de la técnica
+                </Typography>
+                <Typography variant="paragraph">
+                    La técnica de los 12 Pasos de la Felicidad es un enfoque basado en principios psicológicos y prácticas de bienestar diseñadas para mejorar la 
+                    satisfacción y la felicidad en la vida personal y profesional. Aunque no hay un modelo único y universalmente aceptado, muchas metodologías se 
+                    basan en los siguientes <span className="font-bold">pilares</span>:
+                </Typography> 
+                <ul className="list-none list-inside ml-5 mt-1 space-y-2">
+                    <li><span className="font-bold">🙏 Expresar Gratitud:</span> Agradecer lo positivo mejora el bienestar emocional.</li>
+                    <li><span className="font-bold">🎁 Practicar la Generosidad:</span> Dar sin esperar fortalece las relaciones.</li>
+                    <li><span className="font-bold">🥗 Cuidar la Alimentación:</span> Una dieta saludable impacta en el estado de ánimo.</li>
+                    <li><span className="font-bold">🏃‍♂️ Hacer Ejercicio Regular:</span> Reduce el estrés y mejora el bienestar.</li>
+                    <li><span className="font-bold">👥 Cultivar Relaciones Positivas:</span> Rodearse de personas que suman felicidad.</li>
+                    <li><span className="font-bold">⏳ Vivir el Presente:</span> Centrarse en el aquí y ahora evita preocupaciones innecesarias.</li>
+                    <li><span className="font-bold">🎯 Tener Propósitos Claros:</span> Establecer metas significativas genera motivación.</li>
+                    <li><span className="font-bold">📚 Aprender y Crecer:</span> Mejorar constantemente potencia la felicidad.</li>
+                    <li><span className="font-bold">🌿 Manejar el Estrés:</span> Técnicas como la meditación ayudan a equilibrarse.</li>
+                    <li><span className="font-bold">😴 Dormir Bien:</span> Un descanso adecuado es clave para la salud mental.</li>
+                    <li><span className="font-bold">🎶 Disfrutar del Ocio:</span> La diversión y el descanso son esenciales para el bienestar.</li>
+                    <li><span className="font-bold">💪 Practicar la Resiliencia:</span> Aceptar errores y aprender sin autocrítica excesiva.</li>
+                </ul>
+
+                <Typography variant="h5" className="mt-3 mb-3">
+                    Beneficios
+                </Typography>
+
+                <ul className="list-none list-inside ml-5 space-y-2">
+                    <li>✅ Mayor bienestar emocional y físico.</li>
+                    <li>✅ Mejora en la productividad y rendimiento laboral.</li>
+                    <li>✅ Relaciones interpersonales más saludables.</li>
+                    <li>✅ Reducción del estrés y la ansiedad.</li>
+                    <li>✅ Aumento de la motivación y el sentido de propósito.</li>
+                </ul>
+                {/* 
                 <Typography variant="h4" color="blue-gray" className="mb-3">
                     Preguntas y respuestas del set
                 </Typography>
@@ -132,6 +167,7 @@ export function TwelveSteps() {
                         </div>
                     ))}
                 </div>
+                 */}
             </Card>
         </div>
     );

@@ -15,25 +15,33 @@ import {
     TwelveSteps,
     NikoNiko,
     Kudos,
+    Dashboard,
 } from "@/widgets/modules";
+import { element } from "prop-types";
 
 export function Modules() {
     const data = [
         {
-            label: "12 Pasos de la Felicidad",
+            label: "Dashboard",
             value: "dashboard",
+            icon: Square3Stack3DIcon,
+            element: <Dashboard />,
+        },
+        {
+            label: "12 Pasos de la Felicidad",
+            value: "twelveSteps",
             icon: Square3Stack3DIcon,
             element: <TwelveSteps />,
         },
         {
             label: "Niko Niko",
-            value: "profile",
+            value: "nikoNiko",
             icon: UserCircleIcon,
             element: <NikoNiko />,
         },
         {
             label: "Kudos",
-            value: "settings",
+            value: "kudos",
             icon: Cog6ToothIcon,
             element: <Kudos />,
         },

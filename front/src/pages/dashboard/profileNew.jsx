@@ -37,6 +37,38 @@ export function ProfileNew() {
     const [selectedAvatar, setSelectedAvatar] = React.useState("0000.png");
     const handleOpen = () => setOpen(!open)
 
+    const [darkMode, setDarkMode] = React.useState(
+        localStorage.getItem("theme") === "dark"
+    );
+    const [settings, setSettings] = React.useState(platformSettingsData);
+
+    // Aplicar tema oscuro en el `html`
+    React.useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    }, [darkMode]);
+
+    const handleSwitchChange = (changeKey) => {
+        if (changeKey === "darkMode") {
+            setDarkMode(!darkMode);
+        } else {
+            setSettings((prev) =>
+                prev.map((category) => ({
+                    ...category,
+                    options: category.options.map((option) =>
+                        option.change === changeKey
+                            ? { ...option, checked: !option.checked }
+                            : option
+                    ),
+                }))
+            );
+        }
+    };
 
     const data = [
         {
@@ -77,7 +109,7 @@ export function ProfileNew() {
     return (
         <>
 
-            <Card className="mx-3 mt-8 mb-6 lg:mx-4 border border-blue-gray-100">
+            <Card className="mx-3 mt-8 mb-6 bg-light-bg dark:bg-feel-1 lg:mx-4 border border-blue-gray-100">
                 <CardBody className="p-4">
                     <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
                         <div className="flex items-center gap-6">
@@ -211,7 +243,7 @@ export function ProfileNew() {
                                 Platform Settings
                             </Typography>
                             <div className="flex flex-col gap-12">
-                                {platformSettingsData.map(({ title, options }) => (
+                                {/* {platformSettingsData.map(({ title, options }) => (
                                     <div key={title}>
                                         <Typography className="mb-4 block text-xs font-semibold uppercase text-blue-gray-500">
                                             {title}
@@ -223,10 +255,27 @@ export function ProfileNew() {
                                                     id={label}
                                                     label={label}
                                                     defaultChecked={checked}
+                                                    onChange={change}
                                                     labelProps={{
                                                         className: "text-sm font-normal text-blue-gray-500",
                                                     }}
                                                 />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))} */}
+                                {settings.map((category) => (
+                                    <div key={category.title} className="mb-6">
+                                        <h2 className="text-xl font-semibold">{category.title}</h2>
+                                        <div className="mt-4 space-y-3">
+                                            {category.options.map((option) => (
+                                                <div key={option.label} className="flex items-center justify-between">
+                                                    <span>{option.label}</span>
+                                                    <Switch
+                                                        checked={option.change === "darkMode" ? darkMode : option.checked}
+                                                        onChange={() => handleSwitchChange(option.change)}
+                                                    />
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
