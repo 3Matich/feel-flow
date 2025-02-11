@@ -1,7 +1,17 @@
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(
+    JSON.parse(localStorage.getItem("isAuthenticated")) || false
+  );
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("isAuthenticated");
+    clearAuthData()
+  };
   return (
     <Routes>
       <Route path="/dashboard/*" element={<Dashboard />} />

@@ -7,6 +7,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { validateLogin } from "@/api/auth/login";
 
 export function SignInNew() {
   const [showPassword, setShowPassword] = useState(false);
@@ -74,6 +75,25 @@ export function SignInNew() {
       }, 2000);
     }
   };
+
+  const login = async (user, pw) => {
+
+    if (!user || !pw) {
+      setErrors("Por favor, completa todos los campos.");
+      return;
+    }
+
+    try {
+      const result = await validateLogin(user, pw);
+      if (result === 200) {
+        localStorage.setItem("isAuthenticated", JSON.stringify(true));
+        navigate("/home")
+      }
+    } catch (error) {
+      console.error("Error de inicio de sesión:", error.message);
+      setErrors("Username o Password Incorrectos");
+    }
+  }
 
   return (
     <section
@@ -181,6 +201,10 @@ export function SignInNew() {
             <Link to="/auth/sign-up" className="text-gray-900 ml-1">Crear cuenta</Link>
           </Typography>
         </form>
+      </div>
+      <div className="absolute bottom-0 h-16">
+        <Button onClick={() => login("admin1@gmail.com", "RiverPlatecapo@123")}>Login with admin</Button>
+        <Button onClick={() => login("tlteam1@gmail.com", "RiverPlatecapo@123")}>Login with TL</Button>
       </div>
     </section>
   );
