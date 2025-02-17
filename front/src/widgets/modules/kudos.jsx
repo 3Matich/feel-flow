@@ -26,10 +26,10 @@ export function Kudos() {
     const { sidenavColor } = controller;
 
     const kudosIcons = [
-        "/icons/Kudos_Energia_Positiva.svg",
-        "/icons/Kudos_Resolutor_Estrella.svg",
-        "/icons/Kudos_Maestro_Del_Detalle.svg",
-        "/icons/Kudos_Manos_Amigas.svg"
+        "/icons/Kudos _Energia_Positiva.svg",
+        "/icons/Kudos _Resolutor_Estrella.svg",
+        "/icons/Kudos _Maestro_Del_detalle.svg",
+        "/icons/kudos_Manos_Amigas.svg"
     ];
 
     const kudosDescriptions = [
