@@ -71,10 +71,9 @@ export function Teams() {
     };
 
     const handleRemoveLogo = () => {
-        setLogoPreview(null);  // Esto elimina la imagen de la vista previa.
-        setNewTeam((prev) => ({ ...prev, logo: "" }));  // Restablece el campo 'logo' en el estado 'newTeam'.
+        setLogoPreview(null);
+        setNewTeam((prev) => ({ ...prev, logo: "" }));
     };
-
 
     const validateForm = () => {
         let newErrors = {};
@@ -95,17 +94,25 @@ export function Teams() {
     };
 
     useEffect(() => {
-        if (newTeam.leaderPassword && newTeam.leaderConfirmPassword && newTeam.leaderPassword !== newTeam.leaderConfirmPassword) {
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                leaderConfirmPassword: "Las contraseñas no coinciden"
-            }));
-        } else {
-            setErrors((prevErrors) => {
-                const { leaderConfirmPassword, ...rest } = prevErrors;
-                return rest;
-            });
+        let newErrors = { ...errors };
+
+        // Validar longitud de la contraseña
+        if (newTeam.leaderPassword) {
+            if (newTeam.leaderPassword.length < 6) {
+                newErrors.leaderPassword = "La contraseña debe tener al menos 6 caracteres";
+            } else {
+                delete newErrors.leaderPassword; // Limpiar error de longitud
+            }
         }
+
+        // Validar que las contraseñas coincidan
+        if (newTeam.leaderConfirmPassword && newTeam.leaderPassword !== newTeam.leaderConfirmPassword) {
+            newErrors.leaderConfirmPassword = "Las contraseñas no coinciden";
+        } else {
+            delete newErrors.leaderConfirmPassword; // Limpiar error de coincidencia
+        }
+
+        setErrors(newErrors);
     }, [newTeam.leaderPassword, newTeam.leaderConfirmPassword]);
 
     const handleCreateTeam = () => {
@@ -113,12 +120,9 @@ export function Teams() {
             setIsSaving(true);
             const teamData = { ...newTeam, logo: logoPreview || "" };
 
-            // Simulamos un retraso de 2 segundos
             setTimeout(() => {
-                // Simula la creación del equipo (esto se reemplazaría por la llamada a la API)
                 setTeams([...teams, teamData]);
 
-                // Restablece el formulario y cierra el modal
                 setNewTeam({
                     name: "",
                     description: "",
@@ -133,13 +137,11 @@ export function Teams() {
                 setOpen(false);
                 setIsSaving(false);
 
-                // Establecer el mensaje de éxito
                 setSuccessMessage("¡Equipo creado con éxito!");
 
-                // Opcionalmente, cerrar el mensaje después de 3 segundos
                 setTimeout(() => {
                     setSuccessMessage("");
-                }, 3000); // El mensaje de éxito desaparece después de 3 segundos
+                }, 3000);
             }, 2000);
         }
     };
@@ -151,7 +153,6 @@ export function Teams() {
 
     return (
         <>
-            {/* Mostrar mensaje de éxito */}
             {successMessage && (
                 <Alert
                     color="green"
@@ -162,7 +163,7 @@ export function Teams() {
                     {successMessage}
                 </Alert>
             )}
-            {/* Resto del componente sin cambios */}
+
             <Card color="transparent" className="mb-6 p-4 mt-10">
                 <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
                     <Typography variant="h4" color="blue">Equipos</Typography>
@@ -172,7 +173,6 @@ export function Teams() {
                     </Button>
                 </CardHeader>
                 <CardBody className="mb-1">
-                    {/* Código para la barra de búsqueda */}
                     <div className="relative w-full mb-3">
                         <label
                             className={`absolute left-4 transition-all duration-300 bg-white px-1 pointer-events-none ${isFocused || searchQuery
@@ -195,7 +195,6 @@ export function Teams() {
                         <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     </div>
 
-                    {/* Resto de la tabla */}
                     <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
                         <thead>
                             <tr className="bg-blue-gray-50">
@@ -230,7 +229,6 @@ export function Teams() {
                 </CardBody>
             </Card>
 
-            {/* Modal para crear un equipo */}
             <Dialog open={open} handler={handleOpen}>
                 <DialogHeader>
                     <Typography variant="h4" color="blue">Crear un nuevo Equipo</Typography>
@@ -269,21 +267,19 @@ export function Teams() {
                                 name="leaderPassword"
                                 value={newTeam.leaderPassword}
                                 onChange={handleChange}
-                                error={errors.leaderPassword}
-                                endAdornment={
-                                    <Button
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        variant="text"
-                                        color="blue"
-                                    >
-                                        {showPassword ? (
-                                            <EyeSlashIcon className="h-5 w-5" />
-                                        ) : (
-                                            <EyeIcon className="h-5 w-5" />
-                                        )}
-                                    </Button>
-                                }
+                                error={!!errors.leaderPassword}
                             />
+                            <button
+                                type="button"
+                                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? (
+                                    <EyeSlashIcon className="h-5 w-5" />
+                                ) : (
+                                    <EyeIcon className="h-5 w-5" />
+                                )}
+                            </button>
                             {errors.leaderPassword && <p className="text-red-500 text-sm">{errors.leaderPassword}</p>}
                         </div>
 
@@ -294,25 +290,22 @@ export function Teams() {
                                 name="leaderConfirmPassword"
                                 value={newTeam.leaderConfirmPassword}
                                 onChange={handleChange}
-                                error={errors.leaderConfirmPassword}
-                                endAdornment={
-                                    <Button
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        variant="text"
-                                        color="blue"
-                                    >
-                                        {showConfirmPassword ? (
-                                            <EyeSlashIcon className="h-5 w-5" />
-                                        ) : (
-                                            <EyeIcon className="h-5 w-5" />
-                                        )}
-                                    </Button>
-                                }
+                                error={!!errors.leaderConfirmPassword}
                             />
+                            <button
+                                type="button"
+                                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                                {showConfirmPassword ? (
+                                    <EyeSlashIcon className="h-5 w-5" />
+                                ) : (
+                                    <EyeIcon className="h-5 w-5" />
+                                )}
+                            </button>
                             {errors.leaderConfirmPassword && <p className="text-red-500 text-sm">{errors.leaderConfirmPassword}</p>}
                         </div>
 
-                        {/* Título y arrastrar y soltar logo */}
                         <div className="mb-1">
                             <Typography variant="large" color="black" className="mb-2">
                                 Logo del Equipo
@@ -347,22 +340,11 @@ export function Teams() {
                                     id="logo-input"
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                            if (file.size > 2 * 1024 * 1024) {
-                                                alert("El archivo es demasiado grande. Selecciona una imagen de máximo 2 MB.");
-                                                return;
-                                            }
-                                            setNewTeam((prev) => ({ ...prev, logo: file }));
-                                            setLogoPreview(URL.createObjectURL(file));
-                                        }
-                                    }}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    className="hidden"
+                                    onChange={handleLogoChange}
                                 />
                             </div>
-                        </div> 
-                        {errors.logo && <p className="text-red-500 text-sm">{errors.logo}</p>}
+                        </div>
                     </div>
                 </DialogBody>
                 <DialogFooter className="flex justify-center gap-2">
