@@ -320,10 +320,10 @@ export function Teams() {
                             <div
                                 onDrop={handleDrop}
                                 onDragOver={handleDragOver}
-                                className="relative flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md"
+                                className="relative flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md w-72 h-40 mx-auto"
                             >
                                 {logoPreview ? (
-                                    <div className="relative w-24 h-24">
+                                    <div className="relative w-32 h-32 mx-auto">
                                         <img src={logoPreview} alt="Logo preview" className="object-cover w-full h-full rounded-md" />
                                         <button
                                             onClick={(e) => {
@@ -350,7 +350,7 @@ export function Teams() {
                                     onChange={(e) => {
                                         const file = e.target.files[0];
                                         if (file) {
-                                            if (file.size > 2 * 1024 * 1024) {  // 2MB
+                                            if (file.size > 2 * 1024 * 1024) {
                                                 alert("El archivo es demasiado grande. Selecciona una imagen de máximo 2 MB.");
                                                 return;
                                             }
@@ -360,9 +360,8 @@ export function Teams() {
                                     }}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                 />
-
                             </div>
-                        </div>
+                        </div> 
                         {errors.logo && <p className="text-red-500 text-sm">{errors.logo}</p>}
                     </div>
                 </DialogBody>
