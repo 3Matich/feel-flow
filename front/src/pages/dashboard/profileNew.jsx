@@ -30,11 +30,15 @@ import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard } from "@/widgets/cards";
 import { platformSettingsData, conversationsData, projectsData, profileData } from "@/data";
 import EditableProfileInfo from "@/widgets/cards/profile-info";
+import { useDragAndDrop } from "@/hooks";
 
 export function ProfileNew() {
     const [selectedTab, setSelectedTab] = React.useState('app');
     const [open, setOpen] = React.useState(false);
     const [selectedAvatar, setSelectedAvatar] = React.useState("0000.png");
+    const { handleDragOver, handleDrop, handleImageChange, handleRemoveImage, logoPreview } = useDragAndDrop();
+
+    
     const handleOpen = () => setOpen(!open)
 
     const [darkMode, setDarkMode] = React.useState(
@@ -114,7 +118,7 @@ export function ProfileNew() {
                     <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
                         <div className="flex items-center gap-6">
                             <Avatar
-                                src={`/img/avatar/${selectedAvatar}`}
+                                src={logoPreview || `/img/avatar/${selectedAvatar}`}
                                 alt="avatar"
                                 size="xl"
                                 variant="rounded"
@@ -150,7 +154,54 @@ export function ProfileNew() {
                                     </div>
                                 </DialogBody>
                                 <hr />
+                                <DialogHeader>O bien, suba una foto</DialogHeader>
+                                <DialogBody>
+                                    <div className="flex flex-warp justify-center">
+                                        <div
+                                            onDrop={handleDrop}
+                                            onDragOver={handleDragOver}
+                                            className="relative flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md w-72 h-40 mx-auto"
+                                        >
+                                            {logoPreview ? (
+                                                <div className="relative w-32 h-32 mx-auto">
+                                                    <img src={logoPreview} alt="Logo preview" className="object-cover w-full h-full rounded-md" />
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleRemoveImage();
+                                                        }}
+                                                        className="absolute -top-2 -right-0 text-gray-700 hover:text-black bg-gray p-1 text-lg font-bold transition-opacity opacity-70 hover:opacity-100 z-10"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <label
+                                                    htmlFor="logo-input"
+                                                    className="cursor-pointer text-center text-gray-500 hover:text-blue-500 transition"
+                                                >
+                                                    Arrastra y suelta un logo aquí, o haz clic para seleccionar
+                                                </label>
+                                            )}
+                                            <input
+                                                id="logo-input"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleImageChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </DialogBody>
                                 <DialogFooter>
+                                    <Button
+                                        variant="text"
+                                        color="green"
+                                        onClick={handleOpen}
+                                        className="mr-1"
+                                    >
+                                        <span>Save</span>
+                                    </Button>
                                     <Button
                                         variant="text"
                                         color="red"
@@ -176,29 +227,6 @@ export function ProfileNew() {
                                     </div>
                                 )
                             )}
-                        </div>
-                        <div className="w-96">
-                            <Tabs>
-                                <TabsHeader>
-                                    {data.map(({ label, value, icon }) => (
-                                        <Tab key={value} value={value}>
-                                            <div className="flex items-center gap-2">
-                                                {React.createElement(icon, { className: "w-5 h-5" })}
-                                                {label}
-                                            </div>
-                                        </Tab>
-                                    ))}
-                                </TabsHeader>
-                                {/* 
-                                <TabsBody>
-                                    {data.map(({ value, element }) => (
-                                        <TabPanel key={value} value={value}>
-                                            {element}
-                                        </TabPanel>
-                                    ))}
-                                </TabsBody>
-                                 */}
-                            </Tabs>
                         </div>
                     </div>
 
@@ -237,7 +265,7 @@ export function ProfileNew() {
                                 />
                             )
                         )}
-                        
+
                         <div>
                             <Typography variant="h6" color="blue-gray" className="mb-3">
                                 Platform Settings
