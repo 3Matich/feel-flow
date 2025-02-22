@@ -180,7 +180,7 @@ export function SignInNew() {
           {/* Google reCAPTCHA widget */}
           <div className="mt-4 flex justify-center items-center">
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}  // Coloca aquí tu site key de Google reCAPTCHA
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} 
               onChange={handleCaptchaChange}
             />
           </div>
