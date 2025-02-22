@@ -22,6 +22,7 @@ export function Teams() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [open, setOpen] = useState(false);
+    const [size, setSize] = useState("xs");
     const [newTeam, setNewTeam] = useState({
         name: "",
         description: "",
@@ -78,7 +79,6 @@ export function Teams() {
     const validateForm = () => {
         let newErrors = {};
         if (!newTeam.name) newErrors.name = "El nombre del equipo es requerido";
-        if (!newTeam.description) newErrors.description = "La descripción es requerida";
         if (!newTeam.leaderFirstName) newErrors.leaderFirstName = "El nombre del líder es requerido";
         if (!newTeam.leaderLastName) newErrors.leaderLastName = "El apellido del líder es requerido";
         if (!newTeam.leaderUsername) {
@@ -92,28 +92,45 @@ export function Teams() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    const [passwordValid, setPasswordValid] = useState(false); // Para validar si la contraseña es fuerte
+    const [passwordMatch, setPasswordMatch] = useState(true); // Para validar que las contraseñas coinciden
 
     useEffect(() => {
+        const password = newTeam.leaderPassword;
+        const passwordConfirm = newTeam.leaderConfirmPassword;
+
         let newErrors = { ...errors };
 
-        // Validar longitud de la contraseña
-        if (newTeam.leaderPassword) {
-            if (newTeam.leaderPassword.length < 6) {
-                newErrors.leaderPassword = "La contraseña debe tener al menos 6 caracteres";
+        // Validación de fortaleza de la contraseña (solo si el usuario ha ingresado algo)
+        if (password) {
+            const isStrongPassword = password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
+            setPasswordValid(isStrongPassword);
+
+            if (!isStrongPassword) {
+                newErrors.leaderPassword = "Debe tener al menos 8 caracteres, una mayúscula y un número";
             } else {
-                delete newErrors.leaderPassword; // Limpiar error de longitud
+                delete newErrors.leaderPassword;
             }
+        } else {
+            setPasswordValid(false);
         }
 
-        // Validar que las contraseñas coincidan
-        if (newTeam.leaderConfirmPassword && newTeam.leaderPassword !== newTeam.leaderConfirmPassword) {
-            newErrors.leaderConfirmPassword = "Las contraseñas no coinciden";
-        } else {
-            delete newErrors.leaderConfirmPassword; // Limpiar error de coincidencia
+        // Validación de coincidencia de contraseñas (solo si ambas están llenas)
+        if (password && passwordConfirm) {
+            const passwordsMatch = password === passwordConfirm;
+            setPasswordMatch(passwordsMatch);
+
+            if (!passwordsMatch) {
+                newErrors.leaderConfirmPassword = "Las contraseñas no coinciden";
+            } else {
+                delete newErrors.leaderConfirmPassword;
+            }
         }
 
         setErrors(newErrors);
     }, [newTeam.leaderPassword, newTeam.leaderConfirmPassword]);
+
+
 
     const handleCreateTeam = () => {
         if (validateForm()) {
@@ -229,37 +246,92 @@ export function Teams() {
                 </CardBody>
             </Card>
 
-            <Dialog open={open} handler={handleOpen}>
-                <DialogHeader>
-                    <Typography variant="h4" color="blue">Crear un nuevo Equipo</Typography>
+            <Dialog
+                open={open}
+                handler={handleOpen}
+                className={size === "xs" ? "max-w-xs" : ""}
+            >
+                <DialogHeader className="flex items-center justify-between">
+                    <div className="flex justify-between items-center w-full">
+                        <Typography variant="h4" color="blue">
+                            Crear un nuevo Equipo
+                        </Typography>
+                        <button
+                            onClick={() => {
+                                handleOpen(); // Cerrar
+                                setNewTeam({
+                                    name: "",
+                                    description: "",
+                                    leaderFirstName: "",
+                                    leaderLastName: "",
+                                    leaderUsername: "",
+                                    leaderPassword: "",
+                                    leaderConfirmPassword: "",
+                                    logo: "",
+                                });
+                            }}
+                            className="text-gray-600 hover:text-gray-900 focus:outline-none"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
                 </DialogHeader>
                 <DialogBody>
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Campo Nombre del Equipo */}
                         <div className="relative">
-                            <Input label="Nombre del Equipo" name="name" value={newTeam.name} onChange={handleChange} error={errors.name} />
+                            <Input
+                                label="Nombre del Equipo"
+                                name="name"
+                                value={newTeam.name}
+                                onChange={handleChange}
+                                error={errors.name}
+                                className="w-full"
+                            />
                             {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                         </div>
 
+                        {/* Campo Nombre del Líder */}
                         <div className="relative">
-                            <Textarea label="Descripción" name="description" value={newTeam.description} onChange={handleChange} error={errors.description} />
-                            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
-                        </div>
-
-                        <div className="relative">
-                            <Input label="Nombre del Líder" name="leaderFirstName" value={newTeam.leaderFirstName} onChange={handleChange} error={errors.leaderFirstName} />
+                            <Input
+                                label="Nombre del Líder"
+                                name="leaderFirstName"
+                                value={newTeam.leaderFirstName}
+                                onChange={handleChange}
+                                error={errors.leaderFirstName}
+                                className="w-full"
+                            />
                             {errors.leaderFirstName && <p className="text-red-500 text-sm">{errors.leaderFirstName}</p>}
                         </div>
 
+                        {/* Campo Apellido del Líder */}
                         <div className="relative">
-                            <Input label="Apellido del Líder" name="leaderLastName" value={newTeam.leaderLastName} onChange={handleChange} error={errors.leaderLastName} />
+                            <Input
+                                label="Apellido del Líder"
+                                name="leaderLastName"
+                                value={newTeam.leaderLastName}
+                                onChange={handleChange}
+                                error={errors.leaderLastName}
+                                className="w-full"
+                            />
                             {errors.leaderLastName && <p className="text-red-500 text-sm">{errors.leaderLastName}</p>}
                         </div>
 
+                        {/* Campo Email del Líder */}
                         <div className="relative">
-                            <Input label="Email del Líder" name="leaderUsername" value={newTeam.leaderUsername} onChange={handleChange} error={errors.leaderUsername} />
+                            <Input
+                                label="Email del Líder"
+                                name="leaderUsername"
+                                value={newTeam.leaderUsername}
+                                onChange={handleChange}
+                                error={errors.leaderUsername}
+                                className="w-full"
+                            />
                             {errors.leaderUsername && <p className="text-red-500 text-sm">{errors.leaderUsername}</p>}
                         </div>
 
+                        {/* Campo Contraseña */}
                         <div className="relative">
                             <Input
                                 label="Contraseña"
@@ -268,6 +340,7 @@ export function Teams() {
                                 value={newTeam.leaderPassword}
                                 onChange={handleChange}
                                 error={!!errors.leaderPassword}
+                                className="w-full"
                             />
                             <button
                                 type="button"
@@ -283,6 +356,7 @@ export function Teams() {
                             {errors.leaderPassword && <p className="text-red-500 text-sm">{errors.leaderPassword}</p>}
                         </div>
 
+                        {/* Campo Confirmar Contraseña */}
                         <div className="relative">
                             <Input
                                 label="Confirmar Contraseña"
@@ -291,6 +365,7 @@ export function Teams() {
                                 value={newTeam.leaderConfirmPassword}
                                 onChange={handleChange}
                                 error={!!errors.leaderConfirmPassword}
+                                className="w-full"
                             />
                             <button
                                 type="button"
@@ -306,7 +381,29 @@ export function Teams() {
                             {errors.leaderConfirmPassword && <p className="text-red-500 text-sm">{errors.leaderConfirmPassword}</p>}
                         </div>
 
-                        <div className="mb-1">
+                        {/* Campo Descripción */}
+                        <div className="relative col-span-2">
+                            <Textarea
+                                label="Descripción"
+                                name="description"
+                                value={newTeam.description}
+                                onChange={handleChange}
+                                error={errors.description}
+                                className="w-full"
+                                onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
+                                onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
+                            />
+                            {!isFocused && (
+                                <div className="absolute top-2 right-3 text-xs text-gray-400">
+                                    (Opcional)
+                                </div>
+                            )}
+                        </div>
+
+
+
+                        {/* Campo Logo */}
+                        <div className="mb-1 col-span-2 flex flex-col items-center">
                             <Typography variant="large" color="black" className="mb-2">
                                 Logo del Equipo
                             </Typography>
@@ -347,10 +444,24 @@ export function Teams() {
                         </div>
                     </div>
                 </DialogBody>
+
+
                 <DialogFooter className="flex justify-center gap-2">
                     <Button
                         color="red"
-                        onClick={handleOpen}
+                        onClick={() => {
+                            handleOpen(); // Cerrar 
+                            setNewTeam({ // Limpiar los valores del formulario
+                                name: "",
+                                description: "",
+                                leaderFirstName: "",
+                                leaderLastName: "",
+                                leaderUsername: "",
+                                leaderPassword: "",
+                                leaderConfirmPassword: "",
+                                logo: "",
+                            });
+                        }}
                         className="mr-4"
                     >
                         Cancelar
@@ -368,6 +479,7 @@ export function Teams() {
                     </Button>
                 </DialogFooter>
             </Dialog>
+
         </>
     );
 }
