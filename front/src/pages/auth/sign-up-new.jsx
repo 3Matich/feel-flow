@@ -6,16 +6,18 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar los íconos
 
 export function SignUpNew() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para confirmar la contraseña
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    passwordConfirm: "",
     company: "",
     acceptTerms: false,
   });
@@ -24,9 +26,26 @@ export function SignUpNew() {
     lastName: "",
     email: "",
     password: "",
+    passwordConfirm: "",
     company: "",
     acceptTerms: "",
   });
+
+  const [passwordValid, setPasswordValid] = useState(false); // Para validar si la contraseña es fuerte
+  const [passwordMatch, setPasswordMatch] = useState(true); // Para validar que las contraseñas coinciden
+
+  // Validación en tiempo real de la contraseña
+  useEffect(() => {
+    const password = formData.password;
+    const passwordConfirm = formData.passwordConfirm;
+
+    // Verifica si las contraseñas coinciden
+    setPasswordMatch(password === passwordConfirm);
+
+    // Validación de fortaleza de la contraseña
+    const isStrongPassword = password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
+    setPasswordValid(isStrongPassword);
+  }, [formData.password, formData.passwordConfirm]);
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
@@ -48,6 +67,7 @@ export function SignUpNew() {
       lastName: "",
       email: "",
       password: "",
+      passwordConfirm: "",
       company: "",
       acceptTerms: "",
     };
@@ -72,6 +92,14 @@ export function SignUpNew() {
 
     if (!formData.password) {
       newErrors.password = "Por favor, ingresa tu contraseña.";
+      valid = false;
+    }
+
+    if (!formData.passwordConfirm) {
+      newErrors.passwordConfirm = "Por favor, confirma tu contraseña.";
+      valid = false;
+    } else if (!passwordMatch) {
+      newErrors.passwordConfirm = "Las contraseñas no coinciden.";
       valid = false;
     }
 
@@ -104,9 +132,9 @@ export function SignUpNew() {
         background: "linear-gradient(135deg, #0d1b2a, #1b263b, #6b2d2d, #8b4513)",
       }}
     >
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-4">
         <div className="mb-5 flex flex-col">
-          <div className="flex flex-col items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-left mb-4">
             <div className="flex items-center gap-3">
               <img
                 src="/img/logo.png"
@@ -119,149 +147,137 @@ export function SignUpNew() {
             </div>
           </div>
 
-          <Typography variant="h5" color="blue-gray" className="font-normal text-left text-large mb-2">
+          <Typography variant="h5" color="blue-gray" className="font-normal text-center text-large mb-2">
             Regístrate para crear una cuenta.
           </Typography>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-3 mb-2">
-          <div className="flex flex-col gap-4">
-            {/* Nombre y Apellido en la misma línea */}
+        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mt-2 mb-2">
+          <div className="flex flex-col gap-5">
+            {/* Nombre y Apellido */}
             <div className="flex gap-4">
-              <div className="w-1/2">
-                <Typography variant="h6" color="blue-gray" className="font-medium mb-1">
-                  Nombre
-                </Typography>
-                <Input
-                  size="lg"
-                  placeholder="Nombre"
-                  className="w-full py-2"
-                  labelProps={{ className: "before:content-none after:content-none" }}
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
+              <div className="flex-grow">
+                <Input 
+                  label="Nombre" 
+                  name="firstName" 
+                  onChange={handleChange} 
+                  value={formData.firstName} 
+                  error={errors.firstName}
                 />
-                {errors.firstName && (
-                  <Typography variant="small" color="red">
-                    {errors.firstName}
-                  </Typography>
-                )}
+                {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
               </div>
 
-              <div className="w-1/2">
-                <Typography variant="h6" color="blue-gray" className="font-medium mb-1">
-                  Apellido
-                </Typography>
-                <Input
-                  size="lg"
-                  placeholder="Apellido"
-                  className="w-full py-2"
-                  labelProps={{ className: "before:content-none after:content-none" }}
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
+              <div className="flex-grow">
+                <Input 
+                  label="Apellido" 
+                  name="lastName" 
+                  onChange={handleChange} 
+                  value={formData.lastName} 
+                  error={errors.lastName}
                 />
-                {errors.lastName && (
-                  <Typography variant="small" color="red">
-                    {errors.lastName}
-                  </Typography>
-                )}
+                {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
               </div>
             </div>
 
             {/* Usuario */}
             <div>
-              <Typography variant="h6" color="blue-gray" className="font-medium mb-1">
-                Usuario
-              </Typography>
-              <Input
-                size="lg"
-                placeholder="usuario@mail.com"
-                className="w-full py-2"
-                labelProps={{ className: "before:content-none after:content-none" }}
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
+              <Input 
+                label="Usuario" 
+                name="email" 
+                onChange={handleChange} 
+                value={formData.email} 
+                error={errors.email}
               />
-              {errors.email && (
-                <Typography variant="small" color="red">
-                  {errors.email}
-                </Typography>
-              )}
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
 
+            
             {/* Contraseña */}
-            <div>
-              <Typography variant="h6" color="blue-gray" className="font-medium mb-1">
-                Contraseña
-              </Typography>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  size="lg"
-                  placeholder="********"
-                  className="w-full py-2 pr-10"
-                  labelProps={{ className: "before:content-none after:content-none" }}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-                <button
-                  type="button"
-                  className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-              {errors.password && (
-                <Typography variant="small" color="red">
-                  {errors.password}
-                </Typography>
+            <div className="relative">
+              <Input
+                label="Contraseña"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                error={errors.password}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+              </button>
+              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+              {!passwordValid && formData.password && (
+                <p className="text-red-500 text-sm">La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.</p>
               )}
             </div>
-          </div>
 
-
-
-          <Checkbox
-            label={
-              <Typography
-                variant="small"
-                color="gray"
-                className="flex items-center justify-start font-medium"
+            {/* Confirmar Contraseña */}
+            <div className="relative">
+              <Input
+                label="Confirmar contraseña"
+                type={showConfirmPassword ? "text" : "password"}
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
+                onChange={handleChange}
+                error={errors.passwordConfirm}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                Acepto los &nbsp;
-                <a
-                  href="#"
-                  className="font-normal text-black transition-colors hover:text-gray-900 underline"
-                >
+                {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+              </button>
+              {errors.passwordConfirm && <p className="text-red-500 text-sm">{errors.passwordConfirm}</p>}
+              {!passwordMatch && formData.passwordConfirm && (
+                <p className="text-red-500 text-sm">Las contraseñas no coinciden.</p>
+              )}
+            </div>
+
+            {/* Empresa */}
+            <div>
+              <Input 
+                label="Empresa" 
+                name="company" 
+                onChange={handleChange} 
+                value={formData.company} 
+                error={errors.company}
+              />
+              {errors.company && <p className="text-red-500 text-sm">{errors.company}</p>}
+            </div>
+
+            {/* Aceptar términos */}
+            <div className="flex items-center">
+              <Checkbox
+                name="acceptTerms"
+                checked={formData.acceptTerms}
+                onChange={handleChange}
+                containerProps={{ className: "-ml-2.5" }}
+              />
+              <Typography variant="small" color="gray" className="ml-2">
+                Acepto los&nbsp;
+                <a href="#" className="font-normal text-black hover:text-gray-900 underline">
                   Términos y Condiciones
                 </a>
               </Typography>
-            }
-            containerProps={{ className: "-ml-2.5" }}
-            name="acceptTerms"
-            checked={formData.acceptTerms}
-            onChange={handleChange}
-          />
-          {errors.acceptTerms && (
-            <Typography variant="small" color="red" className="mt-1">
-              {errors.acceptTerms}
-            </Typography>
-          )}
-          <Button type="submit" className="mt-8" fullWidth>
-            Registrarse
-          </Button>
+            </div>
+            {errors.acceptTerms && <p className="text-red-500 text-sm">{errors.acceptTerms}</p>}
 
-          <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-6">
-            ¿Ya tienes una cuenta?
-            <Link to="/auth/sign-in" className="text-gray-900 ml-1">Iniciar Sesión</Link>
-          </Typography>
+            {/* Botón de registro */}
+            <Button type="submit" className="mt-3 w-full">
+              Registrarse
+            </Button>
+
+            {/* Link para iniciar sesión */}
+            <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-3">
+              ¿Ya tienes una cuenta?
+              <Link to="/auth/sign-in-new" className="text-gray-900 ml-1">Iniciar Sesión</Link>
+            </Typography>
+          </div>
         </form>
       </div>
     </section>
