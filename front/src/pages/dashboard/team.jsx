@@ -14,8 +14,9 @@ import { authorsTableData, teamMembersData } from "@/data";
 export function Team() {
     return (
         <>
-            <Card color="transparent" className="mb-9 p-4">
-                <CardHeader color="transparent" shadow={false} className="p-2">
+            <Card color="transparent" className="mb-9 p-4 mt-4">
+                <CardHeader color="transparent" shadow={false} className="p-2 flex items-center gap-3 rounded-full">
+                    <img src="/img/scuderia.jpg" alt="" srcset="" className="w-20" />
                     <Typography variant="h4" color="blue">Los Oompa-Loompas</Typography> {/* Nombre del equipo */}
                 </CardHeader>
                 <CardBody>
@@ -26,7 +27,7 @@ export function Team() {
             <Card color="transparent" className="p-4">
                 <CardHeader variant="gradient" color="blue" className="mb-7 p-6">
                     <Typography variant="h6" color="white">
-                        Los Oompa-Loompas
+                        Miembros del equipo
                     </Typography>
                 </CardHeader>
                 <CardBody className="px-0 pt-0 pb-2"> {/* Datos del equipo */}
@@ -34,7 +35,7 @@ export function Team() {
                     <table className="w-full min-w-[640px] table-auto">
                         <thead>
                             <tr>
-                                {["Usuario", "Funcion", "Estado", "Ingreso", ""].map((el) => (
+                                {["Usuario", "Funcion", "Ingreso", ""].map((el) => (
                                     <th
                                         key={el}
                                         className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -84,6 +85,7 @@ export function Team() {
                                                     {job[1]}
                                                 </Typography>
                                             </td>
+                                            {/* 
                                             <td className={className}>
                                                 <Chip
                                                     variant="gradient"
@@ -92,6 +94,7 @@ export function Team() {
                                                     className="py-0.5 px-2 text-[11px] font-medium w-fit"
                                                 />
                                             </td>
+                                            */}
                                             <td className={className}>
                                                 <Typography className="text-xs font-semibold text-blue-gray-600">
                                                     {date}
@@ -103,7 +106,7 @@ export function Team() {
                                                     href="#"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    Edit
+                                                    View
                                                 </Typography>
                                             </td>
                                         </tr>

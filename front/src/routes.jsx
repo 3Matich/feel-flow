@@ -19,7 +19,7 @@ import {
   ProfileNew,
   Teams,
 } from "@/pages/dashboard";
-import { SignIn, SignUp, SignInNew } from "@/pages/auth";
+import { SignIn, SignUp, SignInNew, SignUpNew } from "@/pages/auth";
 import { element } from "prop-types";
 
 const icon = {
@@ -101,6 +101,12 @@ export const routes = [
         name: "sign up",
         path: "/sign-up",
         element: <SignUp />,
+      },
+      {
+        icon: <RectangleStackIcon {...icon} />,
+        name: "sign up new",
+        path: "/sign-up-new",
+        element: <SignUpNew />,
       },
     ],
   },

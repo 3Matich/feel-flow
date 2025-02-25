@@ -15,7 +15,7 @@ export function Dashboard() {
   const { sidenavType } = controller;
 
   return (
-    <div className="min-h-screen bg-blue-gray-50/50">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-green-900 dark:text-red-100">
       <Sidenav
         routes={routes}
         brandImg={

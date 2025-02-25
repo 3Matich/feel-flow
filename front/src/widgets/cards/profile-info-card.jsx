@@ -6,14 +6,16 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
+
 export function ProfileInfoCard({ title, description, details, action }) {
+
   return (
     <Card color="transparent" shadow={false}>
       <CardHeader
         color="transparent"
         shadow={false}
         floated={false}
-        className="mx-0 mt-0 mb-4 flex items-center justify-between gap-4"
+        className="mx-0 mt-0 mb-4 flex items-center justify-between gap-4 rounded-none"
       >
         <Typography variant="h6" color="blue-gray">
           {title}
@@ -28,6 +30,7 @@ export function ProfileInfoCard({ title, description, details, action }) {
           >
             {description}
           </Typography>
+
         )}
         {description && details ? (
           <hr className="my-8 border-blue-gray-50" />

@@ -1,43 +1,45 @@
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
-import { Link } from "react-router-dom";
 import { useState } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar los íconos
+import { Button, Input, Typography } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { validateLogin } from "@/api/auth/login";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export function SignInNew() {
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    acceptTerms: false,
   });
   const [errors, setErrors] = useState({
     email: "",
     password: "",
-    acceptTerms: "",
+    captcha: "",
+    general: "", // Para errores generales como login fallido
   });
+  const [loading, setLoading] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
+
+  const navigate = useNavigate(); // Usamos useNavigate para redirigir después del login
 
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === "acceptTerms" ? checked : value,
+      [name]: value,
     });
-    // Limpiar el mensaje de error cuando el usuario comienza a escribir
+
     setErrors({
       ...errors,
       [name]: "",
+      captcha: "", // Limpiar el error del CAPTCHA al cambiar un campo
+      general: "", // Limpiar el error general al cambiar un campo
     });
   };
 
   const validateForm = () => {
     let valid = true;
-    const newErrors = { email: "", password: "", acceptTerms: "" };
+    const newErrors = { email: "", password: "", captcha: "", general: "" };
 
     if (!formData.email) {
       newErrors.email = "Por favor, ingresa tu email.";
@@ -52,8 +54,8 @@ export function SignInNew() {
       valid = false;
     }
 
-    if (!formData.acceptTerms) {
-      newErrors.acceptTerms = "Debes aceptar los términos y condiciones.";
+    if (!captchaVerified) {
+      newErrors.captcha = "Por favor, verifica que no eres un robot.";
       valid = false;
     }
 
@@ -63,9 +65,58 @@ export function SignInNew() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (validateForm()) {
-      // Aquí puedes manejar el envío del formulario, por ejemplo, enviar los datos a un API
-      console.log("Formulario enviado:", formData);
+      setLoading(true);
+      login(formData.email, formData.password);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
+  const handleCaptchaChange = (value) => {
+    if (value) {
+      setCaptchaVerified(true); // Cuando el usuario resuelve el CAPTCHA, habilitamos la validación
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        captcha: "", // Limpiar el error del CAPTCHA
+      }));
+    } else {
+      setCaptchaVerified(false);
+    }
+  };
+  
+  // Función login que se llama al hacer clic en los botones
+  const login = async (user, pw) => {
+    if (!user || !pw) {
+      setErrors({
+        ...errors,
+        general: "Por favor, completa todos los campos.",
+      });
+      return;
+    }
+
+    try {
+      // Llama a tu API para verificar el login
+      const result = await validateLogin(user, pw);
+      if (result === 200) {
+        localStorage.setItem("isAuthenticated", JSON.stringify(true));
+        navigate("/home"); // Simula redirección al Home
+      } else {
+        setErrors({
+          ...errors,
+          general: "Usuario o contraseña incorrectos.",
+        });
+      }
+    } catch (error) {
+      console.error("Error de inicio de sesión:", error.message);
+      setErrors({
+        ...errors,
+        general: "Hubo un problema al intentar iniciar sesión.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,119 +131,84 @@ export function SignInNew() {
         <div className="mb-5 flex flex-col">
           <div className="flex flex-col items-center justify-center mb-5">
             <div className="flex items-center gap-3">
-              <img
-                src="/img/logo.png"
-                alt="Logo"
-                className="w-20 h-20"
-              />
+              <img src="/img/logo.png" alt="Logo" className="w-20 h-20" />
               <Typography variant="h1" className="font-bold text-gray-900 text-5xl text-center">
                 Feel Flow
               </Typography>
             </div>
           </div>
 
-          <Typography variant="h5" color="blue-gray" className="font-normal text-left text-large mb-0">
+          <Typography variant="h5" color="blue-gray" className="font-normal text-center text-large mb-0">
             Ingresa tu email y contraseña.
           </Typography>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-5 mb-2">
-          <div className="mb-1 flex flex-col gap-3"> {/* Aumentar el espacio entre campos */}
-            <Typography variant="h6" color="blue-gray" className="font-medium text-small">
-              Usuario
-            </Typography>
-            <Input
-              size="lg"
-              placeholder="usuario@mail.com"
-              className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && (
-              <Typography variant="small" color="red" className="mt-1">
-                {errors.email}
-              </Typography>
-            )}
+          <div className="mb-1 flex flex-col gap-3">
+            <div>
+              <Input
+                label="Usuario"
+                name="email"
+                onChange={handleChange}
+                value={formData.email}
+                error={errors.email}
+              />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+            </div>
 
-            <Typography variant="h6" color="blue-gray" className="font-medium">
-              Contraseña
-            </Typography>
+            {/* Contraseña */}
             <div className="relative">
               <Input
-                type={showPassword ? "text" : "password"}
-                size="lg"
-                placeholder="********"
-                className="!border-t-blue-gray-200 focus:!border-t-gray-900 pr-10"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
+                label="Contraseña"
+                type={showPassword ? "text" : "password"} // Cambiar el tipo según el estado showPassword
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                error={errors.password}
               />
               <button
                 type="button"
-                className="absolute right-2 top-2.5 text-gray-600 hover:text-gray-900 focus:outline-none"
-                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)} // Cambiar el estado al hacer clic
               >
-                {showPassword ? (
-                  <EyeSlashIcon className="h-5 w-5" />
-                ) : (
-                  <EyeIcon className="h-5 w-5" />
-                )}
+                {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
               </button>
+              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
             </div>
-            {errors.password && (
-              <Typography variant="small" color="red" className="mt-1">
-                {errors.password}
-              </Typography>
-            )}
           </div>
 
-          <Typography variant="small" className="font-medium text-gray-900 mt-4">
-            <a href="#">
-              ¿Olvidaste tu contraseña?
-            </a>
-          </Typography>
-          <Checkbox
-            label={
-              <Typography
-                variant="small"
-                color="gray"
-                className="flex items-center justify-start font-medium"
-              >
-                Acepto los &nbsp;
-                <a
-                  href="#"
-                  className="font-normal text-black transition-colors hover:text-gray-900 underline"
-                >
-                  Términos y Condiciones
-                </a>
-              </Typography>
-            }
-            containerProps={{ className: "-ml-2.5" }}
-            name="acceptTerms"
-            checked={formData.acceptTerms}
-            onChange={handleChange}
-          />
-          {errors.acceptTerms && (
-            <Typography variant="small" color="red" className="mt-1">
-              {errors.acceptTerms}
-            </Typography>
-          )}
-          <Button type="submit" className="mt-8" fullWidth>
-            Iniciar Sesión
+          {/* Google reCAPTCHA widget */}
+          <div className="mt-4 flex justify-center items-center">
+            <ReCAPTCHA
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} 
+              onChange={handleCaptchaChange}
+            />
+          </div>
+
+          {/* Mostrar error del CAPTCHA si no está verificado */}
+          {errors.captcha && <p className="text-red-500 text-sm text-center">{errors.captcha}</p>}
+
+          {/* Mostrar error general sobre el botón de login */}
+          {errors.general && <p className="text-red-500 text-sm text-center mt-4">{errors.general}</p>}
+
+          <Button type="submit" className="mt-5 flex justify-center items-center" fullWidth disabled={loading}>
+            {loading ? (
+              <div className="animate-spin h-5 w-5 border-t-2 border-white rounded-full"></div>
+            ) : (
+              "Iniciar Sesión"
+            )}
           </Button>
 
           <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-6">
             ¿No tienes una cuenta?
-            <Link to="/auth/sign-up" className="text-gray-900 ml-1">Crear cuenta</Link>
+            <a href="#" className="text-gray-900 ml-1">Crear cuenta</a>
           </Typography>
         </form>
+      </div>
+
+      <div className="absolute bottom-0 h-16">
+        <Button onClick={() => login("admin1@gmail.com", "RiverPlatecapo@123")}>Login with admin</Button>
+        <Button onClick={() => login("tlteam1@gmail.com", "RiverPlatecapo@123")}>Login with TL</Button>
       </div>
     </section>
   );

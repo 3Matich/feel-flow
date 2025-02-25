@@ -15,6 +15,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useMaterialTailwindController } from "@/context";
 
+import { NotFoundPage } from "@/pages/dashboard"
+
 export function NikoNiko() {
     const [teamValue, setTeamValue] = React.useState("Team 1");
     const [startDate, setStartDate] = React.useState("");

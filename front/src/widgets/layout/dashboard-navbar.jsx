@@ -25,6 +25,7 @@ import {
   setOpenConfigurator,
   setOpenSidenav,
 } from "@/context";
+// import ThemeSwitcher from "@/components/themeSwitcher";
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -72,8 +73,12 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center">
+          {/*
           <div className="mr-auto md:mr-4 md:w-56">
             <Input label="Search" />
+          </div>
+          <div>
+            <ThemeSwitcher />
           </div>
           <IconButton
             variant="text"
@@ -100,6 +105,7 @@ export function DashboardNavbar() {
               <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
             </IconButton>
           </Link>
+          */}
           <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">
