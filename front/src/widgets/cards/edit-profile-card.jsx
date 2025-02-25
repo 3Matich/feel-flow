@@ -27,10 +27,18 @@ export function ProfileEditCard({ title, description, details, action, isEditing
     const [newDescription, setNewDescription] = React.useState(description);
     const [formData, setFormData] = React.useState(details);
 
-
     const handleChange = (e, clave) => {
         setFormData({ ...formData, [clave]: e.target.value });
+        console.log(formData);
     };
+
+    const handleSave = () => {
+        console.log("Descripción guardada:", newDescription);
+        console.log("Datos guardados:", formData);
+        setIsEditing(!isEditing);
+        // Aquí podrías hacer una petición a una API para guardar la descripción
+    };
+
 
     return (
         <Card color="transparent" shadow={false}>
@@ -43,6 +51,7 @@ export function ProfileEditCard({ title, description, details, action, isEditing
                 <Typography variant="h6" color="blue-gray">
                     {title}
                 </Typography>
+                {action}
             </CardHeader>
             <CardBody className="p-0">
                 <Textarea
@@ -51,10 +60,8 @@ export function ProfileEditCard({ title, description, details, action, isEditing
                     size="auto"
                     variant="standard"
                     label="Sobre ti"
-                    // placeholder={newDescription}
                     value={newDescription}
-                    contentEditable={true}
-                    onChange={(val) => setNewDescription(val)}
+                    onChange={(event) => setNewDescription(event.target.value)}
                 />
                 <hr className="my-8 border-blue-gray-50" />
                 {details && (
@@ -174,7 +181,7 @@ export function ProfileEditCard({ title, description, details, action, isEditing
                     </ul>
                 )}
                 <div className="mt-4 flex gap-4">
-                    <Button color="green" size="sm" onClick={() => setIsEditing(!isEditing)}>
+                    <Button color="green" size="sm" onClick={handleSave}>
                         Guardar
                     </Button>
                     <Button color="red" size="sm" onClick={() => setIsEditing(!isEditing)}>
