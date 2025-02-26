@@ -7,3 +7,4 @@ export * from "@/pages/dashboard/team";
 export * from "@/pages/dashboard/profileNew";
 export * from "@/pages/dashboard/teams";
 export * from "@/pages/dashboard/404";
+export * from "@/pages/dashboard/resumenes";

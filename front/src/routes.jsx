@@ -1,3 +1,4 @@
+// src/routes.js
 import {
   HomeIcon,
   UserCircleIcon,
@@ -8,7 +9,9 @@ import {
   ComputerDesktopIcon,
   UserGroupIcon,
   UserPlusIcon,
+  DocumentTextIcon, // Nuevo ícono para "Resúmenes"
 } from "@heroicons/react/24/solid";
+
 import { 
   Home, 
   Profile, 
@@ -18,9 +21,10 @@ import {
   Team, 
   ProfileNew,
   Teams,
+  Resumenes, // Importar la nueva página
 } from "@/pages/dashboard";
+
 import { SignIn, SignUp, SignInNew, SignUpNew } from "@/pages/auth";
-import { element } from "prop-types";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -35,6 +39,12 @@ export const routes = [
         name: "dashboard",
         path: "/home",
         element: <Home />,
+      },
+      {
+        icon: <DocumentTextIcon {...icon} />,
+        name: "resumenes",
+        path: "/resumenes",
+        element: <Resumenes />,
       },
       {
         icon: <UserCircleIcon {...icon} />,
