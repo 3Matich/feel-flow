@@ -1,0 +1,287 @@
+import {
+  Card,
+  Input,
+  Checkbox,
+  Button,
+  Typography,
+} from "@material-tailwind/react";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar los íconos
+
+export function SignUpNew() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para confirmar la contraseña
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    company: "",
+    acceptTerms: false,
+  });
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    company: "",
+    acceptTerms: "",
+  });
+
+  const [passwordValid, setPasswordValid] = useState(false); // Para validar si la contraseña es fuerte
+  const [passwordMatch, setPasswordMatch] = useState(true); // Para validar que las contraseñas coinciden
+
+  // Validación en tiempo real de la contraseña
+  useEffect(() => {
+    const password = formData.password;
+    const passwordConfirm = formData.passwordConfirm;
+
+    // Verifica si las contraseñas coinciden
+    setPasswordMatch(password === passwordConfirm);
+
+    // Validación de fortaleza de la contraseña
+    const isStrongPassword = password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
+    setPasswordValid(isStrongPassword);
+  }, [formData.password, formData.passwordConfirm]);
+
+  const handleChange = (e) => {
+    const { name, value, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "acceptTerms" ? checked : value,
+    });
+    // Limpiar el mensaje de error cuando el usuario comienza a escribir
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      company: "",
+      acceptTerms: "",
+    };
+
+    if (!formData.firstName) {
+      newErrors.firstName = "Por favor, ingresa tu nombre.";
+      valid = false;
+    }
+
+    if (!formData.lastName) {
+      newErrors.lastName = "Por favor, ingresa tu apellido.";
+      valid = false;
+    }
+
+    if (!formData.email) {
+      newErrors.email = "Por favor, ingresa tu email.";
+      valid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "El email no tiene un formato válido.";
+      valid = false;
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Por favor, ingresa tu contraseña.";
+      valid = false;
+    }
+
+    if (!formData.passwordConfirm) {
+      newErrors.passwordConfirm = "Por favor, confirma tu contraseña.";
+      valid = false;
+    } else if (!passwordMatch) {
+      newErrors.passwordConfirm = "Las contraseñas no coinciden.";
+      valid = false;
+    }
+
+    if (!formData.company) {
+      newErrors.company = "Por favor, ingresa el nombre de tu empresa.";
+      valid = false;
+    }
+
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "Debes aceptar los términos y condiciones.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      // Aquí puedes manejar el envío del formulario, por ejemplo, enviar los datos a un API
+      console.log("Formulario enviado:", formData);
+    }
+  };
+
+  return (
+    <section
+      className="flex justify-center items-center min-h-screen overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, #0d1b2a, #1b263b, #6b2d2d, #8b4513)",
+      }}
+    >
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-4">
+        <div className="mb-5 flex flex-col">
+          <div className="flex flex-col items-center justify-left mb-4">
+            <div className="flex items-center gap-3">
+              <img
+                src="/img/logo.png"
+                alt="Logo"
+                className="w-20 h-20"
+              />
+              <Typography variant="h1" className="font-bold text-gray-900 text-5xl text-center">
+                Feel Flow
+              </Typography>
+            </div>
+          </div>
+
+          <Typography variant="h5" color="blue-gray" className="font-normal text-center text-large mb-2">
+            Regístrate para crear una cuenta.
+          </Typography>
+        </div>
+
+        <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mt-2 mb-2">
+          <div className="flex flex-col gap-5">
+            {/* Nombre y Apellido */}
+            <div className="flex gap-4">
+              <div className="flex-grow">
+                <Input 
+                  label="Nombre" 
+                  name="firstName" 
+                  onChange={handleChange} 
+                  value={formData.firstName} 
+                  error={errors.firstName}
+                />
+                {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
+              </div>
+
+              <div className="flex-grow">
+                <Input 
+                  label="Apellido" 
+                  name="lastName" 
+                  onChange={handleChange} 
+                  value={formData.lastName} 
+                  error={errors.lastName}
+                />
+                {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
+              </div>
+            </div>
+
+            {/* Usuario */}
+            <div>
+              <Input 
+                label="Usuario" 
+                name="email" 
+                onChange={handleChange} 
+                value={formData.email} 
+                error={errors.email}
+              />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+            </div>
+
+            
+            {/* Contraseña */}
+            <div className="relative">
+              <Input
+                label="Contraseña"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                error={errors.password}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+              </button>
+              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+              {!passwordValid && formData.password && (
+                <p className="text-red-500 text-sm">La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.</p>
+              )}
+            </div>
+
+            {/* Confirmar Contraseña */}
+            <div className="relative">
+              <Input
+                label="Confirmar contraseña"
+                type={showConfirmPassword ? "text" : "password"}
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
+                onChange={handleChange}
+                error={errors.passwordConfirm}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+              </button>
+              {errors.passwordConfirm && <p className="text-red-500 text-sm">{errors.passwordConfirm}</p>}
+              {!passwordMatch && formData.passwordConfirm && (
+                <p className="text-red-500 text-sm">Las contraseñas no coinciden.</p>
+              )}
+            </div>
+
+            {/* Empresa */}
+            <div>
+              <Input 
+                label="Empresa" 
+                name="company" 
+                onChange={handleChange} 
+                value={formData.company} 
+                error={errors.company}
+              />
+              {errors.company && <p className="text-red-500 text-sm">{errors.company}</p>}
+            </div>
+
+            {/* Aceptar términos */}
+            <div className="flex items-center">
+              <Checkbox
+                name="acceptTerms"
+                checked={formData.acceptTerms}
+                onChange={handleChange}
+                containerProps={{ className: "-ml-2.5" }}
+              />
+              <Typography variant="small" color="gray" className="ml-2">
+                Acepto los&nbsp;
+                <a href="#" className="font-normal text-black hover:text-gray-900 underline">
+                  Términos y Condiciones
+                </a>
+              </Typography>
+            </div>
+            {errors.acceptTerms && <p className="text-red-500 text-sm">{errors.acceptTerms}</p>}
+
+            {/* Botón de registro */}
+            <Button type="submit" className="mt-3 w-full">
+              Registrarse
+            </Button>
+
+            {/* Link para iniciar sesión */}
+            <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-3">
+              ¿Ya tienes una cuenta?
+              <Link to="/auth/sign-in-new" className="text-gray-900 ml-1">Iniciar Sesión</Link>
+            </Typography>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+export default SignUpNew;

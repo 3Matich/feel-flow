@@ -10,20 +10,21 @@ import {
 import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 
-export function Dashboard() {
+export function Dashboard({ onLogout }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
 
   return (
-    <div className="min-h-screen bg-blue-gray-50/50">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-green-900 dark:text-red-100">
       <Sidenav
         routes={routes}
         brandImg={
           sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
         }
+        onLogout={onLogout}
       />
       <div className="p-4 xl:ml-80">
-        <DashboardNavbar />
+        <DashboardNavbar onLogout={onLogout}/>
         <Configurator />
         <IconButton
           size="lg"

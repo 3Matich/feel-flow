@@ -7,6 +7,7 @@ import {
   RectangleStackIcon,
   ComputerDesktopIcon,
   UserGroupIcon,
+  UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import { 
   Home, 
@@ -15,8 +16,10 @@ import {
   Notifications, 
   Modules,
   Team, 
+  ProfileNew,
+  Teams,
 } from "@/pages/dashboard";
-import { SignIn, SignUp } from "@/pages/auth";
+import { SignIn, SignUp, SignInNew, SignUpNew } from "@/pages/auth";
 import { element } from "prop-types";
 
 const icon = {
@@ -38,6 +41,12 @@ export const routes = [
         name: "profile",
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        icon: <UserCircleIcon {...icon} />,
+        name: "profile2",
+        path: "/profile2",
+        element: <ProfileNew />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
@@ -63,6 +72,12 @@ export const routes = [
         path: "/team",
         element: <Team />,
       },
+      {
+        icon: <UserPlusIcon {...icon} />,
+        name: "teams",
+        path: "/teams",
+        element: <Teams />,
+      },
     ],
   },
   {
@@ -76,10 +91,22 @@ export const routes = [
         element: <SignIn />,
       },
       {
+        icon: <ServerStackIcon {...icon} />,
+        name: "sign in new",
+        path: "/sign-in-new",
+        element: <SignInNew />,
+      },
+      {
         icon: <RectangleStackIcon {...icon} />,
         name: "sign up",
         path: "/sign-up",
         element: <SignUp />,
+      },
+      {
+        icon: <RectangleStackIcon {...icon} />,
+        name: "sign up new",
+        path: "/sign-up-new",
+        element: <SignUpNew />,
       },
     ],
   },

@@ -1,35 +1,41 @@
 export const platformSettingsData = [
   {
-    title: "account",
+    title: "Cuenta",
     options: [
       {
         checked: true,
-        label: "Email me when someone follows me",
+        change: "notifySurvey",
+        label: "Notificar por correo cuando finalizan las encuestas",
       },
       {
         checked: false,
-        label: "Email me when someone answers on my post",
+        change: "notifyModule",
+        label: "Notificar por correo cuando se crea un modulo",
       },
       {
-        checked: true,
-        label: "Email me when someone mentions me",
+        checked: false,
+        change: "darkMode",
+        label: "Modo oscuro",
       },
     ],
   },
   {
-    title: "application",
+    title: "Aplicacion",
     options: [
       {
         checked: false,
-        label: "New launches and projects",
+        change: "newReleases",
+        label: "Nuevos lanzamientos y proyectos",
       },
       {
         checked: true,
-        label: "Monthly product updates",
+        change: "monthlyUpdates",
+        label: "Actualizaciones mensuales de productos",
       },
       {
         checked: false,
-        label: "Subscribe to newsletter",
+        change: "newsletter",
+        label: "Suscríbete al boletín de FeelFlow",
       },
     ],
   },

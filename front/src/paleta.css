@@ -1,0 +1,47 @@
+/* Color Theme Swatches in Hex */
+.color-theme_logo-1-hex { color: #010D26; }
+.color-theme_logo-2-hex { color: #113A79; }
+.color-theme_logo-3-hex { color: #BF5866; }
+.color-theme_logo-4-hex { color: #F25D50; }
+.color-theme_logo-5-hex { color: #FFEFD8; }
+
+/* Color Theme Swatches in RGBA */
+.color-theme_logo-1-rgba { color: rgba(1, 13, 38, 1); }
+.color-theme_logo-2-rgba { color: rgba(17, 58, 121, 1); }
+.color-theme_logo-3-rgba { color: rgba(191, 88, 102, 1); }
+.color-theme_logo-4-rgba { color: rgba(242, 93, 80, 1); }
+.color-theme_logo-5-rgba { color: rgba(255, 239, 216, 1); }
+
+/* Color Theme Swatches in HSLA */
+.color-theme_logo-1-hsla { color: hsla(220, 94, 7, 1); }
+.color-theme_logo-2-hsla { color: hsla(216, 75, 27, 1); }
+.color-theme_logo-3-hsla { color: hsla(351, 44, 54, 1); }
+.color-theme_logo-4-hsla { color: hsla(4, 86, 63, 1); }
+.color-theme_logo-5-hsla { color: hsla(35, 100, 92, 1); }
+
+
+/* Gradient in Hex */
+.gradient-hex {
+    background: linear-gradient(to right, 
+        #FFEDD9 0%, 
+        #FFEDD9 13.37%,  /* Asignando color a cada porcentaje */
+        #F1664A 26.75%, 
+        #F1664A 43.84%, 
+        #183E7B 60.93%, 
+        #183E7B 80.46%,  
+        #000B23 100%
+    );
+}
+
+/* Gradient in RGBA */
+.gradient-rgba {
+    background: linear-gradient(to right, 
+        rgba(255, 237, 217, 1) 0%, 
+        rgba(255, 237, 217, 1) 13.37%,  /* Asignando color a cada porcentaje */
+        rgba(241, 102, 74, 1) 26.75%, 
+        rgba(241, 102, 74, 1) 43.84%, 
+        rgba(24, 62, 123, 1) 60.93%, 
+        rgba(24, 62, 123, 1) 80.46%,  
+        rgba(0, 11, 35, 1) 100%
+    );
+}
