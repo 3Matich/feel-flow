@@ -11,7 +11,7 @@ const saveUserData = (token) => {
 
 export const saveAuthData = (token, username) => {
     sessionStorage.setItem("token", token);
-    sessionStorage.setItem("username", username);
+    sessionStorage.setItem("username", username);    
     saveUserData(token);
 };
 

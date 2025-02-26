@@ -1,15 +1,16 @@
 import PropTypes from "prop-types";
 import { Link, NavLink } from "react-router-dom";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import {
   Avatar,
   Button,
   IconButton,
   Typography,
+  Tooltip,
 } from "@material-tailwind/react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
-export function Sidenav({ brandImg, brandName, routes }) {
+export function Sidenav({ brandImg, brandName, routes, onLogout }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
@@ -91,6 +92,13 @@ export function Sidenav({ brandImg, brandName, routes }) {
             ))}
           </ul>
         ))}
+      </div>
+      <div className="absolute bottom-4 right-4">
+        <Tooltip content="Cerrar sesión" placement="left" className="bg-gray-800">
+          <IconButton variant="text" color="blue-gray" onClick={onLogout}>
+            <ArrowLeftOnRectangleIcon className="h-7 w-7 text-blue-gray-500 hover:text-red-500" />
+          </IconButton>
+        </Tooltip>
       </div>
     </aside>
   );

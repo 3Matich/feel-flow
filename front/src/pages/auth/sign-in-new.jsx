@@ -5,7 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { validateLogin } from "@/api/auth/login";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
-export function SignInNew() {
+export function SignInNew({ onLogin }) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -101,7 +101,7 @@ export function SignInNew() {
       // Llama a tu API para verificar el login
       const result = await validateLogin(user, pw);
       if (result === 200) {
-        localStorage.setItem("isAuthenticated", JSON.stringify(true));
+        onLogin();
         navigate("/home"); // Simula redirección al Home
       } else {
         setErrors({
@@ -180,11 +180,10 @@ export function SignInNew() {
           {/* Google reCAPTCHA widget */}
           <div className="mt-4 flex justify-center items-center">
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} 
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={handleCaptchaChange}
             />
           </div>
-
           {/* Mostrar error del CAPTCHA si no está verificado */}
           {errors.captcha && <p className="text-red-500 text-sm text-center">{errors.captcha}</p>}
 
