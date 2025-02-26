@@ -178,6 +178,8 @@ export function SignInNew({ onLogin }) {
           </div>
 
           {/* Google reCAPTCHA widget */}
+          {/*
+          */}
           <div className="mt-4 flex justify-center items-center">
             <ReCAPTCHA
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
@@ -200,7 +202,7 @@ export function SignInNew({ onLogin }) {
 
           <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-6">
             ¿No tienes una cuenta?
-            <a href="#" className="text-gray-900 ml-1">Crear cuenta</a>
+            <a href="/auth/sign-up-new" className="text-gray-900 ml-1">Crear cuenta</a>
           </Typography>
         </form>
       </div>
