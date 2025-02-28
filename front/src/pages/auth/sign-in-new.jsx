@@ -178,14 +178,14 @@ export function SignInNew({ onLogin }) {
           </div>
 
           {/* Google reCAPTCHA widget */}
-          {/*
+          
           <div className="mt-4 flex justify-center items-center">
             <ReCAPTCHA
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={handleCaptchaChange}
             />
           </div>
-            */}
+            
           {/* Mostrar error del CAPTCHA si no está verificado */}
           {errors.captcha && <p className="text-red-500 text-sm text-center">{errors.captcha}</p>}
 
