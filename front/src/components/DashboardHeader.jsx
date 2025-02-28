@@ -13,7 +13,7 @@ function DashboardHeader() {
   return (
     <Box
       sx={{
-        background: "linear-gradient(135deg,rgb(2, 2, 2) 0%,rgb(127, 127, 232) 100%)",
+        background: "linear-gradient(135deg,rgba(2, 2, 2, 0.91) 15%,rgba(13, 13, 96, 0.83) 100%)",
         padding: "4rem 2rem",
         borderRadius: "1rem",
         boxShadow: "0 10px 20px rgba(0, 0, 0, 0.1)",
