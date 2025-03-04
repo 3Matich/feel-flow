@@ -58,7 +58,7 @@ export function Team() {
             )}
 
             {/* Tarjeta del Equipo */}
-            <Card color="transparent" className="mb-8 p-6 mt-6 shadow-lg rounded-xl border border-gray-200">
+            <Card color="transparent" className="mb-6 p-6 mt-6 shadow-lg rounded-xl border border-gray-200">
                 <CardHeader color="transparent" shadow={false} className="p-3 flex justify-between items-center rounded-lg">
                     <div className="flex items-center gap-2">
                         <img
@@ -80,11 +80,11 @@ export function Team() {
                             </Typography>
                         )}
                     </div>
-                    <IconButton variant="text" color="blue" onClick={handleEditToggle} className="ml-2">
+                    <IconButton variant="text" color="indigo" onClick={handleEditToggle} className="ml-2">
                         <Pencil size={20} />
                     </IconButton>
                 </CardHeader>
-                <CardBody className="pt-3">
+                <CardBody className="pt-3 pb-2">
                     {isEditing ? (
                         <Textarea
                             value={teamDescription}
@@ -97,7 +97,7 @@ export function Team() {
                     )}
 
                     {isEditing && (
-                        <div className="mt-3 flex gap-2">
+                        <div className="flex gap-2">
                             <Button variant="gradient" color="red" onClick={handleEditToggle} disabled={isSaving}>
                                 Cancelar
                             </Button>
@@ -110,10 +110,11 @@ export function Team() {
             </Card>
 
 
+
             {/* Tarjeta de Miembros */}
             <Card color="transparent" className="p-2 shadow-lg rounded-xl border border-gray-200">
-                <CardHeader variant="gradient" color="blue" className="mb-6 p-6 flex justify-between items-center rounded-lg">
-                    <Typography variant="h6" color="white" className="font-medium">Miembros del Equipo</Typography>
+                <CardHeader variant="gradient" color="blue" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg">
+                    <Typography variant="h6" color="white" className="font-medium">Miembros del quipo</Typography>
                     <Button color="white" className="flex items-center gap-2 shadow-md">
                         <UserPlusIcon className="h-5 w-5" />
                         Invitar Miembro
