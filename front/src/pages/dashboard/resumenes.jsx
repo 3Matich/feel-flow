@@ -6,6 +6,7 @@ import NikoNikoTable from "../../components/NikoNikoTable";
 import HappinessChart from "../../components/HappinessChart";
 import DashboardHeader from "../../components/DashboardHeader";
 import PodiumChart from "../../components/PodiumChart";
+import { Autocomplete, TextField } from "@mui/material";
 
 export function Resumenes() {
   const [teams, setTeams] = useState([]);
@@ -127,42 +128,58 @@ export function Resumenes() {
           />
         )}
 
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-center mb-4">Kudos Dashboard</h2>
-          <div className="p-4 bg-gray-100 rounded-lg shadow-md">
-            <div className="flex gap-4 mb-4">
-              <select
-                className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                value={selectedKudosMember || "Equipo"}
-                onChange={(e) => setSelectedKudosMember(e.target.value)}
-              >
-                {Object.keys(kudosData["Sprint 1"] || {}).map((member) => (
-                  <option key={member} value={member}>
-                    {member}
-                  </option>
-                ))}
-              </select>
+<div className="mt-8">
+  <h2 className="text-2xl font-bold text-center mb-4">Kudos Dashboard</h2>
+  <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="flex gap-4 mb-4 justify-center">
+      {/* Autocomplete para seleccionar Miembro */}
+      <Autocomplete
+        options={Object.keys(kudosData["Sprint 1"] || {})}
+        value={selectedKudosMember}
+        onChange={(e, newValue) => setSelectedKudosMember(newValue)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Selecciona un miembro"
+            variant="outlined"
+            sx={{
+              width: 200,
+              backgroundColor: "white",
+            }}
+          />
+        )}
+      />
 
-              <select
-                className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                value={selectedKudosSprint || "Sprint 1"}
-                onChange={(e) => setSelectedKudosSprint(e.target.value)}
-              >
-                {Object.keys(kudosData || {}).map((sprint) => (
-                  <option key={sprint} value={sprint}>
-                    {sprint}
-                  </option>
-                ))}
-              </select>
-            </div>
+      {/* Autocomplete para seleccionar Sprint */}
+      <Autocomplete
+        options={Object.keys(kudosData || {})}
+        value={selectedKudosSprint}
+        onChange={(e, newValue) => setSelectedKudosSprint(newValue)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Selecciona un sprint"
+            variant="outlined"
+            sx={{
+              width: 200,
+              backgroundColor: "white",
+            }}
+          />
+        )}
+      />
+    </div>
 
-            {selectedKudosSprint && selectedKudosMember && kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
-              <PodiumChart data={kudosData[selectedKudosSprint][selectedKudosMember]} />
-            ) : (
-              <p className="text-gray-500 text-center">Seleccione un miembro y un sprint para ver los datos.</p>
-            )}
-          </div>
-        </div>
+    {selectedKudosSprint && selectedKudosMember && kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
+      <PodiumChart data={kudosData[selectedKudosSprint][selectedKudosMember]} />
+    ) : (
+      <p className="text-gray-500 text-center">
+        Seleccione un miembro y un sprint para ver los datos.
+      </p>
+    )}
+  </div>
+</div>
+
+
       </div>
     </div>
   );

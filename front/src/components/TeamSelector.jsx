@@ -1,50 +1,66 @@
 import React from "react";
+import { Autocomplete, TextField } from "@mui/material";
 
 function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMonth, setSelectedMonth }) {
-  return (
-    <div className="mt-8 grid gap-6 grid-cols-1 md:grid-cols-2">
-      <div>
-        <label htmlFor="teamSelect" className="block text-sm font-medium text-gray-700 mb-2">
-          Seleccionar equipo
-        </label>
-        <select
-          id="teamSelect"
-          value={selectedTeam}
-          onChange={(e) => setSelectedTeam(e.target.value)}
-          className="block w-full p-3 border border-gray-300 rounded-md"
-        >
-          <option value="">Todos los equipos</option>
-          {teams.map((team) => (
-            <option key={team.uuid} value={team.uuid}>
-              {team.nameTeam}
-            </option>
-          ))}
-        </select>
-        {/* Información seleccionada */}
-        {/* <div className="mt-6 text-gray-800 text-lg">
-            <p><strong>Equipo seleccionado:</strong> {selectedTeam || "Ninguno"}</p>
-            <p><strong>Mes seleccionado:</strong> {months[selectedMonth - 1] || "Todos"}</p>
-        </div> */}
+  // Opciones para los equipos
+  const teamOptions = teams.map((team) => ({
+    label: team.nameTeam,
+    value: team.uuid,
+  }));
 
-      </div>
-      <div>
-        <label htmlFor="monthSelect" className="block text-sm font-medium text-gray-700 mb-2">
-          Seleccionar mes
-        </label>
-        <select
-          id="monthSelect"
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          className="block w-full p-3 border border-gray-300 rounded-md"
-        >
-          <option value="">Todos los meses</option>
-          {months.map((month, index) => (
-            <option key={index} value={index + 1}>
-              {month}
-            </option>
-          ))}
-        </select>
-        
+  // Opciones para los meses
+  const monthOptions = months.map((month, index) => ({
+    label: month,
+    value: index + 1,
+  }));
+
+  return (
+    <div className="mt-12 flex flex-col items-center">
+      <div className="flex gap-6">
+        {/* Autocomplete para seleccionar equipo */}
+        <div className="flex flex-col items-center">
+          {/* <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
+            Seleccionar equipo
+          </label> */}
+          <Autocomplete
+            options={teamOptions}
+            value={selectedTeam ? teamOptions.find((option) => option.value === selectedTeam) : null}
+            onChange={(event, newValue) => setSelectedTeam(newValue ? newValue.value : "")}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Todos los equipos"
+                variant="outlined"
+                sx={{
+                  width: 200,
+                  backgroundColor: "white",
+                }}
+              />
+            )}
+          />
+        </div>
+        {/* Autocomplete para seleccionar mes */}
+        <div className="flex flex-col items-center">
+          {/* <label className="block text-sm font-medium text-gray-700 mb-2 text-center">
+            Seleccionar mes
+          </label> */}
+          <Autocomplete
+            options={monthOptions}
+            value={selectedMonth ? monthOptions.find((option) => option.value === selectedMonth) : null}
+            onChange={(event, newValue) => setSelectedMonth(newValue ? newValue.value : "")}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Todos los meses"
+                variant="outlined"
+                sx={{
+                  width: 200,
+                  backgroundColor: "white",
+                }}
+              />
+            )}
+          />
+        </div>
       </div>
     </div>
   );
