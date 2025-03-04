@@ -15,7 +15,7 @@ export function Dashboard({ onLogout }) {
   const { sidenavType } = controller;
 
   return (
-    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-green-900 dark:text-red-100">
+    <div className="flex min-h-screen bg-light-bg dark:bg-dark-bg text-green-900 dark:text-red-100">
       <Sidenav
         routes={routes}
         brandImg={
@@ -23,8 +23,8 @@ export function Dashboard({ onLogout }) {
         }
         onLogout={onLogout}
       />
-      <div className="p-4 xl:ml-80">
-        <DashboardNavbar onLogout={onLogout}/>
+      <div className="flex flex-col flex-grow p-4 xl:ml-80">
+        <DashboardNavbar onLogout={onLogout} />
         <Configurator />
         <IconButton
           size="lg"
@@ -35,18 +35,21 @@ export function Dashboard({ onLogout }) {
         >
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton>
-        <Routes>
-          {routes.map(
-            ({ layout, pages }) =>
-              layout === "dashboard" &&
-              pages.map(({ path, element }) => (
-                <Route exact path={path} element={element} />
-              ))
-          )}
-        </Routes>
-        <div className="text-blue-gray-600">
-          <Footer />
+        
+        {/* Contenedor de las rutas */}
+        <div className="flex-grow">
+          <Routes>
+            {routes.map(
+              ({ layout, pages }) =>
+                layout === "dashboard" &&
+                pages.map(({ path, element }) => (
+                  <Route exact path={path} element={element} />
+                ))
+            )}
+          </Routes>
         </div>
+
+        <Footer className="mt-auto" />
       </div>
     </div>
   );

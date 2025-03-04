@@ -119,7 +119,7 @@ export function Team() {
                         <Typography className="text-sm text-blue-500 truncate w-full">
                             {inviteLink}
                         </Typography>
-                        <IconButton onClick={copyToClipboard} color={copied ? "green" : "indigo"} className={`transition-transform duration-200 ${copied ? 'scale-110' : ''}`}>
+                        <IconButton onClick={copyToClipboard} color={copied ? "green" : "indigo1"} className={`transition-transform duration-200 ${copied ? 'scale-110' : ''}`}>
                             <ClipboardCopy size={20} />
                         </IconButton>
                     </div>
