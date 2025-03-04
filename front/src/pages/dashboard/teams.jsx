@@ -183,7 +183,7 @@ export function Teams() {
 
             <Card color="transparent" className="mb-6 p-4 mt-10">
                 <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
-                    <Typography variant="h4" color="blue">Equipos</Typography>
+                    <Typography variant="h4" color="blue">Listado de Equipos</Typography>
                     <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
                         <PlusIcon className="h-5 w-5" />
                         Crear Equipo
