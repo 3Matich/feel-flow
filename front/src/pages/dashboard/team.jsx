@@ -59,12 +59,12 @@ export function Team() {
 
             {/* Tarjeta del Equipo */}
             <Card color="transparent" className="mb-8 p-6 mt-6 shadow-lg rounded-xl border border-gray-200">
-                <CardHeader color="transparent" shadow={false} className="p-4 flex justify-between items-center rounded-lg">
-                    <div className="flex items-center gap-4">
+                <CardHeader color="transparent" shadow={false} className="p-3 flex justify-between items-center rounded-lg">
+                    <div className="flex items-center gap-2">
                         <img
                             src="/img/scuderia.jpg"
                             alt="Equipo"
-                            className="w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg"
+                            className="w-20 h-20 object-cover rounded-full border-4 border-white shadow-lg"
                         />
 
                         {isEditing ? (
@@ -75,16 +75,16 @@ export function Team() {
                                 className="border border-gray-300 rounded-lg p-2 text-lg font-semibold text-gray-900 w-full"
                             />
                         ) : (
-                            <Typography variant="h4" color="blue" className="font-semibold">
+                            <Typography variant="h4" color="blue" className="font-semibold leading-tight">
                                 {teamName}
                             </Typography>
                         )}
                     </div>
-                    <IconButton variant="text" color="indigo" onClick={handleEditToggle} className="ml-2">
+                    <IconButton variant="text" color="blue" onClick={handleEditToggle} className="ml-2">
                         <Pencil size={20} />
                     </IconButton>
                 </CardHeader>
-                <CardBody>
+                <CardBody className="pt-3">
                     {isEditing ? (
                         <Textarea
                             value={teamDescription}
@@ -93,11 +93,11 @@ export function Team() {
                             rows={3}
                         />
                     ) : (
-                        <Typography className="text-gray-700">{teamDescription}</Typography>
+                        <Typography className="text-gray-700 leading-tight">{teamDescription}</Typography>
                     )}
 
                     {isEditing && (
-                        <div className="mt-4 flex gap-2">
+                        <div className="mt-3 flex gap-2">
                             <Button variant="gradient" color="red" onClick={handleEditToggle} disabled={isSaving}>
                                 Cancelar
                             </Button>
@@ -109,10 +109,11 @@ export function Team() {
                 </CardBody>
             </Card>
 
+
             {/* Tarjeta de Miembros */}
-            <Card color="transparent" className="p-6 shadow-lg rounded-xl border border-gray-200">
+            <Card color="transparent" className="p-2 shadow-lg rounded-xl border border-gray-200">
                 <CardHeader variant="gradient" color="blue" className="mb-6 p-6 flex justify-between items-center rounded-lg">
-                    <Typography variant="h6" color="white" className="font-medium">Miembros del equipo</Typography>
+                    <Typography variant="h6" color="white" className="font-medium">Miembros del Equipo</Typography>
                     <Button color="white" className="flex items-center gap-2 shadow-md">
                         <UserPlusIcon className="h-5 w-5" />
                         Invitar Miembro
