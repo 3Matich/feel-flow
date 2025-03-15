@@ -4,6 +4,10 @@ import {
     CardHeader,
     CardBody,
     Typography,
+    Dialog,
+    DialogHeader,
+    DialogBody,
+    DialogFooter,
     Avatar,
     Button,
     IconButton,
@@ -12,6 +16,7 @@ import {
     Spinner,
     Alert
 } from "@material-tailwind/react";
+import { ClipboardCopy, X } from "lucide-react";
 import { teamMembersData } from "@/data";
 import { CheckCircleIcon, Pencil } from "lucide-react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
@@ -24,6 +29,29 @@ export function Team() {
     const [teamDescription, setTeamDescription] = useState(
         "En este equipo solo se aceptan personas de baja estatura, aproximadamente 1.60 m, que viven alrededor de 50 años. Su comida favorita tiene que ser los granos de cacao, que eran muy escasos en Loompalandia."
     );
+    const [open, setOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
+    const [closing, setClosing] = useState(false);
+    const teamId = "123456"; // Simulación de ID de equipo
+    const inviteLink = `https://localhost:5173/auth/signup?invite=${teamId}`;
+
+    const handleOpen = () => {
+        if (closing) return;
+        setOpen(!open);
+        setCopied(false);
+    };
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(inviteLink);
+        setCopied(true);
+        setTimeout(() => {
+            setClosing(true);
+            setTimeout(() => {
+                setOpen(false);
+                setClosing(false);
+            }, 300);
+        }, 2000);
+    };
 
     const handleEditToggle = () => {
         if (!isSaving) {
@@ -115,7 +143,7 @@ export function Team() {
             <Card color="transparent" className="p-2 shadow-lg rounded-xl border border-gray-200">
                 <CardHeader variant="gradient" color="blue" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg">
                     <Typography variant="h6" color="white" className="font-medium">Miembros del quipo</Typography>
-                    <Button color="white" className="flex items-center gap-2 shadow-md">
+                    <Button color="white" onClick={handleOpen} className="flex items-center gap-2">
                         <UserPlusIcon className="h-5 w-5" />
                         Invitar Miembro
                     </Button>
@@ -164,6 +192,35 @@ export function Team() {
                     </table>
                 </CardBody>
             </Card>
+
+            {/* Modal para invitar miembros */}
+
+            <Dialog open={open} handler={handleOpen} size="sm" className={`transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
+                <DialogHeader className="flex justify-between items-center">
+                    <Typography variant="h5">Invitar a un nuevo miembro</Typography>
+                    <IconButton variant="text" color="gray" onClick={handleOpen}>
+                        <X size={20} />
+                    </IconButton>
+                </DialogHeader>
+                <DialogBody>
+                    <div className="mt-4 flex items-center gap-2 border border-gray-300 rounded-lg p-2">
+                        <Typography className="text-sm text-blue-500 truncate w-full">
+                            {inviteLink}
+                        </Typography>
+                        <IconButton onClick={copyToClipboard} color={copied ? "green" : "indigo"} className={`transition-transform duration-200 ${copied ? 'scale-110' : ''}`}>
+                            <ClipboardCopy size={20} />
+                        </IconButton>
+                    </div>
+                    {copied && (
+                        <Typography className="mt-2 text-green-500 text-sm animate-bounce">¡Link copiado!</Typography>
+                    )}
+                </DialogBody>
+                <DialogFooter>
+                    <Button variant="gradient" color="red" onClick={handleOpen} className="mr-2">Cancelar</Button>
+                    <Button variant="gradient" color="indigo" onClick={copyToClipboard}>Copiar Link</Button>
+                </DialogFooter>
+            </Dialog>
+
         </>
     );
 }
