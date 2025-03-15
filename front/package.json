@@ -31,7 +31,8 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "6.17.0",
     "react-select": "^5.10.1",
-    "recharts": "^2.7.2"
+    "recharts": "^2.7.2",
+    "use-react-countries": "^2.0.1"
   },
   "devDependencies": {
     "@types/react": "18.2.31",

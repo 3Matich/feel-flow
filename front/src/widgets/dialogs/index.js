@@ -1,0 +1,1 @@
+export * from "@/widgets/dialogs/edit-profile-dialog";

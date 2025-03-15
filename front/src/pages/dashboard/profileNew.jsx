@@ -2,34 +2,25 @@ import React from "react";
 import {
     Card,
     CardBody,
-    CardHeader,
-    CardFooter,
     Avatar,
     Typography,
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
     Switch,
     Tooltip,
     Button,
-    Modal,
     Dialog,
     DialogHeader,
     DialogBody,
     DialogFooter,
-    IconButton,
 } from "@material-tailwind/react";
 import {
     HomeIcon,
     ChatBubbleLeftEllipsisIcon,
     Cog6ToothIcon,
     PencilIcon,
-    CheckBadgeIcon,
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import { ProfileInfoCard, MessageCard, ProfileEditCard } from "@/widgets/cards";
+import { EditProfileDialog } from "@/widgets/dialogs";
 import { platformSettingsData, conversationsData, projectsData, profileData } from "@/data";
 import EditableProfileInfo from "@/widgets/cards/profile-info";
 import { useDragAndDrop } from "@/hooks";
@@ -41,7 +32,7 @@ export function ProfileNew() {
     const { handleDragOver, handleDrop, handleImageChange, handleRemoveImage, logoPreview } = useDragAndDrop();
     const [isEditing, setIsEditing] = React.useState(false);
 
-
+    
     const handleOpen = () => setOpen(!open)
 
     const [darkMode, setDarkMode] = React.useState(
@@ -115,7 +106,6 @@ export function ProfileNew() {
 
     return (
         <>
-
             <Card className="mx-3 mt-8 mb-6 bg-light-bg dark:bg-feel-1 lg:mx-4 border border-blue-gray-100">
                 <CardBody className="p-4">
                     <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
@@ -250,52 +240,38 @@ export function ProfileNew() {
                         )}
                         */}
                         {profileData.map(
-                            ({ name, surname, username, description, mobile, location }) => (
+                            ({ name, surname, username, description, mobile, location, job }) => (
                                 <>
-                                    {isEditing ? (
-
-                                        <ProfileEditCard
-                                            title="Profile Information"
-                                            description={description}
-                                            isEditing={isEditing}
-                                            setIsEditing={setIsEditing}
-                                            details={{
-                                                nombre: name + " " + surname,
-                                                telefono: mobile,
+                                    {isEditing && (
+                                        <EditProfileDialog
+                                            data={{
+                                                name: name,
+                                                surname: surname,
+                                                telephone: mobile,
                                                 email: username,
-                                                ubicacion: location,
+                                                location: location,
+                                                job: job
                                             }}
-                                            
-                                            // action={
-                                            //     <Tooltip content="Save Profile">
-                                            //         <IconButton className="color-transparent" onClick={() => setIsEditing(!isEditing)}>
-                                            //             <i className="fa fa-floppy-o" />
-                                            //             {/* <CheckBadgeIcon className="h-4 w-4 cursor-pointer text-blue-gray-500"  /> */}
-
-                                            //         </IconButton>
-                                            //     </Tooltip>
-                                            // }
+                                            desc= {description}
                                         />
-                                    ) : (
-                                        <ProfileInfoCard
-                                            title="Profile Information"
-                                            description={description}
-                                            isEditing={isEditing}
-                                            setIsEditing={setIsEditing}
-                                            details={{
-                                                nombre: name + " " + surname,
-                                                telefono: mobile,
-                                                email: username,
-                                                ubicacion: location,
-                                            }}
-                                            action={
-                                                <Tooltip content="Edit Profile">
-                                                    <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" onClick={() => setIsEditing(!isEditing)} />
-                                                </Tooltip>
-                                            }
-                                        />
-
                                     )}
+                                    <ProfileInfoCard
+                                        title="Profile Information"
+                                        description={description}
+                                        isEditing={isEditing}
+                                        setIsEditing={setIsEditing}
+                                        details={{
+                                            nombre: name + " " + surname,
+                                            telefono: mobile,
+                                            email: username,
+                                            ubicacion: location,
+                                        }}
+                                        action={
+                                            <Tooltip content="Edit Profile">
+                                                <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" onClick={() => setIsEditing(!isEditing)} />
+                                            </Tooltip>
+                                        }
+                                    />
                                 </>
                             )
                         )}
