@@ -16,6 +16,11 @@
     "@mui/lab": "^6.0.0-beta.25",
     "@mui/material": "^6.4.6",
     "@mui/x-date-pickers": "^7.24.1",
+    "@nivo/heatmap": "^0.88.0",
+    "@nivo/radar": "^0.88.0",
+    "@nivo/sankey": "^0.88.0",
+    "@nivo/sunburst": "^0.88.0",
+    "@nivo/treemap": "^0.88.0",
     "apexcharts": "3.44.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
@@ -32,7 +37,9 @@
     "react-router-dom": "6.17.0",
     "react-select": "^5.10.1",
     "recharts": "^2.7.2",
-    "use-react-countries": "^2.0.1"
+    "use-react-countries": "^2.0.1",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3"
   },
   "devDependencies": {
     "@types/react": "18.2.31",

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 import {
   Navbar,
   Typography,
@@ -23,11 +25,14 @@ import {
   setOpenConfigurator,
 } from "@/context";
 
-const events = [
-    { user: "Pedro", action: "actualizó el estado de Kudos", time: "Hace 2 horas", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
-    { user: "María", action: "completó la encuesta de 12 Pasos", time: "Hace 4 horas", avatar: "https://randomuser.me/api/portraits/women/2.jpg" },
-    { user: "Carlos", action: "agregó un comentario en Niko Niko", time: "Ayer", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
-    { user: "Ana", action: "marcó Niko Niko como revisado", time: "Hace 1 día", avatar: "https://randomuser.me/api/portraits/women/4.jpg" },
+const sampleNotifications = [
+  {
+    "id": 4,
+    "title": "Nueva tarea",
+    "message": "Revisar el módulo X",
+    "time": "Hace 5 minutos",
+    "avatar": "https://randomuser.me/api/portraits/men/4.jpg"
+  }
 ];
 
 export function DashboardNavbar({ onLogout }) {
@@ -36,17 +41,20 @@ export function DashboardNavbar({ onLogout }) {
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
 
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState(sampleNotifications);
 
   useEffect(() => {
-    const formattedEvents = events.map((event, index) => ({
-      id: index + 1,
-      title: event.user,
-      message: event.action,
-      time: event.time,
-      avatar: event.avatar, // Imagen específica para cada notificación
-    }));
-    setNotifications(formattedEvents);
+    const socket = new SockJS("https://example.com/ws");
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, () => {
+      stompClient.subscribe("/topic/teamUUID", (message) => {
+        const newNotification = JSON.parse(message.body);
+        setNotifications((prev) => [newNotification, ...prev]);
+      });
+    });
+
+    return () => stompClient.disconnect();
   }, []);
 
   return (
