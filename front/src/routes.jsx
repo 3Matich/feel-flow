@@ -91,36 +91,36 @@ export const routes = [
     ],
   }
   ,
-  // {
-  //   title: "auth pages",
-  //   layout: "auth",
-  //   pages: [
-  //     {
-  //       icon: <ServerStackIcon {...icon} />,
-  //       name: "sign in",
-  //       path: "/sign-in",
-  //       element: <SignIn />,
-  //     },
-  //     {
-  //       icon: <ServerStackIcon {...icon} />,
-  //       name: "sign in new",
-  //       path: "/sign-in-new",
-  //       element: <SignInNew />,
-  //     },
-  //     {
-  //       icon: <RectangleStackIcon {...icon} />,
-  //       name: "sign up",
-  //       path: "/sign-up",
-  //       element: <SignUp />,
-  //     },
-  //     {
-  //       icon: <RectangleStackIcon {...icon} />,
-  //       name: "sign up new",
-  //       path: "/sign-up-new",
-  //       element: <SignUpNew />,
-  //     },
-  //   ],
-  // },
+  {
+    title: "auth pages",
+    layout: "auth",
+    pages: [
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "sign in",
+        path: "/sign-in",
+        element: <SignIn />,
+      },
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "sign in new",
+        path: "/sign-in-new",
+        element: <SignInNew />,
+      },
+      {
+        icon: <RectangleStackIcon {...icon} />,
+        name: "sign up",
+        path: "/sign-up",
+        element: <SignUp />,
+      },
+      {
+        icon: <RectangleStackIcon {...icon} />,
+        name: "sign up new",
+        path: "/sign-up-new",
+        element: <SignUpNew />,
+      },
+    ],
+  },
   ,
   {
     title: "Personal pages",
