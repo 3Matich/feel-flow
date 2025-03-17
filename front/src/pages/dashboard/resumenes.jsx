@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { GetEquipos } from "../../services/GetEquipos"; // Ajustar ruta si es necesario
+import { GetEquipos } from "../../services/GetEquipos"; // Ajusta la ruta según tu estructura
 import TeamSelector from "../../components/TeamSelector";
 import NikoNikoTable from "../../components/NikoNikoTable";
 import HappinessChart from "../../components/HappinessChart";
@@ -18,7 +18,12 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
   Squares2X2Icon,
+  HomeIcon,
 } from "@heroicons/react/24/solid";
+
+// Importa la página Home
+import { Home } from "./Home"; // Ajusta la ruta según tu estructura
+import { GeneralMetrics } from "./GeneralMetrics";
 
 export function Resumenes() {
   const [teams, setTeams] = useState([]);
@@ -64,7 +69,7 @@ export function Resumenes() {
         const response = await GetEquipos(token);
         setTeams(response);
 
-        // Simulación de miembros y datos NicoNiko
+        // Simulación de miembros y datos Niko Niko
         const mockTeamMembers = ["Juan", "María", "Pedro", "Lucía"];
         const mockNikoData = mockTeamMembers.reduce((acc, member) => {
           acc[member] = Array.from({ length: 30 }, () => Math.floor(Math.random() * 3) + 1);
@@ -109,8 +114,14 @@ export function Resumenes() {
       ? teamData?.averages || []
       : teamData?.members[parseInt(selectedMember, 10)]?.responses || [];
 
-  // Datos para las pestañas
+  // Datos para las pestañas, incluyendo la pestaña "Home" como la primera
   const tabsData = [
+    {
+      label: "Home",
+      value: "home",
+      icon: HomeIcon,
+      element: <Home />,
+    },
     {
       label: "Niko Niko",
       value: "nikoNiko",
@@ -204,7 +215,7 @@ export function Resumenes() {
           </div>
         </div>
       ),
-    },
+    }
   ];
 
   return (
@@ -212,9 +223,11 @@ export function Resumenes() {
       <Helmet>
         <title>Dashboard</title>
       </Helmet>
-      <DashboardHeader />
+      {/* <DashboardHeader /> */}
+      <GeneralMetrics />
       <div className="mt-12">
-        <Tabs value="nikoNiko">
+        {/* Se establece el valor por defecto de la pestaña a "home" */}
+        <Tabs value="home">
           <TabsHeader>
             {tabsData.map(({ label, value, icon }) => (
               <Tab key={value} value={value}>
