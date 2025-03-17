@@ -7,6 +7,18 @@ import HappinessChart from "../../components/HappinessChart";
 import DashboardHeader from "../../components/DashboardHeader";
 import PodiumChart from "../../components/PodiumChart";
 import { Autocomplete, TextField } from "@mui/material";
+import {
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  TabPanel,
+} from "@material-tailwind/react";
+import {
+  UserCircleIcon,
+  Cog6ToothIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/solid";
 
 export function Resumenes() {
   const [teams, setTeams] = useState([]);
@@ -47,7 +59,6 @@ export function Resumenes() {
         console.error("Token no encontrado. Redirigiendo al login.");
         return;
       }
-
       try {
         setLoading(true);
         const response = await GetEquipos(token);
@@ -98,41 +109,58 @@ export function Resumenes() {
       ? teamData?.averages || []
       : teamData?.members[parseInt(selectedMember, 10)]?.responses || [];
 
-  return (
-    <div className="mt-12">
-      
-      <Helmet>
-        <title>Dashboard</title>
-      </Helmet>
-      <div className="mt-12">
-        <DashboardHeader />
-        {loading && <p className="text-blue-500 font-semibold text-center">Cargando equipos...</p>}
-        {error && <p className="text-red-500 font-semibold text-center">{error}</p>}
-        <TeamSelector
-          teams={teams}
-          selectedTeam={selectedTeam}
-          setSelectedTeam={setSelectedTeam}
-          months={months}
-          selectedMonth={selectedMonth}
-          setSelectedMonth={setSelectedMonth}
-        />
-        <NikoNikoTable teamMembers={teamMembers} nikoData={nikoData} />
-        {teamData && (
-          <HappinessChart
-            teamData={teamData}
-            selectedMember={selectedMember}
-            setSelectedMember={setSelectedMember}
-            selectedSprint={selectedSprint}
-            setSelectedSprint={setSelectedSprint}
-            selectedData={selectedData}
+  // Datos para las pestañas
+  const tabsData = [
+    {
+      label: "Niko Niko",
+      value: "nikoNiko",
+      icon: UserCircleIcon,
+      element: (
+        <div>
+          {loading && <p className="text-blue-500 font-semibold text-center">Cargando equipos...</p>}
+          {error && <p className="text-red-500 font-semibold text-center">{error}</p>}
+          <TeamSelector
+            teams={teams}
+            selectedTeam={selectedTeam}
+            setSelectedTeam={setSelectedTeam}
+            months={months}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
           />
-        )}
-
+          <NikoNikoTable teamMembers={teamMembers} nikoData={nikoData} />
+        </div>
+      ),
+    },
+    {
+      label: "12 Pasos de la Felicidad",
+      value: "felicidad",
+      icon: Squares2X2Icon,
+      element: (
+        <div>
+          {teamData ? (
+            <HappinessChart
+              teamData={teamData}
+              selectedMember={selectedMember}
+              setSelectedMember={setSelectedMember}
+              selectedSprint={selectedSprint}
+              setSelectedSprint={setSelectedSprint}
+              selectedData={selectedData}
+            />
+          ) : (
+            <p className="text-blue-500 font-semibold text-center">Cargando datos...</p>
+          )}
+        </div>
+      ),
+    },
+    {
+      label: "Kudos",
+      value: "kudos",
+      icon: Cog6ToothIcon,
+      element: (
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-center mb-4">Kudos Dashboard</h2>
           <div className="p-4 bg-gray-100 rounded-lg shadow-md">
             <div className="flex gap-4 mb-4 justify-center">
-              {/* Autocomplete para seleccionar Miembro */}
               <Autocomplete
                 options={Object.keys(kudosData["Sprint 1"] || {})}
                 value={selectedKudosMember}
@@ -149,8 +177,6 @@ export function Resumenes() {
                   />
                 )}
               />
-
-              {/* Autocomplete para seleccionar Sprint */}
               <Autocomplete
                 options={Object.keys(kudosData || {})}
                 value={selectedKudosSprint}
@@ -168,7 +194,6 @@ export function Resumenes() {
                 )}
               />
             </div>
-
             {selectedKudosSprint && selectedKudosMember && kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
               <PodiumChart data={kudosData[selectedKudosSprint][selectedKudosMember]} />
             ) : (
@@ -178,7 +203,36 @@ export function Resumenes() {
             )}
           </div>
         </div>
+      ),
+    },
+  ];
 
+  return (
+    <div className="mt-12">
+      <Helmet>
+        <title>Dashboard</title>
+      </Helmet>
+      <DashboardHeader />
+      <div className="mt-12">
+        <Tabs value="nikoNiko">
+          <TabsHeader>
+            {tabsData.map(({ label, value, icon }) => (
+              <Tab key={value} value={value}>
+                <div className="flex items-center gap-2">
+                  {React.createElement(icon, { className: "w-5 h-5" })}
+                  {label}
+                </div>
+              </Tab>
+            ))}
+          </TabsHeader>
+          <TabsBody>
+            {tabsData.map(({ value, element }) => (
+              <TabPanel key={value} value={value}>
+                {element}
+              </TabPanel>
+            ))}
+          </TabsBody>
+        </Tabs>
       </div>
     </div>
   );
