@@ -46,30 +46,30 @@ export const routes = [
       //   path: "/resumenes",
       //   element: <Resumenes />,
       // },
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "profile",
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        icon: <UserCircleIcon {...icon} />,
-        name: "profile2",
-        path: "/profile2",
-        element: <ProfileNew />,
-      },
-      {
-        icon: <TableCellsIcon {...icon} />,
-        name: "tables",
-        path: "/tables",
-        element: <Tables />,
-      },
-      {
-        icon: <InformationCircleIcon {...icon} />,
-        name: "notifications",
-        path: "/notifications",
-        element: <Notifications />,
-      },
+      // {
+      //   icon: <UserCircleIcon {...icon} />,
+      //   name: "profile",
+      //   path: "/profile",
+      //   element: <Profile />,
+      // },
+      // {
+      //   icon: <UserCircleIcon {...icon} />,
+      //   name: "profile2",
+      //   path: "/profile2",
+      //   element: <ProfileNew />,
+      // },
+      // {
+      //   icon: <TableCellsIcon {...icon} />,
+      //   name: "tables",
+      //   path: "/tables",
+      //   element: <Tables />,
+      // },
+      // {
+      //   icon: <InformationCircleIcon {...icon} />,
+      //   name: "notifications",
+      //   path: "/notifications",
+      //   element: <Notifications />,
+      // },
       {
         icon: <ComputerDesktopIcon {...icon} />,
         name: "modules",
@@ -78,7 +78,7 @@ export const routes = [
       },
       {
         icon: <UserGroupIcon {...icon} />,
-        name: "team",
+        name: "Team Members",
         path: "/team",
         element: <Team />,
       },
@@ -89,35 +89,49 @@ export const routes = [
         element: <Teams />,
       },
     ],
-  },
+  }
+  ,
+  // {
+  //   title: "auth pages",
+  //   layout: "auth",
+  //   pages: [
+  //     {
+  //       icon: <ServerStackIcon {...icon} />,
+  //       name: "sign in",
+  //       path: "/sign-in",
+  //       element: <SignIn />,
+  //     },
+  //     {
+  //       icon: <ServerStackIcon {...icon} />,
+  //       name: "sign in new",
+  //       path: "/sign-in-new",
+  //       element: <SignInNew />,
+  //     },
+  //     {
+  //       icon: <RectangleStackIcon {...icon} />,
+  //       name: "sign up",
+  //       path: "/sign-up",
+  //       element: <SignUp />,
+  //     },
+  //     {
+  //       icon: <RectangleStackIcon {...icon} />,
+  //       name: "sign up new",
+  //       path: "/sign-up-new",
+  //       element: <SignUpNew />,
+  //     },
+  //   ],
+  // },
+  ,
   {
-    title: "auth pages",
-    layout: "auth",
+    title: "Personal pages",
+    layout: "dashboard",
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in",
-        path: "/sign-in",
-        element: <SignIn />,
-      },
-      {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in new",
-        path: "/sign-in-new",
-        element: <SignInNew />,
-      },
-      {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up",
-        path: "/sign-up",
-        element: <SignUp />,
-      },
-      {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up new",
-        path: "/sign-up-new",
-        element: <SignUpNew />,
-      },
+        icon: <UserCircleIcon {...icon} />,
+        name: "profile",
+        path: "/profile2",
+        element: <ProfileNew />,
+      }
     ],
   },
 ];
