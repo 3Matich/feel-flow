@@ -13,8 +13,8 @@ const kudosData = [
 ];
 
 const nikoNikoNotes = [
-  { member: "Juan Pérez", note: "Día productivo" },
-  { member: "Ana López", note: "Un poco estresado, pero bien" },
+  { member: "Juan Pérez", note: "Día productivo", img: "https://randomuser.me/api/portraits/men/1.jpg" },
+  { member: "Ana López", note: "Un poco estresado, pero bien", img: "https://randomuser.me/api/portraits/women/1.jpg" },
 ];
 
 export function LatestRecords() {
@@ -59,12 +59,16 @@ export function LatestRecords() {
           </Typography>
         </CardHeader>
         <CardBody className="pt-0">
-          {nikoNikoNotes.map(({ member, note }, key) => (
+          {nikoNikoNotes.map(({ member, note, img }, key) => (
             <div key={key} className="flex items-start gap-4 py-3">
-              <Avatar size="lg" alt={member} />
+              <Avatar size="lg" alt={member} src={img} />
               <div>
-                <Typography variant="small" className="block font-medium">{member}</Typography>
-                <Typography variant="small" className="text-xs font-medium text-blue-gray-500">{note}</Typography>
+                <Typography variant="small" className="block font-medium">
+                  {member}
+                </Typography>
+                <Typography variant="small" className="text-xs font-medium text-blue-gray-500">
+                  {note}
+                </Typography>
               </div>
             </div>
           ))}
