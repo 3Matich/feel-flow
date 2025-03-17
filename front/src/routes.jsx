@@ -121,7 +121,6 @@ export const routes = [
       },
     ],
   },
-  ,
   {
     title: "Personal pages",
     layout: "dashboard",
