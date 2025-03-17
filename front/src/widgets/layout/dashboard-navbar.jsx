@@ -24,10 +24,10 @@ import {
 } from "@/context";
 
 const events = [
-    { user: "Pedro", action: "actualizó el estado de Kudos", time: "Hace 2 horas", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
-    { user: "María", action: "completó la encuesta de 12 Pasos", time: "Hace 4 horas", avatar: "https://randomuser.me/api/portraits/women/2.jpg" },
-    { user: "Carlos", action: "agregó un comentario en Niko Niko", time: "Ayer", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
-    { user: "Ana", action: "marcó Niko Niko como revisado", time: "Hace 1 día", avatar: "https://randomuser.me/api/portraits/women/4.jpg" },
+    { user: "Pedro", action: "actualizó el estado de Kudos", time: "Hace 2 horas", avatar: "/img/team-2.jpeg"},
+    { user: "María", action: "completó la encuesta de 12 Pasos", time: "Hace 4 horas", avatar: "/img/team-3.jpeg" },
+    { user: "Carlos", action: "agregó un comentario en Niko Niko", time: "Ayer", avatar: "/img/team-4.jpeg" },
+    { user: "Lucia", action: "marcó Niko Niko como revisado", time: "Hace 1 día", avatar: "https://randomuser.me/api/portraits/women/1.jpg" },
 ];
 
 export function DashboardNavbar({ onLogout }) {
