@@ -20,6 +20,8 @@ import {
   Modules,
   Team, 
   ProfileNew,
+  WellnessHub,
+  OwnTracking,
   Teams,
   Resumenes, // Importar la nueva página
 } from "@/pages/dashboard";
@@ -130,6 +132,18 @@ export const routes = [
         name: "profile",
         path: "/profile2",
         element: <ProfileNew />,
+      },
+      {
+        icon: <UserCircleIcon {...icon} />,
+        name: "Own Tracking",
+        path: "/ownTracking",
+        element: <OwnTracking />,
+      },
+      {
+        icon: <UserCircleIcon {...icon} />,
+        name: "Wellness Hub",
+        path: "/WellnessHub",
+        element: <WellnessHub />,
       }
     ],
   },
