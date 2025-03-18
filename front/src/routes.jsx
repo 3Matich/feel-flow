@@ -40,12 +40,12 @@ export const routes = [
         path: "/home",
         element: <Home />,
       },
-      // {
-      //   icon: <DocumentTextIcon {...icon} />,
-      //   name: "resumenes",
-      //   path: "/resumenes",
-      //   element: <Resumenes />,
-      // },
+      {
+        icon: <DocumentTextIcon {...icon} />,
+        name: "Calendar",
+        path: "/resumenes",
+        element: <Resumenes />,
+      },
       // {
       //   icon: <UserCircleIcon {...icon} />,
       //   name: "profile",
