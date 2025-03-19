@@ -44,9 +44,9 @@ export function Dashboard({ onLogout }) {
               ))
           )}
         </Routes>
-        <div className="text-blue-gray-600">
+        {/* <div className="text-blue-gray-600">
           <Footer />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -54,7 +54,7 @@ export function NikoNiko() {
                     Seleccione las opciones para configurar el módulo.
                 </Typography>
                 <form className="mt-4">
-                    <div className="mb-1 flex flex-col gap-4">
+                    <div className="mb-2 flex flex-col gap-4">
                         <Typography variant="h6" color="blue-gray">
                             Equipo
                         </Typography>
@@ -71,6 +71,7 @@ export function NikoNiko() {
                             Fecha de Fin del módulo
                         </Typography>
                         <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
+                        {/*  
                         <div className="mb-4">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateTimePicker
@@ -81,8 +82,9 @@ export function NikoNiko() {
                                 />
                             </LocalizationProvider>
                         </div>
+                        */}
                     </div>
-                    <Button className="mt-4" fullWidth color={sidenavColor}>
+                    <Button className="mt-6" fullWidth color={sidenavColor}>
                         Guardar
                     </Button>
                 </form>

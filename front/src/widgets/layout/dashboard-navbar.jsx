@@ -52,7 +52,7 @@ export function DashboardNavbar({ onLogout }) {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all ${
+      className={`rounded-xl transition-all mb-4 ${
         fixedNavbar
           ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
           : "px-0 py-1"
@@ -62,7 +62,7 @@ export function DashboardNavbar({ onLogout }) {
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
-          <Breadcrumbs className={`bg-transparent p-0 ${fixedNavbar ? "mt-1" : ""}`}>
+          {/* <Breadcrumbs className={`bg-transparent p-0 ${fixedNavbar ? "mt-1" : ""}`}>
             <Link to={`/${layout}`}>
               <Typography
                 variant="small"
@@ -75,16 +75,17 @@ export function DashboardNavbar({ onLogout }) {
             <Typography variant="small" color="blue-gray" className="font-normal">
               {page}
             </Typography>
-          </Breadcrumbs>
+          </Breadcrumbs> */}
           <Typography variant="h6" color="blue-gray">
             {page}
           </Typography>
         </div>
         <div className="flex items-center">
+          {/*  
           <IconButton variant="text" color="blue-gray" onClick={onLogout}>
             <ArrowLeftOnRectangleIcon className="h-5 w-5 text-blue-gray-500" />
           </IconButton>
-
+          */}
           <Badge content={notifications.length}>
             <Menu>
               <MenuHandler>
