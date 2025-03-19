@@ -18,27 +18,7 @@ export const platformSettingsData = [
         label: "Modo oscuro",
       },
     ],
-  },
-  {
-    title: "Aplicacion",
-    options: [
-      {
-        checked: false,
-        change: "newReleases",
-        label: "Nuevos lanzamientos y proyectos",
-      },
-      {
-        checked: true,
-        change: "monthlyUpdates",
-        label: "Actualizaciones mensuales de productos",
-      },
-      {
-        checked: false,
-        change: "newsletter",
-        label: "Suscríbete al boletín de FeelFlow",
-      },
-    ],
-  },
+  }
 ];
 
 export default platformSettingsData;
