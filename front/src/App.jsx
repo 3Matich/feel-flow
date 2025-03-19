@@ -26,7 +26,7 @@ function App() {
       {isAuthenticated ? (
         <>
           <Route path="/dashboard/*" element={<Dashboard onLogout={handleLogout} />} />
-          <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard/general" replace />} />
         </>
       ) : (
         <>
