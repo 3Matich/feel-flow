@@ -70,8 +70,7 @@ export function NikoNiko() {
                         <Typography variant="h6" color="blue-gray">
                             Fecha de Fin del módulo
                         </Typography>
-                        <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
-                        {/*  
+                        <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" /> 
                         <div className="mb-4">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateTimePicker
@@ -82,7 +81,6 @@ export function NikoNiko() {
                                 />
                             </LocalizationProvider>
                         </div>
-                        */}
                     </div>
                     <Button className="mt-6" fullWidth color={sidenavColor}>
                         Guardar

@@ -65,7 +65,6 @@ export function Kudos() {
                             Fecha de Fin del módulo
                         </Typography>
                         <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
-                        {/*  
                         <div className="mb-4">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateTimePicker
@@ -76,7 +75,6 @@ export function Kudos() {
                                 />
                             </LocalizationProvider>
                         </div>
-                        */}
                     </div>
                     <Button className="mt-6" fullWidth color={sidenavColor}>
                         Guardar
