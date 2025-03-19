@@ -23,6 +23,7 @@ import {
   Cog6ToothIcon,
   Squares2X2Icon,
   HomeIcon,
+  EyeIcon
 } from "@heroicons/react/24/solid";
 
 
@@ -118,9 +119,9 @@ export function Home() {
   // Datos para las pestañas, incluyendo la pestaña "Home" como la primera
   const tabsData = [
     {
-      label: "Home",
+      label: "Resumen",
       value: "home",
-      icon: HomeIcon,
+      icon: EyeIcon,
       element: (
         <div className="mt-12">
           {/* <GeneralMetrics /> */}

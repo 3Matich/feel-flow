@@ -194,7 +194,7 @@ export function OwnTracking() {
         transition={{ duration: 0.5 }}
         className="text-3xl font-bold text-center mb-8"
       >
-        Own Tracking
+        Autogestión
       </motion.h1>
 
       {/* Sección de Tareas y Objetivos en dos columnas */}

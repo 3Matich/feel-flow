@@ -1,15 +1,15 @@
-// src/routes.js
 import {
   HomeIcon,
-  UserCircleIcon,
-  TableCellsIcon,
-  InformationCircleIcon,
-  ServerStackIcon,
-  RectangleStackIcon,
+  DocumentTextIcon,
   ComputerDesktopIcon,
   UserGroupIcon,
   UserPlusIcon,
-  DocumentTextIcon, // Nuevo ícono para "Resúmenes"
+  ServerStackIcon,
+  RectangleStackIcon,
+  UserCircleIcon,
+  // Para las páginas de autogestión y bienestar se utilizan iconos diferentes:
+  ClipboardDocumentIcon,
+  HeartIcon,
 } from "@heroicons/react/24/solid";
 
 import { 
@@ -23,7 +23,7 @@ import {
   WellnessHub,
   OwnTracking,
   Teams,
-  Resumenes, // Importar la nueva página
+  Resumenes,
 } from "@/pages/dashboard";
 
 import { SignIn, SignUp, SignInNew, SignUpNew } from "@/pages/auth";
@@ -38,14 +38,14 @@ export const routes = [
     pages: [
       {
         icon: <HomeIcon {...icon} />,
-        name: "dashboard",
-        path: "/home",
+        name: "General",
+        path: "/general",
         element: <Home />,
       },
       {
         icon: <DocumentTextIcon {...icon} />,
-        name: "Calendar",
-        path: "/resumenes",
+        name: "Calendario",
+        path: "/calendario",
         element: <Resumenes />,
       },
       // {
@@ -74,25 +74,24 @@ export const routes = [
       // },
       {
         icon: <ComputerDesktopIcon {...icon} />,
-        name: "modules",
-        path: "/modules",
+        name: "modulos",
+        path: "/modulos",
         element: <Modules />,
       },
       {
         icon: <UserGroupIcon {...icon} />,
-        name: "Team Members",
-        path: "/team",
+        name: "Miembros",
+        path: "/miembros",
         element: <Team />,
       },
       {
         icon: <UserPlusIcon {...icon} />,
-        name: "teams",
-        path: "/teams",
+        name: "Equipos",
+        path: "/equipos",
         element: <Teams />,
       },
     ],
-  }
-  ,
+  },
   {
     title: "auth pages",
     layout: "auth",
@@ -129,19 +128,21 @@ export const routes = [
     pages: [
       {
         icon: <UserCircleIcon {...icon} />,
-        name: "profile",
-        path: "/profile2",
+        name: "Perfil",
+        path: "/perfil",
         element: <ProfileNew />,
       },
       {
-        icon: <UserCircleIcon {...icon} />,
-        name: "Own Tracking",
-        path: "/ownTracking",
+        // Para Autogestión, se usa un icono que representa el control personal
+        icon: <ClipboardDocumentIcon {...icon} />,
+        name: "Autogestion",
+        path: "/autogestion",
         element: <OwnTracking />,
       },
       {
-        icon: <UserCircleIcon {...icon} />,
-        name: "Wellness Hub",
+        // Para Bienestar, se usa un icono de corazón que representa cuidado y bienestar
+        icon: <HeartIcon {...icon} />,
+        name: "Bienestar",
         path: "/WellnessHub",
         element: <WellnessHub />,
       }

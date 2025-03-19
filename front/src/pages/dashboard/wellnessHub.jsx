@@ -56,7 +56,7 @@ export function WellnessHub() {
       onClick={onClick}
     >
       <Icon className="w-12 h-12" />
-      <h3 className="text-xl font-bold">{title}</h3>
+      <h3 className="text-xl font-bold text-center">{title}</h3>
       <p className="text-center text-sm">{description}</p>
     </motion.div>
   );
@@ -69,7 +69,7 @@ export function WellnessHub() {
         transition={{ duration: 0.5 }}
         className="text-4xl font-extrabold text-center"
       >
-        Wellness Hub & Analytics
+        Bienestar y Analiticas
       </motion.h1>
 
       {/* Menú de secciones */}
