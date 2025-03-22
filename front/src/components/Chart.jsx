@@ -1,40 +1,54 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { TOPICS } from "./topics"; // Importa desde topics.js
+import { TOPICS } from "./topics";
 
 export const renderChart = (data) => {
   return (
-    <div className="flex items-end justify-between h-64 gap-2">
+    <div className="relative flex items-end justify-between h-64 gap-2 overflow-visible">
       {data.map((value, index) => {
         const numericValue = typeof value === "number" ? value : 0;
+        const topic = TOPICS[index];
+
         return (
-          <div key={index} className="flex flex-col items-center w-1/12">
-            <div
-              className="relative w-8 h-48 bg-gray-200 rounded-md overflow-hidden flex justify-center"
-              title={TOPICS[index].name}
-            >
+          <div key={index} className="flex flex-col items-center w-1/12 relative group overflow-visible">
+            {/* Contenedor de la barra */}
+            <div className="relative w-8 h-48 bg-gray-200 rounded-md flex justify-center">
+              {/* Barra azul con tooltip */}
               <motion.div
-                className="absolute bottom-0 left-0 rounded-md"
+                className="absolute bottom-0 left-0 w-full rounded-md group-hover:z-40"
                 style={{
                   height: `${Math.max((numericValue / 5) * 100, 10)}%`,
-                  width: "100%",
-                  backgroundColor: "#3498db", // Color base de la barra
+                  backgroundColor: "#3498db",
                 }}
                 whileHover={{
-                  scaleY: 1.1, // Escala verticalmente
-                  scaleX: 1.05, // Escala ligeramente horizontal
-                  backgroundColor: "#2980b9", // Cambia a un tono más oscuro
-                  boxShadow: "0px 4px 10px rgba(0,0,0,0.3)", // Sombra emergente
+                  scaleY: 1.1,
+                  scaleX: 1.05,
+                  backgroundColor: "#2980b9",
+                  boxShadow: "0px 4px 10px rgba(0,0,0,0.3)",
                   transition: { duration: 0.3 },
                 }}
-              ></motion.div>
+              >
+                {/* Tooltip posicionado arriba */}
+                <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 hidden group-hover:flex flex-col items-center z-50">
+                  <div className="bg-gray-800 text-white text-xs px-3 py-1 rounded-lg shadow-md opacity-95">
+                    {numericValue.toFixed(2)}
+                  </div>
+                  <div className="w-2 h-2 bg-gray-800 rotate-45 mt-[-2px]" />
+                </div>
+              </motion.div>
             </div>
-            <span className="mt-2 text-xl" role="img" aria-label={TOPICS[index].name}>
-              {TOPICS[index].icon}
-            </span>
-            <p className="mt-1 text-sm text-gray-600">{numericValue.toFixed(2)}</p>
+
+            {/* Ícono SVG */}
+            <img
+              src={topic.icon}
+              alt={topic.name}
+              className="mt-1 w-14 h-14"
+              title={topic.name}
+            />
+
+            {/* Nombre del tópico */}
             <p className="text-xs text-center mt-1 text-gray-800 h-10 overflow-hidden">
-              {TOPICS[index].name}
+              {topic.name}
             </p>
           </div>
         );
