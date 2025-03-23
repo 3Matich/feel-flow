@@ -1,70 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
 
 function NikoNikoTable({ teamMembers, nikoData }) {
+  const [dayPage, setDayPage] = useState(0);
+
+  const membersPerPage = 7;
+  const daysPerPage = 7;
+
+  const currentMembers = teamMembers.slice(0, membersPerPage); // Solo los primeros 7
+  const totalDayPages = Math.ceil(30 / daysPerPage);
+
+  const currentDays = Array.from({ length: 30 }, (_, i) => i + 1).slice(
+    dayPage * daysPerPage,
+    dayPage * daysPerPage + daysPerPage
+  );
+
   const getFaceWithColor = (value) => {
-    // Rutas de los íconos para cada estado de ánimo
     const moodIcons = [
-      "/public/icons/1_mood_w.svg",   // Muy Feliz
-      // "/public/icons/2_mood_w.svg",   // Feliz
-      // "/public/icons/b_p_mood_w.svg", // No tan bien
-      "/public/icons/n_mood_w.svg",   // Neutral
-      // "/public/icons/-1_mood_w.svg",  // Triste
-      "/public/icons/-2_mood_w.svg"   // Muy Triste
+      "/icons/1_mood_w.svg",   // Muy feliz
+      "/icons/n_mood_w.svg",   // Neutral
+      "/icons/-2_mood_w.svg"   // Muy triste
     ];
 
-    // Colores correspondientes a cada estado de ánimo
     const moodColors = [
-      "bg-green-500",  // Muy Feliz
-      // "bg-green-400",  // Feliz
-      // "bg-yellow-400", // No tan bien
-      "bg-gray-400",   // Neutral
-      // "bg-yellow-600", // Triste
-      "bg-red-500"     // Muy Triste
+      "bg-green-500",
+      "bg-gray-400",
+      "bg-red-500"
     ];
+
+    const index = value === 1 ? 0 : value === 2 ? 1 : 2;
 
     return (
-      <div
-        className={`${moodColors[value - 1]} w-12 h-12 rounded-full flex items-center justify-center`}
-      >
-        <img
-          src={moodIcons[value - 1]}
-          alt={`Mood ${value}`}
-          className="w-10 h-10"
-        />
+      <div className={`${moodColors[index]} w-10 h-10 rounded-full flex items-center justify-center mx-auto`}>
+        <img src={moodIcons[index]} alt={`Mood ${value}`} className="w-8 h-8" />
       </div>
     );
   };
 
   return (
-    <div className="mt-8 overflow-x-auto bg-white rounded-lg shadow-lg p-6">
-      <table className="min-w-full text-sm table-auto border-separate border-spacing-0">
+    <div className="mt-4 bg-white rounded-lg shadow-lg p-6">
+      <table className="w-full text-sm table-auto border-separate border-spacing-0">
         <thead className="bg-gray-100">
           <tr>
-            <th className="px-6 py-3 text-gray-600 font-semibold text-center">
-              Miembro / Día
+            <th className="px-4 py-3 text-gray-600 font-semibold text-center w-32">
+              Miembro
             </th>
-            {Array.from({ length: 30 }, (_, i) => (
-              <th key={i} className="px-4 py-2 text-gray-600 text-center">
-                {i + 1}
+            {currentDays.map((day) => (
+              <th key={day} className="px-2 py-2 text-gray-600 text-center w-12">
+                {day}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {teamMembers.map((member) => (
+          {currentMembers.map((member) => (
             <tr key={member} className="border-b">
-              <td className="px-6 py-4 font-medium text-gray-700 text-center">
+              <td className="px-4 py-2 font-medium text-gray-700 text-center">
                 {member}
               </td>
-              {nikoData[member]?.map((value, i) => (
-                <td key={i} className="px-4 py-2 text-center">
-                  {getFaceWithColor(value)}
+              {currentDays.map((dayIndex) => (
+                <td key={dayIndex} className="px-2 py-1 text-center align-middle">
+                  {getFaceWithColor(nikoData[member]?.[dayIndex - 1])}
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Flechas de navegación centradas */}
+      <div className="flex justify-center mt-4 gap-4">
+        <button
+          onClick={() => setDayPage((prev) => Math.max(prev - 1, 0))}
+          disabled={dayPage === 0}
+          className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50 text-lg"
+        >
+          ←
+        </button>
+        <button
+          onClick={() => setDayPage((prev) => Math.min(prev + 1, totalDayPages - 1))}
+          disabled={dayPage === totalDayPages - 1}
+          className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50 text-lg"
+        >
+          →
+        </button>
+      </div>
     </div>
   );
 }
