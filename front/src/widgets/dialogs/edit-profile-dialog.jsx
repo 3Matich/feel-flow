@@ -50,13 +50,13 @@ export function EditProfileDialog(data, desc) {
     console.log(data.data);
     return (
         <>
-            <Dialog open={editProfile} handler={handler}>
+            <Dialog open={editProfile} handler={handler} className="text-light-text-secondary dark:text-dark-text-secondary bg-light-card dark:bg-dark-card">
                 <DialogHeader>
                     <div>
-                        <Typography variant="h5" color="blue-gray" className="mb-1">
+                        <Typography variant="h5" className="mb-1 text-light-text dark:text-dark-text">
                             {formData.name} {formData.surname}
                         </Typography>
-                        <Typography variant="small" className="font-normal text-blue-gray-600">
+                        <Typography variant="small" className="font-normal text-light-text-secondary dark:text-dark-text-secondary">
                             {formData.job[0]} / {formData.job[1]}
                         </Typography>
                     </div>
@@ -72,12 +72,13 @@ export function EditProfileDialog(data, desc) {
                             label="Sobre ti"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                            className="text-light-text-secondary dark:text-dark-text-secondary"
                         />
-                        <hr />
+                        <hr className="my-8 border-blue-gray-500 dark:border-white"/>
 
                         {/* Nombre y Apellido */}
                         <div className="grid grid-cols-5 gap-3 items-center">
-                            <Typography variant="h6" className="w-2">
+                            <Typography variant="h6" className="w-2 text-light-text dark:text-dark-text">
                                 Nombre
                             </Typography>
                             <div className="col-span-2">
@@ -88,6 +89,7 @@ export function EditProfileDialog(data, desc) {
                                     type="text"
                                     value={formData.surname}
                                     onChange={handleChange}
+                                    className="text-light-text-secondary dark:text-dark-text-secondary"
                                 />
                             </div>
                             <div className="col-span-2">
@@ -95,7 +97,7 @@ export function EditProfileDialog(data, desc) {
                                     label="Nombre"
                                     name="name"
                                     type="text"
-                                    className="w-20"
+                                    className="w-20 text-light-text-secondary dark:text-dark-text-secondary"
                                     value={formData.name}
                                     onChange={handleChange}
                                 />
@@ -105,7 +107,7 @@ export function EditProfileDialog(data, desc) {
 
                         {/* Telefono */}
                         <div className="grid grid-cols-5 gap-3 items-center">
-                            <Typography variant="h6" className="w-32">
+                            <Typography variant="h6" className="w-32 text-light-text dark:text-dark-text">
                                 Contacto
                             </Typography>
                             <div className="col-span-4">
@@ -113,6 +115,7 @@ export function EditProfileDialog(data, desc) {
                                     content={formData.telephone}
                                     name="telephone"
                                     onChange={handleChange}
+                                    className="text-light-text-secondary dark:text-dark-text-secondary"
                                 />
                             </div>
                         </div>
@@ -120,7 +123,7 @@ export function EditProfileDialog(data, desc) {
 
                         {/* Correo Electrónico */}
                         <div className="grid grid-cols-5 gap-3 items-center">
-                            <Typography variant="h6" className="w-32">
+                            <Typography variant="h6" className="w-32 text-light-text dark:text-dark-text">
                                 Email
                             </Typography>
                             <div className="col-span-4">
@@ -128,7 +131,7 @@ export function EditProfileDialog(data, desc) {
                                     label="Email"
                                     name="email"
                                     type="email"
-                                    className="w-full"
+                                    className="w-full text-light-text-secondary dark:text-dark-text-secondary"
                                     value={formData.email}
                                     onChange={handleChange}
                                     disabled
@@ -139,7 +142,7 @@ export function EditProfileDialog(data, desc) {
 
                         {/* Nacionalidad */}
                         <div className="grid grid-cols-5 gap-3 items-center">
-                            <Typography variant="h6" className="w-32">
+                            <Typography variant="h6" className="w-32 text-light-text dark:text-dark-text">
                                 Pais de Residencia
                             </Typography>
                             <div className="col-span-4">
@@ -147,19 +150,20 @@ export function EditProfileDialog(data, desc) {
                                     userCountry={formData.location}
                                     name="location"
                                     onChange={handleChange}
+                                    className="text-light-text-secondary dark:text-dark-text-secondary"
                                 />
                             </div>
                         </div>
-                        <hr />
+                        <hr className="my-8 border-blue-gray-500 dark:border-white" />
 
 
                     </div>
                 </DialogBody>
-                <DialogFooter>
-                    <Button variant="text" color="red" onClick={handler}>
+                <DialogFooter className="gap-4">
+                    <Button variant="text" className="text-alert-light dark:text-alert-light" onClick={handler}>
                         Cancelar
                     </Button>
-                    <Button variant="gradient" color="gray" onClick={handleSubmit}>
+                    <Button className="text-success-light dark:text-success-light bg-light-button-success dark:bg-dark-button-success" onClick={handleSubmit}>
                         Guardar Cambios
                     </Button>
                 </DialogFooter>

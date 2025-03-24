@@ -15,7 +15,7 @@ export function Dashboard({ onLogout }) {
   const { sidenavType } = controller;
 
   return (
-    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-green-900 dark:text-red-100">
+    <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
       <Sidenav
         routes={routes}
         brandImg={
@@ -24,7 +24,7 @@ export function Dashboard({ onLogout }) {
         onLogout={onLogout}
       />
       <div className="p-4 xl:ml-80">
-        <DashboardNavbar onLogout={onLogout}/>
+        <DashboardNavbar />
         <Configurator />
         <IconButton
           size="lg"

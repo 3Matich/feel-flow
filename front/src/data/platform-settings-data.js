@@ -12,11 +12,6 @@ export const platformSettingsData = [
         change: "notifyModule",
         label: "Notificar por correo cuando se crea un modulo",
       },
-      {
-        checked: false,
-        change: "darkMode",
-        label: "Modo oscuro",
-      },
     ],
   }
 ];

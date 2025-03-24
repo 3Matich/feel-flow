@@ -30,7 +30,7 @@ const events = [
     { user: "Lucia", action: "marcó Niko Niko como revisado", time: "Hace 1 día", avatar: "https://randomuser.me/api/portraits/women/1.jpg" },
 ];
 
-export function DashboardNavbar({ onLogout }) {
+export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar } = controller;
   const { pathname } = useLocation();
@@ -52,9 +52,9 @@ export function DashboardNavbar({ onLogout }) {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all mb-4 ${
+      className={`rounded-xl transition-all mb-4 text-light-text dark:text-dark-text ${
         fixedNavbar
-          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+        ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5 bg-light-primary dark:bg-dark-primary border-light-border dark:border-dark-border"
           : "px-0 py-1"
       }`}
       fullWidth
@@ -76,7 +76,7 @@ export function DashboardNavbar({ onLogout }) {
               {page}
             </Typography>
           </Breadcrumbs> */}
-          <Typography variant="h6" color="blue-gray">
+          <Typography variant="h6"> {/* color="blue-gray" */}
             {page}
           </Typography>
         </div>
@@ -89,11 +89,11 @@ export function DashboardNavbar({ onLogout }) {
           <Badge content={notifications.length}>
             <Menu>
               <MenuHandler>
-                <IconButton variant="text" color="blue-gray">
-                  <BellIcon className="h-5 w-5 text-blue-gray-500" />
+                <IconButton variant="text"> {/* color="blue-gray" */}
+                  <BellIcon className={`h-5 w-5 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" }`} /> {/* text-blue-gray-500 */}
                 </IconButton>
               </MenuHandler>
-              <MenuList className="w-max border-0">
+              <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary">
                 {notifications.map((notif) => (
                   <MenuItem key={notif.id} className="flex items-center gap-3">
                     <Avatar
@@ -105,14 +105,14 @@ export function DashboardNavbar({ onLogout }) {
                     <div>
                       <Typography
                         variant="small"
-                        color="blue-gray"
+                        color="text-light-secondary dark:text-dark-secondary"
                         className="mb-1 font-normal"
                       >
                         <strong>{notif.title}</strong> {notif.message}
                       </Typography>
                       <Typography
                         variant="small"
-                        color="blue-gray"
+                        color="text-light-secondary dark:text-dark-secondary"
                         className="flex items-center gap-1 text-xs font-normal opacity-60"
                       >
                         <ClockIcon className="h-3.5 w-3.5" /> {notif.time}
@@ -126,10 +126,10 @@ export function DashboardNavbar({ onLogout }) {
 
           <IconButton
             variant="text"
-            color="blue-gray"
+            // color="blue-gray"
             onClick={() => setOpenConfigurator(dispatch, true)}
           >
-            <Cog6ToothIcon className="h-5 w-5 text-blue-gray-500" />
+            <Cog6ToothIcon className={`h-5 w-5 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" }`} /> {/* text-blue-gray-500 */}
           </IconButton>
         </div>
       </div>
