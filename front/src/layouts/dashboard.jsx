@@ -28,8 +28,8 @@ export function Dashboard({ onLogout }) {
         <Configurator />
         <IconButton
           size="lg"
-          color="white"
-          className="fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900/10"
+          // color="white"
+          className="fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900/10 bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
           ripple={false}
           onClick={() => setOpenConfigurator(dispatch, true)}
         >
