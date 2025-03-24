@@ -133,21 +133,24 @@ export function Configurator() {
             <Button
               variant={sidenavType === "dark" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "dark")}
-              className={`${sidenavType === "dark" ? "" : "dark:bg-dark-card dark:text-dark-text" }`}
+              color={sidenavColor === "dark" && darkMode ? "white" : sidenavColor}
+              // className={`${sidenavType === "dark" ? "" : "dark:bg-dark-card dark:text-dark-text" }`}
             >
               Negro
             </Button>
             <Button
               variant={sidenavType === "transparent" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "transparent")}
-              className={`${sidenavType === "transparent" ? "" : "dark:bg-dark-card dark:text-dark-text"}`}
+              color={sidenavColor}
+              // className={`${sidenavType === "transparent" ? "" : "dark:bg-dark-card dark:text-dark-text"}`}
             >
               Transparente
             </Button>
             <Button
               variant={sidenavType === "white" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "white")}
-              className={`${sidenavType === "white" ? "" : "dark:bg-dark-card dark:text-dark-text"}`} 
+              color={sidenavColor}
+              // className={`${sidenavType === "white" ? "" : "dark:bg-dark-card dark:text-dark-text"}`} 
             >
               Blanco
             </Button>
