@@ -25,7 +25,7 @@ function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMo
           <Autocomplete
             options={teamOptions}
             value={selectedTeam ? teamOptions.find((option) => option.value === selectedTeam) : null}
-            onChange={(event, newValue) => setSelectedTeam(newValue ? newValue.value : "")}
+            onChange={(event, newValue) => setSelectedTeam(newValue || null)}
             renderInput={(params) => (
               <TextField
                 {...params}

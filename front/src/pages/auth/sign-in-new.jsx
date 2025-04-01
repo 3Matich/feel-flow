@@ -54,10 +54,10 @@ export function SignInNew({ onLogin }) {
       valid = false;
     }
 
-    if (!captchaVerified) {
-      newErrors.captcha = "Por favor, verifica que no eres un robot.";
-      valid = false;
-    }
+    // if (!captchaVerified) {
+    //   newErrors.captcha = "Por favor, verifica que no eres un robot.";
+    //   valid = false;
+    // }
 
     setErrors(newErrors);
     return valid;

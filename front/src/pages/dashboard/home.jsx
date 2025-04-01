@@ -126,8 +126,9 @@ export function Home() {
       element: (
         <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
           <h1 className="text-2xl font-bold text-center mb-4">
-            Niko Niko - {selectedTeam || "Equipo"}
+            Niko Niko - {selectedTeam?.label || "Equipo"}
           </h1>
+
 
           {loading && <p className="text-blue-500 font-semibold text-center">Cargando equipos...</p>}
           {error && <p className="text-red-500 font-semibold text-center">{error}</p>}
@@ -135,7 +136,7 @@ export function Home() {
           <div className="flex justify-center pt-0 mt-0 mb-6">
             <TeamSelector
               teams={teams}
-              selectedTeam={selectedTeam}
+              selectedTeam={selectedTeam.value}
               setSelectedTeam={setSelectedTeam}
               months={months}
               selectedMonth={selectedMonth}
