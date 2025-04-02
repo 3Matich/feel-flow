@@ -19,7 +19,10 @@ export async function getUser(userID) {
             const surname = data.surname;
             const username = data.username;
             const userID = data.uuid;
-            return ({ enterpriseName, enterpriseID, name, surname, username, userID });
+            const country = data.country;
+            const phoneNumber = data.phoneNumber;
+            const description = data.description;
+            return ({ enterpriseName, enterpriseID, name, surname, username, userID, country, phoneNumber, description });
         } else {
             const errorData = await response.json();
             const errorMessage = errorData.message || "Error desconocido del servidor.";
@@ -28,6 +31,6 @@ export async function getUser(userID) {
         }
     } catch (error) {
         console.error("Error al obtener los datos del perfil:", error);
-        return (error)
+        return (error);
     }
 }
