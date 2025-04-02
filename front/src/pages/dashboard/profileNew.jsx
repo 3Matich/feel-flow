@@ -231,7 +231,7 @@ export function ProfileNew() {
               />
             )}
             <ProfileInfoCard
-              title="Profile Information"
+              title="Información de Perfil"
               description={profile.description}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
@@ -253,13 +253,13 @@ export function ProfileNew() {
 
             {/* Sección de Platform Settings */}
             <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
+              <Typography variant="h6" color="blue-gray" className="mb-5">
+                Configuraciones de la Plataforma
               </Typography>
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-8">
                 {settings.map((category) => (
-                  <div key={category.title} className="mb-6">
-                    <h2 className="text-xl font-semibold">{category.title}</h2>
+                  <div key={category.title} className="mb-4">
+                    <h2 className="text-l font-semibold">{category.title}</h2>
                     <div className="mt-4 space-y-3">
                       {category.options.map((option) => (
                         <div key={option.label} className="flex items-center justify-between">
