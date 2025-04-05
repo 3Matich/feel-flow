@@ -24,6 +24,8 @@ import {
   EyeIcon,
 } from "@heroicons/react/24/solid";
 
+import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
+
 export function Home() {
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState("");
@@ -54,6 +56,11 @@ export function Home() {
     },
   };
 
+  // Este estado contendrá los datos finales listos para la tabla
+  // en formato { "Juan Pérez": [ {...}, {...} ], "Ana López": [ {...}, {...} ], ... }
+  const [nikoDataByMember, setNikoDataByMember] = useState({});
+
+  // Cargar equipos al montar
   useEffect(() => {
     const fetchTeams = async () => {
       const token = sessionStorage.getItem("token");
@@ -63,14 +70,6 @@ export function Home() {
         setLoading(true);
         const response = await GetEquipos(token);
         setTeams(response);
-
-        const mockTeamMembers = ["Juan", "María", "Pedro", "Lucía"];
-        const mockNikoData = mockTeamMembers.reduce((acc, member) => {
-          acc[member] = Array.from({ length: 30 }, () => Math.floor(Math.random() * 3) + 1);
-          return acc;
-        }, {});
-        setTeamMembers(mockTeamMembers);
-        setNikoData(mockNikoData);
       } catch (err) {
         console.error("Error al obtener los equipos:", err);
         setError("No se pudieron cargar los equipos. Inténtalo más tarde.");
@@ -81,6 +80,44 @@ export function Home() {
 
     fetchTeams();
   }, []);
+
+  // Cargar datos de Niko Niko summary cuando cambie el equipo o el mes
+  useEffect(() => {
+    const fetchNikoNikoSummary = async () => {
+      if (!selectedTeam) return; // si no hay equipo seleccionado, no hacemos nada
+
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        setLoading(true);
+        // Llamada al servicio
+        // TO-DO: ARREGLAR EL EQUIPO Y EL MES
+        // const data = await GetNikoNikoSummary(token, selectedTeam?.value, numberOfMonth);
+        const data = await GetNikoNikoSummary(token, selectedTeam?.value, 6);
+
+        // Transformar ese array en un objeto por miembro
+        // clave: "Juan Pérez", valor: array de días
+        const groupedData = data.reduce((acc, item) => {
+          const fullName = `${item.name} ${item.surname}`.trim();
+          if (!acc[fullName]) {
+            acc[fullName] = [];
+          }
+          acc[fullName].push(item);
+          return acc;
+        }, {});
+
+        setNikoDataByMember(groupedData);
+      } catch (err) {
+        console.error("Error al obtener el summary de NikoNiko:", err);
+        setError("No se pudieron cargar los datos de Niko Niko.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNikoNikoSummary();
+  }, [selectedTeam, selectedMonth]);
 
   useEffect(() => {
     const fetchMockData = async () => {
@@ -126,17 +163,25 @@ export function Home() {
       element: (
         <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
           <h1 className="text-2xl font-bold text-center mb-4">
-            Niko Niko - {selectedTeam?.label || "Equipo"}
+            Niko Niko - {selectedTeam?.label ?? "Equipo"}
           </h1>
 
 
-          {loading && <p className="text-blue-500 font-semibold text-center">Cargando equipos...</p>}
-          {error && <p className="text-red-500 font-semibold text-center">{error}</p>}
+          {loading && (
+            <p className="text-blue-500 font-semibold text-center">
+              Cargando datos...
+            </p>
+          )}
+          {error && (
+            <p className="text-red-500 font-semibold text-center">
+              {error}
+            </p>
+          )}
 
           <div className="flex justify-center pt-0 mt-0 mb-6">
             <TeamSelector
               teams={teams}
-              selectedTeam={selectedTeam.value}
+              selectedTeam={selectedTeam}
               setSelectedTeam={setSelectedTeam}
               months={months}
               selectedMonth={selectedMonth}
@@ -145,7 +190,7 @@ export function Home() {
           </div>
 
           <div className="mt-4">
-            <NikoNikoTable teamMembers={teamMembers} nikoData={nikoData} />
+            <NikoNikoTable nikoDataByMember={nikoDataByMember} />
           </div>
         </div>
       ),
