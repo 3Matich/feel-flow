@@ -22,13 +22,13 @@ import { element } from "prop-types";
 export function Modules() {
     const data = [
         {
-            label: "Dashboard",
+            label: "Estatus",
             value: "dashboard",
             icon: Square3Stack3DIcon,
             element: <Dashboard />,
         },
         {
-            label: "12 Pasos de la Felicidad",
+            label: "12 Pasos",
             value: "twelveSteps",
             icon: Square3Stack3DIcon,
             element: <TwelveSteps />,
