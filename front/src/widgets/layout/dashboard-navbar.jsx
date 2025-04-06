@@ -81,7 +81,7 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center">
-          {/*  
+          {/*
           <IconButton variant="text" color="blue-gray" onClick={onLogout}>
             <ArrowLeftOnRectangleIcon className="h-5 w-5 text-blue-gray-500" />
           </IconButton>
@@ -90,7 +90,7 @@ export function DashboardNavbar() {
             <Menu>
               <MenuHandler>
                 <IconButton variant="text"> {/* color="blue-gray" */}
-                  <BellIcon className={`h-5 w-5 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" }`} /> {/* text-blue-gray-500 */}
+                  <BellIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}
                 </IconButton>
               </MenuHandler>
               <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary">
@@ -129,7 +129,7 @@ export function DashboardNavbar() {
             // color="blue-gray"
             onClick={() => setOpenConfigurator(dispatch, true)}
           >
-            <Cog6ToothIcon className={`h-5 w-5 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" }`} /> {/* text-blue-gray-500 */}
+            <Cog6ToothIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}
           </IconButton>
         </div>
       </div>

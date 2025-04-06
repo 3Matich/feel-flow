@@ -160,10 +160,10 @@ export function EditProfileDialog(data, desc) {
                     </div>
                 </DialogBody>
                 <DialogFooter className="gap-4">
-                    <Button variant="text" className="text-alert-light dark:text-alert-light" onClick={handler}>
+                    <Button variant="text" className="button-cancel" onClick={handler}>
                         Cancelar
                     </Button>
-                    <Button className="text-success-light dark:text-success-light bg-light-button-success dark:bg-dark-button-success" onClick={handleSubmit}>
+                    <Button className="button-save" onClick={handleSubmit}>
                         Guardar Cambios
                     </Button>
                 </DialogFooter>

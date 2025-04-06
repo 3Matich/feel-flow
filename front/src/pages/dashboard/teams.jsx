@@ -181,9 +181,9 @@ export function Teams() {
                 </Alert>
             )}
 
-            <Card color="transparent" className="mb-6 p-4 mt-10">
+            <Card color="transparent" className="mb-6 p-4 mt-10 text-light-text-secondary dark:text-dark-text-secondary">
                 <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
-                    <Typography variant="h4" color="blue">Listado de Equipos</Typography>
+                    <Typography variant="h4" className="text-light-text dark:text-dark-text">Listado de Equipos</Typography>
                     <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
                         <PlusIcon className="h-5 w-5" />
                         Crear Equipo
@@ -192,8 +192,8 @@ export function Teams() {
                 <CardBody className="mb-1">
                     <div className="relative w-full mb-3">
                         <label
-                            className={`absolute left-4 transition-all duration-300 bg-white px-1 pointer-events-none ${isFocused || searchQuery
-                                ? "text-xs top-0 transform -translate-y-1/2 text-blue-600"
+                            className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
+                                ? "text-xs top-2 transform -translate-y-1/2 text-blue-600"
                                 : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
                                 }`}
                         >
@@ -206,7 +206,7 @@ export function Teams() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onFocus={() => setIsFocused(true)}
                             onBlur={() => setIsFocused(false)}
-                            className="w-full border border-gray-300 rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
+                            className="w-full border border-light-border dark: border-dark-border rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base bg-light-card dark:bg-dark-card"
                         />
 
                         <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -214,11 +214,11 @@ export function Teams() {
 
                     <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
                         <thead>
-                            <tr className="bg-blue-gray-50">
+                            <tr className="table-header">
                                 {["Equipo", "Team Leader"].map((el) => (
                                     <th
                                         key={el}
-                                        className="border-b border-blue-gray-100 py-3 px-5 text-left text-blue-gray-600 uppercase text-sm font-bold"
+                                        className="table-header-cell"
                                     >
                                         {el}
                                     </th>
@@ -227,15 +227,15 @@ export function Teams() {
                         </thead>
                         <tbody>
                             {filteredTeams.map(({ logo, name, leader }, key) => (
-                                <tr key={name} className="hover:bg-blue-gray-50 transition-all">
-                                    <td className="py-3 px-5 border-b border-blue-gray-100 flex items-center gap-4">
+                                <tr key={name} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50">
+                                    <td className="table-body-cell flex items-center gap-4">
                                         <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                                        <Typography className="font-semibold text-blue-gray-700">
+                                        <Typography>
                                             {name}
                                         </Typography>
                                     </td>
-                                    <td className="py-3 px-5 border-b border-blue-gray-100">
-                                        <Typography className="text-sm font-semibold text-blue-gray-700">
+                                    <td className="table-body-cell">
+                                        <Typography className="text-sm">
                                             {leader}
                                         </Typography>
                                     </td>
@@ -249,11 +249,11 @@ export function Teams() {
             <Dialog
                 open={open}
                 handler={handleOpen}
-                className={size === "xs" ? "max-w-xs" : ""}
+                className={`card {size === "xs" ? "max-w-xs" : ""}`}
             >
-                <DialogHeader className="flex items-center justify-between">
+                <DialogHeader className="flex items-center justify-between card-header">
                     <div className="flex justify-between items-center w-full">
-                        <Typography variant="h4" color="blue">
+                        <Typography variant="h4">
                             Crear un nuevo Equipo
                         </Typography>
                         <button
@@ -270,14 +270,14 @@ export function Teams() {
                                     logo: "",
                                 });
                             }}
-                            className="text-gray-600 hover:text-gray-900 focus:outline-none"
+                            className="hover:text-gray-500 focus:outline-none"
                         >
                             ✕
                         </button>
                     </div>
 
                 </DialogHeader>
-                <DialogBody>
+                <DialogBody className="card-body">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Campo Nombre del Equipo */}
                         <div className="relative">
@@ -394,7 +394,7 @@ export function Teams() {
                                 onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
                             />
                             {!isFocused && (
-                                <div className="absolute top-2 right-3 text-xs text-gray-400">
+                                <div className="absolute top-2 right-3 text-xs">
                                     (Opcional)
                                 </div>
                             )}
@@ -404,13 +404,13 @@ export function Teams() {
 
                         {/* Campo Logo */}
                         <div className="mb-1 col-span-2 flex flex-col items-center">
-                            <Typography variant="large" color="black" className="mb-2">
+                            <Typography variant="large" className="mb-2">
                                 Logo del Equipo
                             </Typography>
                             <div
                                 onDrop={handleDrop}
                                 onDragOver={handleDragOver}
-                                className="relative flex items-center justify-center border-2 border-dashed border-gray-400 p-4 rounded-md w-72 h-40 mx-auto"
+                                className="relative flex items-center justify-center border-2 border-dashed p-4 rounded-md w-72 h-40 mx-auto"
                             >
                                 {logoPreview ? (
                                     <div className="relative w-32 h-32 mx-auto">
@@ -448,7 +448,7 @@ export function Teams() {
 
                 <DialogFooter className="flex justify-center gap-2">
                     <Button
-                        color="red"
+                        variant="text"
                         onClick={() => {
                             handleOpen(); // Cerrar 
                             setNewTeam({ // Limpiar los valores del formulario
@@ -462,14 +462,15 @@ export function Teams() {
                                 logo: "",
                             });
                         }}
-                        className="mr-4"
+                        className="mr-4 button-cancel"
                     >
                         Cancelar
                     </Button>
                     <Button
                         onClick={handleCreateTeam}
                         disabled={isSaving}
-                        color="indigo"
+                        // color="indigo"
+                        className="button-save"
                     >
                         {isSaving ? (
                             <Spinner className="h-5 w-5 text-white" />

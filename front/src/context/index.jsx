@@ -39,7 +39,7 @@ export function MaterialTailwindControllerProvider({ children }) {
     sidenavColor: "white",
     sidenavType: "dark",
     transparentNavbar: true,
-    fixedNavbar: true,
+    fixedNavbar: false,
     openConfigurator: false,
     darkMode: false,
   };

@@ -85,7 +85,7 @@ export function ProfileNew() {
 
     return (
         <>
-            <Card className="mx-3 mt-8 mb-6 bg-light-card dark:bg-dark-card lg:mx-4 border border-light-border dark:border-dark-border text-light-text-secondary dark:text-dark-text-secondary">
+            <Card className="mx-3 mt-8 mb-6 card lg:mx-4 border">
                 <CardBody className="p-4">
                     <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
                         <div className="flex items-center gap-6">
@@ -105,7 +105,7 @@ export function ProfileNew() {
                                     mount: { scale: 1, y: 0 },
                                     unmount: { scale: 0.9, y: -100 },
                                 }}
-                                className="bg-light-card dark:bg-dark-card"
+                                className="card"
                             >
                                 <DialogHeader className="text-light-text dark:text-dark-text">Seleccione un avatar de usuario</DialogHeader>
                                 <hr className="my-8 border-blue-gray-500 dark:border-white" />

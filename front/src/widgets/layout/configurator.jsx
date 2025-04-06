@@ -85,7 +85,7 @@ export function Configurator() {
   return (
     <aside
       className={`fixed top-0 right-0 z-50 h-screen w-96 bg-white px-2.5 shadow-lg transition-transform duration-300 ${openConfigurator ? "translate-x-0" : "translate-x-96"
-        } bg-light-bg dark:bg-dark-bg`}
+        } bg-light-bg dark:bg-dark-bg border`}
     >
       <div className="flex items-start justify-between px-6 pt-8 pb-6">
         <div>
@@ -122,6 +122,7 @@ export function Configurator() {
             ))}
           </div>
         </div>
+        {/*
         <div className="mb-12">
           <Typography variant="h6 text-light-text-secondary dark:text-dark-text-secondary">
             Tipo de barra de navegacion
@@ -129,6 +130,7 @@ export function Configurator() {
           <Typography variant="small" className="text-light-text-secondary dark:text-dark-text-secondary">
             Elige entre tres tipos diferentes.
           </Typography>
+
           <div className="mt-5 flex items-center gap-1">
             <Button
               variant={sidenavType === "dark" ? "gradient" : "outlined"}
@@ -150,12 +152,14 @@ export function Configurator() {
               variant={sidenavType === "white" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "white")}
               color={sidenavColor}
-              // className={`${sidenavType === "white" ? "" : "dark:bg-dark-card dark:text-dark-text"}`} 
+              // className={`${sidenavType === "white" ? "" : "dark:bg-dark-card dark:text-dark-text"}`}
             >
               Blanco
             </Button>
           </div>
+
         </div>
+        */}
         <div className="mb-12">
           <hr />
           <div className="flex items-center justify-between py-5 text-light-text dark:text-dark-text">

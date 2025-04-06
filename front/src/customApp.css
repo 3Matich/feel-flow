@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .table-header {
+        @apply bg-blue-100 dark:bg-blue-900 text-light-text dark:text-dark-text;
+    }
+
+    .table-header-cell {
+        @apply border-b border-blue-gray-100 py-3 px-5 text-left uppercase text-sm font-bold;
+    }
+
+    .table-body {
+        @apply transition-all border-b border-blue-gray-100
+    }
+
+    .table-body-cell {
+        @apply py-3 px-5
+    }
+
+    .card {
+        @apply bg-light-card dark:bg-dark-card text-light-text-secondary dark:text-dark-text-secondary
+    }
+
+    .card-header {
+        @apply text-light-text dark:text-dark-text
+    }
+
+    .card-body {
+        @apply text-light-text-secondary dark:text-dark-text-secondary
+    }
+
+    .border {
+        @apply border-light-border dark:border-dark-border
+    }
+
+    .button-save {
+        @apply text-success-light dark:text-success-light bg-light-button-success dark:bg-dark-button-success
+    }
+
+    .button-cancel {
+        @apply text-alert-light dark:text-alert-light
+    }
+
+
+}
+

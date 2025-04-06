@@ -49,8 +49,8 @@ module.exports = withMT({
         "dark-button-warning": "#121212", // Color para el fondo de los botones
       },
       backgroundColor: { // Fondos div principal
-        "light-bg": "#F8F9FA",
-        "dark-bg": "#121212",
+        "light-bg": "#F8F9FA", //
+        "dark-bg": "#05183C", //121212
       },
       backgroundImage: {
         'gradient-custom': "linear-gradient(to right, #FFEDD9 0%, #FFEDD9 13.37%, #F1664A 26.75%, #F1664A 43.84%, #183E7B 60.93%, #183E7B 80.46%, #000B23 100%)",
