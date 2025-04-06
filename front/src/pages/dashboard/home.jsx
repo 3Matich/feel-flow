@@ -229,7 +229,7 @@ export function Home() {
 
   const tabsData = [
     {
-      label: "Resumen",
+      label: "Dashboard",
       value: "home",
       icon: EyeIcon,
       element: (
