@@ -23,28 +23,33 @@ import {
 } from "@material-tailwind/react";
 import { platformSettingsData, conversationsData, projectsData, profileData } from "@/data";
 import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
+import { updateLoggedUser } from "@/api/users";
 
 const COUNTRIES = ["Argentina (+54)", "France (+33)", "Germany (+49)", "Spain (+34)", "USA (+1)"];
 const CODES = ["+54", "+33", "+49", "+34", "+1"];
 const NATIONALITIES = ["Argentina", "Uruguay", "Chile", "Paraguay", "Brasil", "Peru", "Bolivia", "Ecuador", "Colombia", "Venezuela", "Mexico", "España"];
 
+
+
 export function EditProfileDialog({ data, onSave, onCancel, open }) {
 
   const [country, setCountry] = React.useState(0);
   const [editProfile, setEditProfile] = React.useState(true);
+  const [errors, setErrors] = useState();
 
   // const [formData, setFormData] = React.useState(data.data);
   // const [description, setDescription] = React.useState(data.desc);
 
   const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    username: "",
-    country: "",
-    phoneNumber: "",
-    description: "",
+    name: data.name,
+    surname: data.surname,
+    username: data.username,
+    country: data.country,
+    phoneNumber: data.phoneNumber,
+    description: data.description,
   });
 
+  /*
   useEffect(() => {
     if (data) {
       setFormData({
@@ -52,12 +57,13 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
         surname: data.surname || "",
         username: data.username || "",
         // El país se fija siempre en "Argentina"
-        country: "Argentina",
+        country: data.country,
         phoneNumber: data.phoneNumber || "+14155552671",
         description: data.description || "",
       });
     }
   }, [data]);
+  */
 
   const handleChange = (e) => {
     // Si el evento es de InputPhoneFloatingLabel, toma el valor directamente
@@ -68,11 +74,18 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
       // Caso especial para InputPhoneFloatingLabel
       setFormData((prev) => ({ ...prev, phoneNumber: e }));
     }
-  };  
+
+    // Elimina el error al cambiar el campo
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: null });
+    }
+  };
 
   // Validar que los campos obligatorios (excepto email y country) tengan valor
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const { name, surname, phoneNumber, description } = formData;
+    /*
     if (
       !name.trim() ||
       !surname.trim() ||
@@ -82,9 +95,21 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
       alert("Todos los campos son obligatorios");
       return;
     }
+    */
     const updatedData = { ...formData };
-    console.log("Perfil actualizado:", updatedData);
-    onSave(updatedData);
+    // console.log("Perfil actualizado:", updatedData);
+    const result = await updateLoggedUser(updatedData)
+    // onSave(updatedData);
+    if (result) {
+      onCancel();
+    } else {
+      const formattedErrors = result.errors.reduce((acc, curr) => {
+        const key = Object.keys(curr)[0];
+        acc[key] = curr[key];
+      }, {});
+      setErrors(formattedErrors);
+    }
+    // console.log(errors[1])
   };
 
   return (
@@ -109,6 +134,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
             value={formData.description}
             onChange={handleChange}
             name="description"
+            // error={errors.description}
           />
           <hr />
           {/* Nombre y Apellido */}
@@ -124,6 +150,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 placeholder={formData.surname}
                 value={formData.surname}
                 onChange={handleChange}
+                // error={errors.surname}
               />
             </div>
             <div className="col-span-2">
@@ -134,6 +161,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 placeholder={formData.name}
                 value={formData.name}
                 onChange={handleChange}
+                // error={errors.name}
               />
             </div>
           </div>
@@ -144,11 +172,12 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
               Telefono
             </Typography>
             <div className="col-span-4">
-            <InputPhoneFloatingLabel
-  content={formData.phoneNumber}
-  name="phoneNumber"
-  onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))}
-/>
+              <InputPhoneFloatingLabel
+                content={formData.phoneNumber}
+                name="phoneNumber"
+                onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))}
+                // error={errors.phoneNumber}
+              />
 
 
             </div>
@@ -166,24 +195,24 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 type="email"
                 placeholder={formData.username}
                 value={formData.username}
-                onChange={handleChange}
+                // error={errors.username}
                 disabled
               />
             </div>
           </div>
           <hr />
-          {/* País de Residencia (fijo en Argentina) */}
+          {/* Nacionalidad */}
           <div className="grid grid-cols-5 gap-3 items-center">
-            <Typography variant="h6" className="w-32">
-              País
+            <Typography variant="h6" className="w-32 text-light-text dark:text-dark-text">
+              Pais de Residencia
             </Typography>
             <div className="col-span-4">
-              <Input
-                label="País"
+              <CountriesSelect
+                userCountry={formData.country}
                 name="country"
-                type="text"
-                value="Argentina"
-                disabled
+                onChange={handleChange}
+                className="text-light-text-secondary dark:text-dark-text-secondary"
+                // error={errors.country}
               />
             </div>
           </div>

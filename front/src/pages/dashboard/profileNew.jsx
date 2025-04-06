@@ -18,17 +18,15 @@ import {
   Cog6ToothIcon,
   PencilIcon,
 } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
 
 import { getUserData } from "@/services/session";
-import { getUser } from "@/services/Users/GetUser";
-import { updateUser } from "@/services/UpdateUser";
-import { ProfileInfoCard, MessageCard, ProfileEditCard } from "@/widgets/cards";
+// import { getUser } from "@/services/Users/GetUser";
+import { ProfileInfoCard } from "@/widgets/cards";
 import { EditProfileDialog } from "@/widgets/dialogs";
-import { conversationsData, projectsData, profileData } from "@/data";
-import EditableProfileInfo from "@/widgets/cards/profile-info";
 import { useDragAndDrop } from "@/hooks";
 import { platformSettingsData } from "@/data";
+
+import { getUser } from "@/api/users/getUser";
 
 export function ProfileNew() {
   const [profile, setProfile] = useState(null);
@@ -57,16 +55,16 @@ export function ProfileNew() {
     async function fetchProfile() {
       try {
         const data = await getUser(authUserID);
-        const {enterpriseName, enterpriseID, name, surname, username, userID, country, phoneNumber, description} = await getUser(authUserID);
+        // const {enterpriseName, enterpriseID, name, surname, username, userID, country, phoneNumber, description} = await getUser(authUserID);
         if (data && typeof data === "object") {
           setProfile((prev) => ({
             ...prev,
             ...data,
             // Usamos los nuevos campos o asignamos un default si faltan
-            country: data.country || "Argentina",
-            phoneNumber: phoneNumber || "+54155552671",
-            description: data.description || "Ingeniero en progreso",
-            job: Array.isArray(data.job) ? data.job : ["Posición", "Empresa"],
+            // country: data.country,
+            // phoneNumber: phoneNumber,
+            // description: data.description,
+            // job: Array.isArray(data.job) ? data.job : ["Posición", "Empresa"],
           }));
         } else {
           console.error("Error al cargar el perfil: Datos no válidos", data);
@@ -80,6 +78,7 @@ export function ProfileNew() {
   }, []);
 
   // Función para actualizar el perfil usando los nuevos campos
+  /*
   const handleUpdateProfile = async (updatedData) => {
     try {
       const { name, surname, username, country, phoneNumber, description } = updatedData;
@@ -94,7 +93,7 @@ export function ProfileNew() {
       console.error("Error al actualizar el perfil:", error.message);
     }
   };
-
+  */
   const handleOpenAvatarDialog = () => setOpen(!open);
 
   const handleSwitchChange = (changeKey) => {
@@ -224,8 +223,8 @@ export function ProfileNew() {
             {isEditing && (
               <EditProfileDialog
                 data={profile}
-                desc={profile.description}
-                onSave={handleUpdateProfile}
+                // desc={profile.description}
+                // onSave={handleUpdateProfile}
                 onCancel={() => setIsEditing(false)}
                 open={isEditing}
               />

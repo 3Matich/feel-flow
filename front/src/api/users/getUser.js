@@ -13,16 +13,17 @@ export async function getUser(userID) {
 
         if (response.ok) {
             const data = await response.json();
-            const enterpriseName = data.enterpriseInfoHomeDTO.name;
-            const enterpriseID = data.enterpriseInfoHomeDTO.uuid;
-            const name = data.name;
-            const surname = data.surname;
-            const username = data.username;
-            const userID = data.uuid;
-            const country = data.country;
-            const phoneNumber = data.phoneNumber;
-            const description = data.description;
-            return ({ enterpriseName, enterpriseID, name, surname, username, userID, country, phoneNumber, description });
+            return data
+            // const enterpriseName = data.enterpriseInfoHomeDTO.name;
+            // const enterpriseID = data.enterpriseInfoHomeDTO.uuid;
+            // const name = data.name;
+            // const surname = data.surname;
+            // const username = data.username;
+            // const userID = data.uuid;
+            // const country = data.country;
+            // const phoneNumber = data.phoneNumber;
+            // const description = data.description;
+            // return ({ enterpriseName, enterpriseID, name, surname, username, userID, country, phoneNumber, description });
         } else {
             const errorData = await response.json();
             const errorMessage = errorData.message || "Error desconocido del servidor.";
