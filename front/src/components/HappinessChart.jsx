@@ -1,27 +1,26 @@
+// components/HappinessChart.jsx
 import React from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { renderChart } from "../components/Chart";
 
 function HappinessChart({
   teamData,
+  modulesData,
+  memberOptions,
   selectedMember,
   setSelectedMember,
-  selectedSprint,
-  setSelectedSprint,
+  selectedModule,
+  setSelectedModule,
   selectedData,
 }) {
-  // Opciones para el Autocomplete de miembros
-  const memberOptions = teamData.members.map((member, index) => ({
-    label: member.name,
-    value: index,
-  }));
-
-  // Opciones para el Autocomplete de sprints
-  const sprintOptions = [
-    { label: "Sprint Actual", value: "current" },
-    { label: "Sprint Anterior", value: "previous" },
-    { label: "Hace Dos Sprints", value: "twoAgo" },
-  ];
+  // Generamos opciones de módulos en base a la fecha de publicación
+  const moduleOptions = modulesData.map((moduleItem) => {
+    const dateStr = new Date(moduleItem.moduleDto.dateAndTimeToPublish).toLocaleDateString();
+    return {
+      label: dateStr,
+      value: moduleItem.moduleDto.id,
+    };
+  });
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
@@ -29,11 +28,32 @@ function HappinessChart({
         12 pasos de la felicidad - {teamData.teamName}
       </h1>
       <div className="flex flex-col sm:flex-row justify-center items-center mb-12 gap-4">
-        {/* Autocomplete para Promedio del Equipo */}
+        {/* Autocomplete para seleccionar módulo (fecha) */}
+        <Autocomplete
+          options={moduleOptions}
+          value={
+            selectedModule
+              ? moduleOptions.find((option) => option.value === selectedModule)
+              : null
+          }
+          onChange={(event, newValue) =>
+            setSelectedModule(newValue ? newValue.value : "")
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Fecha del Módulo"
+              variant="outlined"
+              sx={{ width: 200, backgroundColor: "white" }}
+            />
+          )}
+        />
+
+        {/* Autocomplete para seleccionar miembro (usuario) */}
         <Autocomplete
           options={memberOptions}
           value={
-            selectedMember !== "" && selectedMember !== null
+            selectedMember
               ? memberOptions.find((option) => option.value === selectedMember)
               : null
           }
@@ -43,41 +63,15 @@ function HappinessChart({
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Promedio del Equipo"
+              label="Selecciona Miembro"
               variant="outlined"
-              sx={{
-                width: 200,
-                backgroundColor: "white",
-              }}
-            />
-          )}
-        />
-
-        {/* Autocomplete para Sprint */}
-        <Autocomplete
-          options={sprintOptions}
-          value={
-            selectedSprint
-              ? sprintOptions.find((option) => option.value === selectedSprint)
-              : null
-          }
-          onChange={(event, newValue) =>
-            setSelectedSprint(newValue ? newValue.value : "")
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Sprint"
-              variant="outlined"
-              sx={{
-                width: 200,
-                backgroundColor: "white",
-              }}
+              sx={{ width: 200, backgroundColor: "white" }}
             />
           )}
         />
       </div>
-      {/* Aumentamos la separación vertical */}
+
+      {/* Se usa 'selectedData' => array de { categoryName, average } */}
       <div className="mt-16 pb-16">
         {renderChart(selectedData)}
       </div>

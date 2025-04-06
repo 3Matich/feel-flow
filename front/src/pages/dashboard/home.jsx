@@ -5,6 +5,9 @@ import { LatestRecords } from "./LatestRecords";
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { GetEquipos } from "../../services/GetEquipos";
+import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
+import { GetModulesAndUsers } from "../../services/GetModulesAndUsers";
+import { GetTwelveStepsSummary } from "../../services/GetTwelveStepsSummary";
 import TeamSelector from "../../components/TeamSelector";
 import NikoNikoTable from "../../components/NikoNikoTable";
 import HappinessChart from "../../components/HappinessChart";
@@ -24,27 +27,36 @@ import {
   EyeIcon,
 } from "@heroicons/react/24/solid";
 
-import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
-
 export function Home() {
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [teamMembers, setTeamMembers] = useState([]);
-  const [nikoData, setNikoData] = useState({});
   const [teamData, setTeamData] = useState(null);
-  const [selectedMember, setSelectedMember] = useState(null);
-  const [selectedSprint, setSelectedSprint] = useState("current");
-  const [selectedKudosMember, setSelectedKudosMember] = useState("Equipo");
-  const [selectedKudosSprint, setSelectedKudosSprint] = useState("Sprint 1");
+
+  // Estados para Niko Niko
+  const [nikoDataByMember, setNikoDataByMember] = useState({});
+
+  // Estados para 12 Pasos de la Felicidad
+  const [modulesData, setModulesData] = useState([]); // Datos del endpoint modules-and-users
+  const [selectedModule, setSelectedModule] = useState(""); // idModule seleccionado (por fecha)
+  const [memberOptions, setMemberOptions] = useState([]); // Opciones de usuarios del módulo seleccionado
+  const [selectedMember, setSelectedMember] = useState(""); // Para resumen individual; si no se selecciona, se muestra promedio de equipo
+  const [twelveSummary, setTwelveSummary] = useState([]); // Resumen obtenido del endpoint summary/twelve-steps
+  const [twelveLoading, setTwelveLoading] = useState(false);
+  const [twelveError, setTwelveError] = useState(null);
+  const [twelveStepsSummary, setTwelveStepsSummary] = useState(null);
 
   const months = [
     "Enero", "Febrero", "Marzo", "Abril",
     "Mayo", "Junio", "Julio", "Agosto",
     "Septiembre", "Octubre", "Noviembre", "Diciembre",
   ];
+
+  // Estados para Kudos (se mantienen igual)
+  const [selectedKudosMember, setSelectedKudosMember] = useState("Equipo");
+  const [selectedKudosSprint, setSelectedKudosSprint] = useState("Sprint 1");
 
   const kudosData = {
     "Sprint 1": {
@@ -56,16 +68,11 @@ export function Home() {
     },
   };
 
-  // Este estado contendrá los datos finales listos para la tabla
-  // en formato { "Juan Pérez": [ {...}, {...} ], "Ana López": [ {...}, {...} ], ... }
-  const [nikoDataByMember, setNikoDataByMember] = useState({});
-
   // Cargar equipos al montar
   useEffect(() => {
     const fetchTeams = async () => {
       const token = sessionStorage.getItem("token");
       if (!token) return;
-
       try {
         setLoading(true);
         const response = await GetEquipos(token);
@@ -77,27 +84,18 @@ export function Home() {
         setLoading(false);
       }
     };
-
     fetchTeams();
   }, []);
 
   // Cargar datos de Niko Niko summary cuando cambie el equipo o el mes
   useEffect(() => {
     const fetchNikoNikoSummary = async () => {
-      if (!selectedTeam) return; // si no hay equipo seleccionado, no hacemos nada
-
+      if (!selectedTeam) return;
       const token = sessionStorage.getItem("token");
       if (!token) return;
-
       try {
         setLoading(true);
-        // Llamada al servicio
-        // TO-DO: ARREGLAR EL EQUIPO Y EL MES
-        // const data = await GetNikoNikoSummary(token, selectedTeam?.value, numberOfMonth);
         const data = await GetNikoNikoSummary(token, selectedTeam?.value, 6);
-
-        // Transformar ese array en un objeto por miembro
-        // clave: "Juan Pérez", valor: array de días
         const groupedData = data.reduce((acc, item) => {
           const fullName = `${item.name} ${item.surname}`.trim();
           if (!acc[fullName]) {
@@ -106,7 +104,6 @@ export function Home() {
           acc[fullName].push(item);
           return acc;
         }, {});
-
         setNikoDataByMember(groupedData);
       } catch (err) {
         console.error("Error al obtener el summary de NikoNiko:", err);
@@ -115,10 +112,69 @@ export function Home() {
         setLoading(false);
       }
     };
-
     fetchNikoNikoSummary();
   }, [selectedTeam, selectedMonth]);
 
+  // Cargar módulos y usuarios para 12 Pasos de la Felicidad
+  useEffect(() => {
+    const fetchModulesAndUsers = async () => {
+      if (!selectedTeam) return;
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      try {
+        setTwelveLoading(true);
+        const data = await GetModulesAndUsers(token, "TWELVE_STEPS", true);
+        setModulesData(data);
+      } catch (err) {
+        console.error("Error al obtener módulos de TWELVE_STEPS:", err);
+        setTwelveError("No se pudieron cargar los módulos de 12 pasos de la felicidad.");
+      } finally {
+        setTwelveLoading(false);
+      }
+    };
+    fetchModulesAndUsers();
+  }, [selectedTeam]);
+
+  // Cuando se selecciona un módulo, actualizar las opciones de miembros (usuarios) basadas en ese módulo
+  useEffect(() => {
+    if (!modulesData || modulesData.length === 0) return;
+    const moduleSelected = modulesData.find(
+      (moduleItem) => moduleItem.moduleDto.id === selectedModule
+    );
+    if (moduleSelected) {
+      const options = moduleSelected.usersDto.map((user) => ({
+        label: `${user.name} ${user.surname}`,
+        value: user.uuid,
+      }));
+      setMemberOptions(options);
+    } else {
+      setMemberOptions([]);
+    }
+  }, [modulesData, selectedModule]);
+
+  // Llamada al resumen de 12 Pasos cuando se selecciona un módulo (y opcionalmente un usuario)
+  useEffect(() => {
+    const fetchTwelveStepsSummary = async () => {
+      if (!selectedModule) return;
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      try {
+        setTwelveLoading(true);
+        const summary = await GetTwelveStepsSummary(token, selectedModule, selectedMember || "");
+        // summary debe ser un array de objetos: [{ categoryName, average }, ... ]
+        setTwelveSummary(summary);
+        setTwelveError(null);
+      } catch (err) {
+        console.error("Error al obtener el resumen de 12 pasos:", err);
+        setTwelveError("No se pudieron cargar los datos de 12 pasos.");
+      } finally {
+        setTwelveLoading(false);
+      }
+    };
+    fetchTwelveStepsSummary();
+  }, [selectedModule, selectedMember]);
+
+  // Se sigue usando un fetchMockData para teamData (para mostrar el nombre del equipo)
   useEffect(() => {
     const fetchMockData = async () => {
       return {
@@ -130,16 +186,43 @@ export function Home() {
         averages: [4.5, 4.5, 3.5, 3.5, 4.5, 4.5, 4.5, 3.5, 4.5, 3.5, 4.5, 4.5],
       };
     };
-
     const fetchData = async () => {
       const response = await fetchMockData();
       setTeamData(response);
     };
-
     fetchData();
   }, []);
 
-  const selectedData =
+    // Llamada al resumen de 12 pasos cuando se selecciona un módulo (y opcionalmente un usuario)
+    useEffect(() => {
+      const fetchTwelveStepsSummary = async () => {
+        if (!selectedModule) return;
+        const token = sessionStorage.getItem("token");
+        if (!token) return;
+        try {
+          setLoading(true);
+          // Si se selecciona un usuario, se usa su uuid; si no, se envía vacío para obtener el promedio de equipo
+          const summary = await GetTwelveStepsSummary(
+            token,
+            selectedModule,
+            selectedMember || ""
+          );
+          setTwelveStepsSummary(summary);
+        } catch (err) {
+          console.error("Error al obtener el resumen de 12 pasos:", err);
+          setError("No se pudieron cargar los datos de 12 pasos.");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchTwelveStepsSummary();
+    }, [selectedModule, selectedMember]);
+
+    // selectedData para el gráfico de felicidad (se utilizará el resumen obtenido)
+    const selectedData = twelveStepsSummary || [];
+
+  // Para Niko Niko, se usa teamData (mock) para mostrar averages si no se selecciona miembro
+  const nikoSelectedData =
     selectedMember === null || selectedMember === ""
       ? teamData?.averages || []
       : teamData?.members[parseInt(selectedMember, 10)]?.responses || [];
@@ -165,8 +248,6 @@ export function Home() {
           <h1 className="text-2xl font-bold text-center mb-4">
             Niko Niko - {selectedTeam?.label ?? "Equipo"}
           </h1>
-
-
           {loading && (
             <p className="text-blue-500 font-semibold text-center">
               Cargando datos...
@@ -177,7 +258,6 @@ export function Home() {
               {error}
             </p>
           )}
-
           <div className="flex justify-center pt-0 mt-0 mb-6">
             <TeamSelector
               teams={teams}
@@ -188,7 +268,6 @@ export function Home() {
               setSelectedMonth={setSelectedMonth}
             />
           </div>
-
           <div className="mt-4">
             <NikoNikoTable nikoDataByMember={nikoDataByMember} />
           </div>
@@ -201,17 +280,21 @@ export function Home() {
       icon: Squares2X2Icon,
       element: (
         <div>
-          {teamData ? (
+          {teamData && modulesData.length > 0 ? (
             <HappinessChart
               teamData={teamData}
+              modulesData={modulesData}
+              memberOptions={memberOptions}
               selectedMember={selectedMember}
               setSelectedMember={setSelectedMember}
-              selectedSprint={selectedSprint}
-              setSelectedSprint={setSelectedSprint}
+              selectedModule={selectedModule}
+              setSelectedModule={setSelectedModule}
               selectedData={selectedData}
             />
           ) : (
-            <p className="text-blue-500 font-semibold text-center">Cargando datos...</p>
+            <p className="text-blue-500 font-semibold text-center">
+              Cargando datos...
+            </p>
           )}
         </div>
       ),
@@ -225,7 +308,6 @@ export function Home() {
           <h1 className="text-2xl font-bold text-center mb-6">
             Resumen de Kudos - {teamData?.teamName || "Equipo"}
           </h1>
-
           <div className="flex flex-col sm:flex-row justify-center items-center mb-4 gap-4">
             <Autocomplete
               options={Object.keys(kudosData[selectedKudosSprint] || {})}
@@ -254,9 +336,10 @@ export function Home() {
               )}
             />
           </div>
-
           <div className="mt-4">
-            {selectedKudosSprint && selectedKudosMember && kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
+            {selectedKudosSprint &&
+            selectedKudosMember &&
+            kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
               <PodiumChart data={kudosData[selectedKudosSprint][selectedKudosMember]} />
             ) : (
               <p className="text-gray-500 text-center">

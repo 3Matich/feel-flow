@@ -1,3 +1,4 @@
+// components/Chart.js
 import React from "react";
 import { motion } from "framer-motion";
 import { TOPICS } from "./topics";
@@ -5,15 +6,29 @@ import { TOPICS } from "./topics";
 export const renderChart = (data) => {
   return (
     <div className="relative flex items-end justify-between h-64 gap-2 overflow-visible">
-      {data.map((value, index) => {
-        const numericValue = typeof value === "number" ? value : 0;
-        const topic = TOPICS[index];
+      {data.map((item, index) => {
+        const numericValue =
+          typeof item.average === "number" ? item.average : 0;
+        // Buscamos en TOPICS el tema que corresponde al categoryName; si no se encuentra, usamos un fallback
+        const topic =
+          TOPICS.find((t) => t.name === item.categoryName) || {
+            icon: "",
+            name: item.categoryName,
+          };
+
+        // Si tus íconos están en la carpeta public, la ruta se debe referenciar sin '/public'
+        const iconSrc =
+          topic.icon.startsWith("/public/")
+            ? topic.icon.replace("/public", "")
+            : topic.icon;
 
         return (
-          <div key={index} className="flex flex-col items-center w-1/12 relative group overflow-visible">
+          <div
+            key={index}
+            className="flex flex-col items-center w-1/12 relative group overflow-visible"
+          >
             {/* Contenedor de la barra */}
             <div className="relative w-8 h-48 bg-gray-200 rounded-md flex justify-center">
-              {/* Barra azul con tooltip */}
               <motion.div
                 className="absolute bottom-0 left-0 w-full rounded-md group-hover:z-40"
                 style={{
@@ -39,12 +54,14 @@ export const renderChart = (data) => {
             </div>
 
             {/* Ícono SVG */}
-            <img
-              src={topic.icon}
-              alt={topic.name}
-              className="mt-1 w-14 h-14"
-              title={topic.name}
-            />
+            {iconSrc && (
+              <img
+                src={iconSrc}
+                alt={topic.name}
+                className="mt-1 w-14 h-14"
+                title={topic.name}
+              />
+            )}
 
             {/* Nombre del tópico */}
             <p className="text-xs text-center mt-1 text-gray-800 h-10 overflow-hidden">
