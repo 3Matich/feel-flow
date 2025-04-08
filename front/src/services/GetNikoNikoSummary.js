@@ -4,9 +4,13 @@ export async function GetNikoNikoSummary(token, idTeam, numberOfMonth) {
       console.error('idTeam debe ser un string UUID válido');
       return [];
     }
+
+    // console.log('token:', token);
+    // console.log('idTeam:', idTeam);
+    // console.log('numberOfMonth:', numberOfMonth);
   
     // let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=${idTeam}`;
-    let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=717defe8-297e-4343-b6f9-aea1f116255a`;
+    let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=056d8489-b8f1-43a1-96c6-e43664d41446`;
     if (numberOfMonth) {
       endpoint += `&numberOfMonth=${numberOfMonth}`;
     }
@@ -24,6 +28,7 @@ export async function GetNikoNikoSummary(token, idTeam, numberOfMonth) {
   
       if (response.ok) {
         const data = await response.json();
+        console.log('GetNikoNikoSummary Success:', data);
         return data;
       } else {
         const errorData = await response.json();

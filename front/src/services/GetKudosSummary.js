@@ -12,6 +12,7 @@ export async function GetKudosSummary(token, idModule, idRegularUser = "") {
     });
     if (response.ok) {
       const data = await response.json();
+      console.log("GetKudosSummary Success: ", data);  // Log para ver la data
       return data; // Array de { badgeName, numberOfBadges }
     } else {
       const errorData = await response.json();
