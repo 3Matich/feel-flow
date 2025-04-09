@@ -1,4 +1,4 @@
-import { getUser } from "../users/user";
+import { getUser } from "../users/getUser";
 
 const saveUserData = (token) => {
     const payload = token.split('.')[1];

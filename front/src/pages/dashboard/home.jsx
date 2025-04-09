@@ -8,9 +8,11 @@ import { GetEquipos } from "../../services/GetEquipos";
 import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
 import { GetModulesAndUsers } from "../../services/GetModulesAndUsers";
 import { GetTwelveStepsSummary } from "../../services/GetTwelveStepsSummary";
+import { GetKudosSummary } from "../../services/GetKudosSummary";
 import TeamSelector from "../../components/TeamSelector";
 import NikoNikoTable from "../../components/NikoNikoTable";
 import HappinessChart from "../../components/HappinessChart";
+import KudosChart from "../../components/KudosChart"; // Nuevo componente para Kudos
 import PodiumChart from "../../components/PodiumChart";
 import { Autocomplete, TextField } from "@mui/material";
 import {
@@ -48,6 +50,74 @@ export function Home() {
   const [twelveError, setTwelveError] = useState(null);
   const [twelveStepsSummary, setTwelveStepsSummary] = useState(null);
 
+    // Estados para Kudos
+  const [kudosModulesData, setKudosModulesData] = useState([]); // Datos del endpoint modules-and-users (KUDOS)
+  const [selectedKudosModule, setSelectedKudosModule] = useState(""); // idModule para Kudos
+  const [kudosMemberOptions, setKudosMemberOptions] = useState([]); // Opciones de usuarios del módulo de Kudos
+  const [selectedKudosMember, setSelectedKudosMember] = useState(""); // Para resumen individual de Kudos; si no, se muestra el promedio de equipo
+  const [kudosSummary, setKudosSummary] = useState([]); // Resumen obtenido del endpoint summary/kudos
+  const [kudosLoading, setKudosLoading] = useState(false);
+  const [kudosError, setKudosError] = useState(null);
+
+  // Cargar módulos para Kudos (KUDOS)
+  useEffect(() => {
+    const fetchKudosModules = async () => {
+      if (!selectedTeam) return;
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      try {
+        setKudosLoading(true);
+        const data = await GetModulesAndUsers(token, "KUDOS", true);
+        setKudosModulesData(data);
+      } catch (err) {
+        console.error("Error al obtener módulos de KUDOS:", err);
+        setKudosError("No se pudieron cargar los módulos de Kudos.");
+      } finally {
+        setKudosLoading(false);
+      }
+    };
+    fetchKudosModules();
+  }, [selectedTeam]);
+
+  // Actualizar opciones de miembros para Kudos según módulo seleccionado
+  useEffect(() => {
+    if (!kudosModulesData || kudosModulesData.length === 0) return;
+    const moduleSelected = kudosModulesData.find(
+      (moduleItem) => moduleItem.moduleDto.id === selectedKudosModule
+    );
+    if (moduleSelected) {
+      const options = moduleSelected.usersDto.map((user) => ({
+        label: `${user.name} ${user.surname}`,
+        value: user.uuid,
+      }));
+      setKudosMemberOptions(options);
+    } else {
+      setKudosMemberOptions([]);
+    }
+  }, [kudosModulesData, selectedKudosModule]);
+
+  // Llamada al resumen de Kudos cuando se selecciona un módulo (y opcionalmente un usuario)
+  useEffect(() => {
+    const fetchKudosSummary = async () => {
+      if (!selectedKudosModule) return;
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      try {
+        setKudosLoading(true);
+        const summary = await GetKudosSummary(token, selectedKudosModule, selectedKudosMember || "");
+        // summary: array de objetos [{ badgeName, numberOfBadges }, ... ]
+        setKudosSummary(summary);
+        setKudosError(null);
+      } catch (err) {
+        console.error("Error al obtener el resumen de Kudos:", err);
+        setKudosError("No se pudieron cargar los datos de Kudos.");
+      } finally {
+        setKudosLoading(false);
+      }
+    };
+    fetchKudosSummary();
+  }, [selectedKudosModule, selectedKudosMember]);
+
   const months = [
     "Enero", "Febrero", "Marzo", "Abril",
     "Mayo", "Junio", "Julio", "Agosto",
@@ -55,8 +125,8 @@ export function Home() {
   ];
 
   // Estados para Kudos (se mantienen igual)
-  const [selectedKudosMember, setSelectedKudosMember] = useState("Equipo");
-  const [selectedKudosSprint, setSelectedKudosSprint] = useState("Sprint 1");
+  // const [selectedKudosMember, setSelectedKudosMember] = useState("Equipo");
+  // const [selectedKudosSprint, setSelectedKudosSprint] = useState("Sprint 1");
 
   const kudosData = {
     "Sprint 1": {
@@ -95,7 +165,8 @@ export function Home() {
       if (!token) return;
       try {
         setLoading(true);
-        const data = await GetNikoNikoSummary(token, selectedTeam?.value, 6);
+        // const data = await GetNikoNikoSummary(token, selectedTeam?.value, month);
+        const data = await GetNikoNikoSummary(token, selectedTeam?.value, 2);
         const groupedData = data.reduce((acc, item) => {
           const fullName = `${item.name} ${item.surname}`.trim();
           if (!acc[fullName]) {
@@ -305,48 +376,22 @@ export function Home() {
       icon: Cog6ToothIcon,
       element: (
         <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
-          <h1 className="text-2xl font-bold text-center mb-6">
-            Resumen de Kudos - {teamData?.teamName || "Equipo"}
-          </h1>
-          <div className="flex flex-col sm:flex-row justify-center items-center mb-4 gap-4">
-            <Autocomplete
-              options={Object.keys(kudosData[selectedKudosSprint] || {})}
-              value={selectedKudosMember}
-              onChange={(e, newValue) => setSelectedKudosMember(newValue)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Selecciona un miembro"
-                  variant="outlined"
-                  sx={{ width: 200, backgroundColor: "white" }}
-                />
-              )}
-            />
-            <Autocomplete
-              options={Object.keys(kudosData)}
-              value={selectedKudosSprint}
-              onChange={(e, newValue) => setSelectedKudosSprint(newValue)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Selecciona un sprint"
-                  variant="outlined"
-                  sx={{ width: 200, backgroundColor: "white" }}
-                />
-              )}
-            />
-          </div>
-          <div className="mt-4">
-            {selectedKudosSprint &&
-            selectedKudosMember &&
-            kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
-              <PodiumChart data={kudosData[selectedKudosSprint][selectedKudosMember]} />
-            ) : (
-              <p className="text-gray-500 text-center">
-                Seleccioná un miembro y un sprint para ver los datos.
-              </p>
-            )}
-          </div>
+          {teamData && modulesData.length > 0 ? (
+          <KudosChart
+            teamData={teamData}
+            modulesData={kudosModulesData}
+            kudosMemberOptions={kudosMemberOptions}
+            selectedKudosMember={selectedKudosMember}
+            setSelectedKudosMember={setSelectedKudosMember}
+            selectedKudosModule={selectedKudosModule}
+            setSelectedKudosModule={setSelectedKudosModule}
+            selectedData={kudosSummary}
+          />
+        ) : (
+          <p className="text-blue-500 font-semibold text-center">
+            Cargando datos...
+          </p>
+        )}
         </div>
       ),
     },
