@@ -1,104 +1,143 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-    Card,
-    Input,
-    Button,
-    Typography,
-    Select,
-    Option
+  Card,
+  Input,
+  Button,
+  Typography,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
+import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
+import { createKudosModule } from "@/services/modulos/createKudosModule";
 import { useMaterialTailwindController } from "@/context";
 
 export function Kudos() {
-    const [teamValue, setTeamValue] = React.useState("Team 1");
-    const [startDate, setStartDate] = React.useState("");
-    const [endDate, setEndDate] = React.useState("");
-    const [selectedDateTime, setSelectedDateTime] = React.useState(null);
+  const [teams, setTeams] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [controller] = useMaterialTailwindController();
 
-    const [controller] = useMaterialTailwindController();
-    const { sidenavColor } = controller;
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const availableTeams = await getAvailableTeams();
+        setTeams(availableTeams);
+      } catch (err) {
+        console.error("❌ Error al obtener equipos:", err);
+      }
+    };
+    fetchTeams();
+  }, []);
 
-    const kudosIcons = [
-        "/public/icons/Kudos_Energia_Positiva.svg",
-        "/public/icons/Kudos_Resolutor_Estrella.svg",
-        "/public/icons/Kudos_Maestro_Del_detalle.svg",
-        "/public/icons/Kudos_Manos_Amigas.svg"
-    ];
+  const handleCreateModule = async () => {
+    try {
+      if (!selectedTeam || !startDate || !endDate) {
+        alert("Por favor complete todos los campos.");
+        return;
+      }
 
-    const kudosDescriptions = [
-        "Energía Positiva: Para los que contagian entusiasmo y motivación al equipo.",
-        "Resolutor Estrella: Para los que encuentran soluciones efectivas a los problemas.",
-        "Maestro del Detalle: Para los que prestan atención a cada pequeño detalle.",
-        "Manos Amigas: Para los que siempre ayudan a sus compañeros."
-    ];
+      const payload = {
+        idTeam: selectedTeam,
+        dateAndTimeToPublish: `${startDate}T00:00:00.000Z`,
+        dateAndTimeToClose: `${endDate}T00:00:00.000Z`,
+      };
 
-    return (
-        <div className="flex gap-7 items-start">
-            <Card color="transparent" shadow={false} className="w-1/2 p-5 flex flex-col justify-start">
-                <Typography variant="h4" color="blue-gray" className="mb-2 text-center">
-                    Configurar Módulo de Kudos
-                </Typography>
-                <Typography color="gray" className="font-normal text-center">
-                    Seleccione las opciones para configurar el módulo.
-                </Typography>
-                <form className="mt-4">
-                    <div className="mb-2 flex flex-col gap-4">
-                        <Typography variant="h6" color="blue-gray">
-                            Equipo
-                        </Typography>
-                        <Select disabled>
-                            <Option value="Team 1">Los Umpalumpas</Option>
-                            <Option value="Team 2">Real Alcohólicos</Option>
-                            <Option value="Team 3">Funcopops</Option>
-                        </Select>
-                        <Typography variant="h6" color="blue-gray">
-                            Fecha de habilitación del módulo
-                        </Typography>
-                        <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
-                        <Typography variant="h6" color="blue-gray">
-                            Fecha de Fin del módulo
-                        </Typography>
-                        <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
-                        <div className="mb-4">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DateTimePicker
-                                    label="Seleccionar fecha y hora"
-                                    value={selectedDateTime}
-                                    onChange={(newDateTime) => setSelectedDateTime(newDateTime)}
-                                    format="DD/MM/YYYY HH:mm"
-                                />
-                            </LocalizationProvider>
-                        </div>
-                    </div>
-                    <Button className="mt-6" fullWidth color={sidenavColor}>
-                        Guardar
-                    </Button>
-                </form>
-            </Card>
-            <Card color="transparent" shadow={false} className="w-1/2 p-5 flex flex-col items-center">
-                <Typography variant="h4" color="blue-gray" className="mb-2 text-center">
-                    Módulo de Kudos
-                </Typography>
-                <Typography color="gray" className="font-normal text-center mb-4">
-                    Incentivamos el reconocimiento y motivación del equipo.
-                </Typography>
-                <div className="grid grid-cols-2 gap-4 w-full">
-                    {kudosIcons.map((icon, index) => (
-                        <div key={index} className="flex flex-col items-center gap-2 p-2">
-                            <img src={icon} alt={kudosDescriptions[index].split(':')[0]} className="w-24 h-24" />
-                            <Typography color="gray" className="font-normal text-center">
-                                <strong>{kudosDescriptions[index].split(':')[0]}</strong>: {kudosDescriptions[index].split(':')[1]}
-                            </Typography>
-                        </div>
-                    ))}
-                </div>
-            </Card>
+      const response = await createKudosModule(payload);
+      alert("✅ Módulo de Kudos creado con éxito");
+      console.log("📦 Respuesta:", response);
+    } catch (err) {
+      alert(`❌ ${err.message}`);
+    }
+  };
+
+  const kudosIcons = [
+    "/public/icons/Kudos_Energia_Positiva.svg",
+    "/public/icons/Kudos_Resolutor_Estrella.svg",
+    "/public/icons/Kudos_Maestro_Del_detalle.svg",
+    "/public/icons/Kudos_Manos_Amigas.svg",
+  ];
+
+  const kudosDescriptions = [
+    "Energía Positiva: Para los que contagian entusiasmo y motivación al equipo.",
+    "Resolutor Estrella: Para los que encuentran soluciones efectivas a los problemas.",
+    "Maestro del Detalle: Para los que prestan atención a cada pequeño detalle.",
+    "Manos Amigas: Para los que siempre ayudan a sus compañeros.",
+  ];
+
+  return (
+    <div className="flex gap-7 items-start">
+      {/* Formulario de configuración */}
+      <Card color="transparent" shadow={false} className="w-1/2 p-5">
+        <Typography variant="h4" color="blue-gray" className="mb-2 text-center">
+          Configurar Módulo de Kudos
+        </Typography>
+        <Typography color="gray" className="font-normal text-center mb-4">
+          Seleccione las opciones para configurar el módulo.
+        </Typography>
+
+        <div className="flex flex-col gap-4">
+          <Typography variant="h6" color="blue-gray">
+            Equipo
+          </Typography>
+          <Select label="Seleccione un equipo" value={selectedTeam} onChange={setSelectedTeam}>
+            {teams.map((team) => (
+              <Option key={team.uuid} value={team.uuid}>
+                {team.nameTeam}
+              </Option>
+            ))}
+          </Select>
+
+          <Typography variant="h6" color="blue-gray">
+            Fecha de habilitación del módulo
+          </Typography>
+          <Input
+            type="date"
+            size="lg"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+
+          <Typography variant="h6" color="blue-gray">
+            Fecha de Fin del módulo
+          </Typography>
+          <Input
+            type="date"
+            size="lg"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+
+          {/* Botón con color personalizado */}
+          <Button
+            className="mt-4 bg-[#282424] hover:bg-opacity-80"
+            onClick={handleCreateModule}
+          >
+            Guardar
+          </Button>
         </div>
-    );
+      </Card>
+
+      {/* Iconos y descripciones */}
+      <Card color="transparent" shadow={false} className="w-1/2 p-5 flex flex-col items-center">
+        <Typography variant="h4" color="blue-gray" className="mb-2 text-center">
+          Módulo de Kudos
+        </Typography>
+        <Typography color="gray" className="font-normal text-center mb-4">
+          Incentivamos el reconocimiento y motivación del equipo.
+        </Typography>
+        <div className="grid grid-cols-2 gap-4 w-full">
+          {kudosIcons.map((icon, index) => (
+            <div key={index} className="flex flex-col items-center gap-2 p-2">
+              <img src={icon} alt={kudosDescriptions[index].split(":")[0]} className="w-24 h-24" />
+              <Typography color="gray" className="font-normal text-center">
+                <strong>{kudosDescriptions[index].split(":")[0]}</strong>: {kudosDescriptions[index].split(":")[1]}
+              </Typography>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
 }

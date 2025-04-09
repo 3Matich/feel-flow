@@ -1,29 +1,135 @@
 import React, { useState, useEffect } from "react";
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
-    Avatar,
-    Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
-    Input,
-    Textarea,
-    Spinner,
-    Alert,
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+  Avatar,
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Input,
+  Textarea,
+  Spinner,
+  Alert,
 } from "@material-tailwind/react";
-import { EyeIcon, EyeSlashIcon, CheckCircleIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  CheckCircleIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+} from "@heroicons/react/24/solid";
 import { teamsData } from "@/data";
+import { createTeam } from "@/services/equipos/createTeam";
 
 export function Teams() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [isFocused, setIsFocused] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [size, setSize] = useState("xs");
-    const [newTeam, setNewTeam] = useState({
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [size, setSize] = useState("xs");
+  const [newTeam, setNewTeam] = useState({
+    name: "",
+    description: "",
+    leaderFirstName: "",
+    leaderLastName: "",
+    leaderUsername: "",
+    leaderPassword: "",
+    leaderConfirmPassword: "",
+    logo: "",
+  });
+  const [teams, setTeams] = useState(teamsData);
+  const [errors, setErrors] = useState({});
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleOpen = () => setOpen(!open);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewTeam((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewTeam((prev) => ({ ...prev, logo: file }));
+      setLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      setNewTeam((prev) => ({ ...prev, logo: file }));
+      setLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setLogoPreview(null);
+    setNewTeam((prev) => ({ ...prev, logo: "" }));
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+    if (!newTeam.name) newErrors.name = "El nombre del equipo es requerido";
+    if (!newTeam.leaderFirstName) newErrors.leaderFirstName = "El nombre del líder es requerido";
+    if (!newTeam.leaderLastName) newErrors.leaderLastName = "El apellido del líder es requerido";
+    if (!newTeam.leaderUsername) {
+      newErrors.leaderUsername = "El email del líder es requerido";
+    } else if (!/\S+@\S+\.\S+/.test(newTeam.leaderUsername)) {
+      newErrors.leaderUsername = "Ingrese un email válido";
+    }
+    if (!newTeam.leaderPassword) newErrors.leaderPassword = "La contraseña es requerida";
+    if (!newTeam.leaderConfirmPassword) newErrors.leaderConfirmPassword = "La confirmación de la contraseña es requerida";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCreateTeam = async () => {
+    if (!validateForm()) return;
+
+    setIsSaving(true);
+    setErrorMessage("");
+    const teamData = {
+      name: newTeam.name,
+      description: newTeam.description,
+      leaderFirstName: newTeam.leaderFirstName,
+      leaderLastName: newTeam.leaderLastName,
+      leaderUsername: newTeam.leaderUsername,
+      leaderPassword: newTeam.leaderPassword,
+    };
+
+    try {
+      const result = await createTeam(teamData);
+      console.log("✅ Equipo creado:", result);
+
+      setTeams([
+        ...teams,
+        {
+          name: teamData.name,
+          description: teamData.description,
+          logo: logoPreview,
+          leader: `${teamData.leaderFirstName} ${teamData.leaderLastName}`,
+        },
+      ]);
+
+      setNewTeam({
         name: "",
         description: "",
         leaderFirstName: "",
@@ -32,154 +138,51 @@ export function Teams() {
         leaderPassword: "",
         leaderConfirmPassword: "",
         logo: "",
-    });
-    const [teams, setTeams] = useState(teamsData);
-    const [errors, setErrors] = useState({});
-    const [logoPreview, setLogoPreview] = useState(null);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
+      });
 
-    const handleOpen = () => setOpen(!open);
+      setLogoPreview(null);
+      setOpen(false);
+      setSuccessMessage("¡Equipo creado con éxito!");
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewTeam((prev) => ({ ...prev, [name]: value }));
-    };
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
+    } catch (error) {
+      console.error("❌ Error creando equipo:", error);
+      setErrorMessage(error.message || "Error al crear equipo");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    const handleLogoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setNewTeam((prev) => ({ ...prev, logo: file }));
-            setLogoPreview(URL.createObjectURL(file));
-        }
-    };
+  const filteredTeams = teams.filter(({ name, leader }) =>
+    name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    leader.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-    };
+  return (
+    <>
+      {successMessage && (
+        <Alert
+          color="green"
+          icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
+          className="mb-4"
+          onClose={() => setSuccessMessage("")}
+        >
+          {successMessage}
+        </Alert>
+      )}
 
-    const handleDrop = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        const file = event.dataTransfer.files[0];
-        if (file) {
-            setNewTeam((prev) => ({ ...prev, logo: file }));
-            setLogoPreview(URL.createObjectURL(file));
-        }
-    };
-
-    const handleRemoveLogo = () => {
-        setLogoPreview(null);
-        setNewTeam((prev) => ({ ...prev, logo: "" }));
-    };
-
-    const validateForm = () => {
-        let newErrors = {};
-        if (!newTeam.name) newErrors.name = "El nombre del equipo es requerido";
-        if (!newTeam.leaderFirstName) newErrors.leaderFirstName = "El nombre del líder es requerido";
-        if (!newTeam.leaderLastName) newErrors.leaderLastName = "El apellido del líder es requerido";
-        if (!newTeam.leaderUsername) {
-            newErrors.leaderUsername = "El email del líder es requerido";
-        } else if (!/\S+@\S+\.\S+/.test(newTeam.leaderUsername)) {
-            newErrors.leaderUsername = "Ingrese un email válido";
-        }
-        if (!newTeam.leaderPassword) newErrors.leaderPassword = "La contraseña es requerida";
-        if (!newTeam.leaderConfirmPassword) newErrors.leaderConfirmPassword = "La confirmación de la contraseña es requerida";
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-    const [passwordValid, setPasswordValid] = useState(false); // Para validar si la contraseña es fuerte
-    const [passwordMatch, setPasswordMatch] = useState(true); // Para validar que las contraseñas coinciden
-
-    useEffect(() => {
-        const password = newTeam.leaderPassword;
-        const passwordConfirm = newTeam.leaderConfirmPassword;
-
-        let newErrors = { ...errors };
-
-        // Validación de fortaleza de la contraseña (solo si el usuario ha ingresado algo)
-        if (password) {
-            const isStrongPassword = password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
-            setPasswordValid(isStrongPassword);
-
-            if (!isStrongPassword) {
-                newErrors.leaderPassword = "Debe tener al menos 8 caracteres, una mayúscula y un número";
-            } else {
-                delete newErrors.leaderPassword;
-            }
-        } else {
-            setPasswordValid(false);
-        }
-
-        // Validación de coincidencia de contraseñas (solo si ambas están llenas)
-        if (password && passwordConfirm) {
-            const passwordsMatch = password === passwordConfirm;
-            setPasswordMatch(passwordsMatch);
-
-            if (!passwordsMatch) {
-                newErrors.leaderConfirmPassword = "Las contraseñas no coinciden";
-            } else {
-                delete newErrors.leaderConfirmPassword;
-            }
-        }
-
-        setErrors(newErrors);
-    }, [newTeam.leaderPassword, newTeam.leaderConfirmPassword]);
-
-
-
-    const handleCreateTeam = () => {
-        if (validateForm()) {
-            setIsSaving(true);
-            const teamData = { ...newTeam, logo: logoPreview || "" };
-
-            setTimeout(() => {
-                setTeams([...teams, teamData]);
-
-                setNewTeam({
-                    name: "",
-                    description: "",
-                    leaderFirstName: "",
-                    leaderLastName: "",
-                    leaderUsername: "",
-                    leaderPassword: "",
-                    leaderConfirmPassword: "",
-                    logo: "",
-                });
-                setLogoPreview(null);
-                setOpen(false);
-                setIsSaving(false);
-
-                setSuccessMessage("¡Equipo creado con éxito!");
-
-                setTimeout(() => {
-                    setSuccessMessage("");
-                }, 3000);
-            }, 2000);
-        }
-    };
-
-    const filteredTeams = teamsData.filter(({ name, leader }) =>
-        name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        leader.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    return (
-        <>
-            {successMessage && (
-                <Alert
-                    color="green"
-                    icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
-                    className="mb-4"
-                    onClose={() => setSuccessMessage("")}
-                >
-                    {successMessage}
-                </Alert>
-            )}
+      {errorMessage && (
+        <Alert
+          color="red"
+          icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
+          className="mb-4"
+          onClose={() => setErrorMessage("")}
+        >
+          {errorMessage}
+        </Alert>
+      )}
 
             <Card color="transparent" className="mb-6 p-4 mt-10">
                 <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
