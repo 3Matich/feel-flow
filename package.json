@@ -5,6 +5,7 @@
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@stomp/stompjs": "^7.1.1",
     "moment": "^2.30.1",
     "react-big-calendar": "^1.18.0",
     "sockjs-client": "^1.6.1"

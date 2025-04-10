@@ -1,3 +1,4 @@
+// DashboardNavbar.jsx
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
@@ -22,13 +23,13 @@ import {
   useMaterialTailwindController,
   setOpenConfigurator,
 } from "@/context";
-import { GetNotifications } from "@/services/GetNotifications";  // Import del servicio
+import { GetNotifications } from "@/services/GetNotifications";
 
-// Función para obtener un tiempo relativo
+// Función para calcular el tiempo relativo
 function getRelativeTime(dateString) {
   const now = new Date();
   const date = new Date(dateString);
-  const diffMs = now - date; // Diferencia en milisegundos
+  const diffMs = now - date; // diferencia en milisegundos
 
   const diffSeconds = Math.floor(diffMs / 1000);
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -52,21 +53,54 @@ export function DashboardNavbar({ onLogout }) {
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
 
-  // Estado para notificaciones
+  // Estado para notificaciones (inicialmente vacío)
   const [notifications, setNotifications] = useState([]);
 
-  // Efecto para cargar las notificaciones desde el back
+  // Cargar notificaciones vía GET cuando se monta (opcional, para tener un respaldo inicial)
   useEffect(() => {
     const fetchNotifications = async () => {
       const token = sessionStorage.getItem("token");
       if (!token) return;
-      // Opcionalmente se pueden pasar { from, to, max } si hace falta
-      const data = await GetNotifications(token);
-      // Se espera que data sea un array de objetos: [{ title, body, createdAt }, ... ]
+      const data = await GetNotifications(token); // Este servicio ya lo tienes implementado
       setNotifications(data);
     };
-
     fetchNotifications();
+  }, []);
+
+  // Conexión WebSocket para recibir notificaciones en tiempo real
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return;
+    // Ejemplo básico: ajusta la URL según la configuración de tu servidor
+    const ws = new WebSocket(`ws://localhost:8080/ws/notifications?token=${token}`);
+    
+    ws.onopen = () => {
+      console.log("WebSocket conectado para notificaciones.");
+    };
+    
+    ws.onmessage = (event) => {
+      try {
+        const newNotif = JSON.parse(event.data);
+        console.log("Notificación recibida vía WebSocket:", newNotif);
+        // Agregar la nueva notificación al inicio de la lista
+        setNotifications((prev) => [newNotif, ...prev]);
+      } catch (error) {
+        console.error("Error al parsear la notificación:", error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket desconectado.");
+    };
+
+    // Limpieza: cerrar la conexión al desmontar
+    return () => {
+      ws.close();
+    };
   }, []);
 
   return (
@@ -82,28 +116,9 @@ export function DashboardNavbar({ onLogout }) {
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
-          <Breadcrumbs className={`bg-transparent p-0 ${fixedNavbar ? "mt-1" : ""}`}>
-            <Link to={`/${layout}`}>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
-              >
-                {layout}
-              </Typography>
-            </Link>
-            <Typography variant="small" color="blue-gray" className="font-normal">
-              {page}
-            </Typography>
-          </Breadcrumbs>
-          {/* <Typography variant="h6" color="blue-gray">
+          <Typography variant="h6" color="blue-gray">
             {page}
-          </Typography> */}
-        </div>
-        <div className="capitalize">
-          {/* <Typography variant="h6" color="blue-gray">
-            {page}
-          </Typography> */}
+          </Typography>
         </div>
         <div className="flex items-center">
           <Badge content={notifications.length}>
