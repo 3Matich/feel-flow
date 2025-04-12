@@ -22,14 +22,15 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
-import { teamsData } from "@/data";
 import { createTeam } from "@/services/equipos/createTeam";
+import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
 
 export function Teams() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState("xs");
+  const [teams, setTeams] = useState([]);
   const [newTeam, setNewTeam] = useState({
     name: "",
     description: "",
@@ -40,7 +41,6 @@ export function Teams() {
     leaderConfirmPassword: "",
     logo: "",
   });
-  const [teams, setTeams] = useState(teamsData);
   const [errors, setErrors] = useState({});
   const [logoPreview, setLogoPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,6 +48,26 @@ export function Teams() {
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const backendTeams = await getAvailableTeams();
+        const transformedTeams = backendTeams.map((team) => ({
+          name: team.nameTeam,
+          description: team.descriptionTeam,
+          leader: `${team.teamLeaderDTO.name} ${team.teamLeaderDTO.surname}`,
+          logo: "",
+        }));
+        setTeams(transformedTeams);
+      } catch (err) {
+        console.error("❌ Error al obtener equipos del backend:", err);
+        setTeams([]);
+      }
+    };
+
+    fetchTeams();
+  }, []);
 
   const handleOpen = () => setOpen(!open);
 
@@ -119,8 +139,8 @@ export function Teams() {
       const result = await createTeam(teamData);
       console.log("✅ Equipo creado:", result);
 
-      setTeams([
-        ...teams,
+      setTeams((prev) => [
+        ...prev,
         {
           name: teamData.name,
           description: teamData.description,
@@ -184,70 +204,76 @@ export function Teams() {
         </Alert>
       )}
 
-            <Card color="transparent" className="mb-6 p-4 mt-10">
-                <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
-                    <Typography variant="h4" color="blue">Listado de Equipos</Typography>
-                    <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
-                        <PlusIcon className="h-5 w-5" />
-                        Crear Equipo
-                    </Button>
-                </CardHeader>
-                <CardBody className="mb-1">
-                    <div className="relative w-full mb-3">
-                        <label
-                            className={`absolute left-4 transition-all duration-300 bg-white px-1 pointer-events-none ${isFocused || searchQuery
-                                ? "text-xs top-0 transform -translate-y-1/2 text-blue-600"
-                                : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
-                                }`}
-                        >
-                            Buscar equipo o Team Leader
-                        </label>
+      <Card color="transparent" className="mb-6 p-4 mt-10">
+        <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
+          <Typography variant="h4" color="blue">Listado de Equipos</Typography>
+          <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
+            <PlusIcon className="h-5 w-5" />
+            Crear Equipo
+          </Button>
+        </CardHeader>
+        <CardBody className="mb-1">
+          {filteredTeams.length === 0 ? (
+            <Typography color="gray" className="text-center text-lg">No hay equipos creados</Typography>
+          ) : (
+            <>
+              <div className="relative w-full mb-3">
+                <label
+                  className={`absolute left-4 transition-all duration-300 bg-white px-1 pointer-events-none ${isFocused || searchQuery
+                    ? "text-xs top-0 transform -translate-y-1/2 text-blue-600"
+                    : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
+                    }`}
+                >
+                  Buscar equipo o Team Leader
+                </label>
 
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            className="w-full border border-gray-300 rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
-                        />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  className="w-full border border-gray-300 rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
+                />
 
-                        <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    </div>
+                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              </div>
 
-                    <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
-                        <thead>
-                            <tr className="bg-blue-gray-50">
-                                {["Equipo", "Team Leader"].map((el) => (
-                                    <th
-                                        key={el}
-                                        className="border-b border-blue-gray-100 py-3 px-5 text-left text-blue-gray-600 uppercase text-sm font-bold"
-                                    >
-                                        {el}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredTeams.map(({ logo, name, leader }, key) => (
-                                <tr key={name} className="hover:bg-blue-gray-50 transition-all">
-                                    <td className="py-3 px-5 border-b border-blue-gray-100 flex items-center gap-4">
-                                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                                        <Typography className="font-semibold text-blue-gray-700">
-                                            {name}
-                                        </Typography>
-                                    </td>
-                                    <td className="py-3 px-5 border-b border-blue-gray-100">
-                                        <Typography className="text-sm font-semibold text-blue-gray-700">
-                                            {leader}
-                                        </Typography>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </CardBody>
-            </Card>
+              <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
+                <thead>
+                  <tr className="bg-blue-gray-50">
+                    {["Equipo", "Team Leader"].map((el) => (
+                      <th
+                        key={el}
+                        className="border-b border-blue-gray-100 py-3 px-5 text-left text-blue-gray-600 uppercase text-sm font-bold"
+                      >
+                        {el}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTeams.map(({ logo, name, leader }) => (
+                    <tr key={name} className="hover:bg-blue-gray-50 transition-all">
+                      <td className="py-3 px-5 border-b border-blue-gray-100 flex items-center gap-4">
+                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
+                        <Typography className="font-semibold text-blue-gray-700">
+                          {name}
+                        </Typography>
+                      </td>
+                      <td className="py-3 px-5 border-b border-blue-gray-100">
+                        <Typography className="text-sm font-semibold text-blue-gray-700">
+                          {leader}
+                        </Typography>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </CardBody>
+      </Card>
 
             <Dialog
                 open={open}
