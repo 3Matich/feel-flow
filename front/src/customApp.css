@@ -48,3 +48,17 @@
     }
 }
 
+@layer base {
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-light-text dark:text-dark-text font-semibold;
+    }
+
+    p {
+        @apply text-light-text-secondary dark:text-dark-text-secondary font-normal;
+    }
+
+    input {
+        @apply border dark:!bg-blue-gray-800 dark:text-dark-text-secondary
+    }
+}

@@ -54,15 +54,15 @@ export function TwelveSteps() {
         <div className="flex gap-7 h-screen items-start">
             {/* Formulario a la izquierda */}
             <Card color="transparent" shadow={false} className="w-1/2 p-5 flex flex-col justify-start">
-                <Typography variant="h4" color="blue-gray" className="mb-2">
+                <Typography variant="h4" className="mb-2">
                     Configurar Módulo 12 Pasos
                 </Typography>
-                <Typography color="gray" className="font-normal">
+                <Typography>
                     Seleccione las opciones para configurar el módulo.
                 </Typography>
                 <form className="mt-4">
                     <div className="mb-1 flex flex-col gap-4">
-                        <Typography variant="h6" color="blue-gray">
+                        <Typography variant="h6">
                             Equipo
                         </Typography>
                         <Select disabled>
@@ -70,16 +70,16 @@ export function TwelveSteps() {
                             <Option value="Team 2">Real Alcohólicos</Option>
                             <Option value="Team 3">Funcopops</Option>
                         </Select>
-                        <Typography variant="h6" color="blue-gray">
+                        <Typography variant="h6">
                             Fecha de habilitación del módulo
                         </Typography>
-                        <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
-                        <Typography variant="h6" color="blue-gray">
+                        <Input type="date" size="lg" />
+                        <Typography variant="h6">
                             Fecha de Fin del módulo
                         </Typography>
-                        <Input type="date" size="lg" className="!border-t-blue-gray-200 focus:!border-t-gray-900" />
+                        <Input type="date" size="lg" />
                     </div>
-                    <Button className="mt-4" fullWidth>
+                    <Button className="mt-6 button-custom" variant="filled" color="none" fullWidth>
                         Guardar
                     </Button>
                 </form>
@@ -87,10 +87,10 @@ export function TwelveSteps() {
 
             {/* Carrusel a la derecha */}
             <Card color="transparent" shadow={false} className="w-1/2 p-5 flex flex-col items-start justify-start h-full">
-                <Typography variant="h4" color="blue-gray" className="mb-2">
+                <Typography variant="h4" className="mb-2">
                     Los 12 Pasos de la Felicidad
                 </Typography>
-                <Typography color="gray" className="font-normal text-center mb-4">
+                <Typography className="text-center mb-4">
                     Practica estos pasos para una vida más plena.
                 </Typography>
 
@@ -111,9 +111,8 @@ export function TwelveSteps() {
                                 className="flex flex-col items-center justify-between p-1 min-h-[140px]"
                             >
                                 <img src={icon} alt={stepsDescriptions[currentIndex + index]} className="w-28 h-28" />
-                                <Typography 
-                                    color="gray" 
-                                    className="font-normal text-center mt-0 leading-tight"
+                                <Typography  
+                                    className="text-center mt-0 leading-tight"
                                 >
                                     <strong>{stepsDescriptions[currentIndex + index]}</strong>
                                 </Typography>

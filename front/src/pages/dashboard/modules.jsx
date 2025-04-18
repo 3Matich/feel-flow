@@ -47,18 +47,24 @@ export function Modules() {
         },
     ];
     return (
-        <Tabs value="dashboard">
-            <TabsHeader>
+        <Tabs
+            value="dashboard"
+            className=""
+            indicatorProps={{
+                className: "bg-pink-500 shadow-none rounded-full",
+            }}
+        >
+            <TabsHeader className="bg-pink-100 rounded-full" indicatorProps={{className:"bg-pink-400 rounded-full"}}>
                 {data.map(({ label, value, icon }) => (
                     <Tab key={value} value={value}>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-black">
                             {React.createElement(icon, { className: "w-5 h-5" })}
                             {label}
                         </div>
                     </Tab>
                 ))}
             </TabsHeader>
-            <TabsBody>
+            <TabsBody className="mt-5">
                 {data.map(({ value, element }) => (
                     <TabPanel key={value} value={value}>
                         {element}
