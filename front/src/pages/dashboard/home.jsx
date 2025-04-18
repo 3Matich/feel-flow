@@ -136,7 +136,7 @@ export function Home() {
           {loading && <p className="text-center">Cargando equipos...</p>}
           {error && <p className="text-center">{error}</p>}
 
-          <div className="flex justify-center pt-0 mt-0 mb-6">
+          <div className="flex justify-center">
             <TeamSelector
               teams={teams}
               selectedTeam={selectedTeam}
@@ -147,7 +147,7 @@ export function Home() {
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-8">
             <NikoNikoTable teamMembers={teamMembers} nikoData={nikoData} />
           </div>
         </div>
@@ -169,7 +169,7 @@ export function Home() {
               selectedData={selectedData}
             />
           ) : (
-            <p className="text-blue-500 font-semibold text-center">Cargando datos...</p>
+            <p className="text-center">Cargando datos...</p>
           )}
         </div>
       ),
@@ -179,12 +179,12 @@ export function Home() {
       value: "kudos",
       icon: GiftIcon,
       element: (
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
-          <h1 className="text-2xl font-bold text-center mb-6">
+        <div className="rounded-lg shadow-lg relative mt-4">
+          {/* <h1 className="text-2xl font-bold text-center mb-6">
             Resumen de Kudos - {teamData?.teamName || "Equipo"}
-          </h1>
+          </h1> */}
 
-          <div className="flex flex-col sm:flex-row justify-center items-center mb-4 gap-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <Autocomplete
               options={Object.keys(kudosData[selectedKudosSprint] || {})}
               value={selectedKudosMember}
@@ -194,7 +194,7 @@ export function Home() {
                   {...params}
                   label="Selecciona un miembro"
                   variant="outlined"
-                  sx={{ width: 200, backgroundColor: "white" }}
+                  sx={{ width: 200, backgroundColor: "pink" }}
                 />
               )}
             />
@@ -207,13 +207,13 @@ export function Home() {
                   {...params}
                   label="Selecciona un sprint"
                   variant="outlined"
-                  sx={{ width: 200, backgroundColor: "white" }}
+                  sx={{ width: 200, backgroundColor: "pink" }}
                 />
               )}
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-8">
             {selectedKudosSprint && selectedKudosMember && kudosData[selectedKudosSprint]?.[selectedKudosMember] ? (
               <PodiumChart data={kudosData[selectedKudosSprint][selectedKudosMember]} />
             ) : (

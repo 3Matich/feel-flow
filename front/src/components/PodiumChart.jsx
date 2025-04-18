@@ -38,7 +38,7 @@ const PodiumChart = ({ data }) => {
   const colorMapping = assignColors(data);
 
   return (
-    <div className="grid grid-cols-4 gap-8 h-80 bg-gray-100 rounded-lg shadow-md relative">
+    <div className="grid grid-cols-4 gap-8 h-80 rounded-lg shadow-md relative">
       {prizes.map((prize) => (
         <div
           key={prize}
@@ -50,8 +50,8 @@ const PodiumChart = ({ data }) => {
             alt={prize}
             className="w-28 h-28 mb-2"
           />
-          <p className="text-gray-700 font-bold text-center">{prize}</p>
-          <p className="text-gray-700 text-center text-sm">{data[prize] || 0} kudos</p>
+          <p className="font-bold text-center">{prize}</p>
+          <p className="text-center text-sm">{data[prize] || 0} kudos</p>
         </div>
       ))}
     </div>

@@ -37,15 +37,15 @@ function NikoNikoTable({ teamMembers, nikoData }) {
   };
 
   return (
-    <div className="mt-4 bg-white rounded-lg shadow-lg p-6">
-      <table className="w-full text-sm table-auto border-separate border-spacing-0">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-4 py-3 text-gray-600 font-semibold text-center w-32">
+    <div className="mt-4 rounded-lg shadow-lg">
+      <table className="w-full table-auto border-separate border-spacing-0">
+        <thead>
+          <tr className="table-header">
+            <th className="px-4 py-3 table-header-cell text-center w-32">
               Miembro
             </th>
             {currentDays.map((day) => (
-              <th key={day} className="px-2 py-2 text-gray-600 text-center w-12">
+              <th key={day} className="px-2 py-2 table-header-cell text-center w-12">
                 {day}
               </th>
             ))}
@@ -53,12 +53,12 @@ function NikoNikoTable({ teamMembers, nikoData }) {
         </thead>
         <tbody>
           {currentMembers.map((member) => (
-            <tr key={member} className="border-b">
-              <td className="px-4 py-2 font-medium text-gray-700 text-center">
+            <tr key={member} className="border table-body">
+              <td className="px-4 py-2 table-body-cell text-center font-bold">
                 {member}
               </td>
               {currentDays.map((dayIndex) => (
-                <td key={dayIndex} className="px-2 py-1 text-center align-middle">
+                <td key={dayIndex} className="px-2 py-1 text-center align-middle table-body-cell">
                   {getFaceWithColor(nikoData[member]?.[dayIndex - 1])}
                 </td>
               ))}
@@ -72,14 +72,14 @@ function NikoNikoTable({ teamMembers, nikoData }) {
         <button
           onClick={() => setDayPage((prev) => Math.max(prev - 1, 0))}
           disabled={dayPage === 0}
-          className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50 text-lg"
+          className="w-9 h-9 rounded-full bg-pink-400 text-white hover:bg-pink-700 font-bold disabled:opacity-50 text-lg"
         >
           ←
         </button>
         <button
           onClick={() => setDayPage((prev) => Math.min(prev + 1, totalDayPages - 1))}
           disabled={dayPage === totalDayPages - 1}
-          className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50 text-lg"
+          className="w-9 h-9 rounded-full bg-pink-400 text-white hover:bg-pink-700 font-bold disabled:opacity-50 text-lg"
         >
           →
         </button>
