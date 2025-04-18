@@ -184,7 +184,7 @@ export function Teams() {
             <Card color="transparent" className="mb-6 p-4 mt-10 text-light-text-secondary dark:text-dark-text-secondary">
                 <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
                     <Typography variant="h4" className="text-light-text dark:text-dark-text">Listado de Equipos</Typography>
-                    <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
+                    <Button onClick={handleOpen} color="none" variant="filled" className="flex items-center gap-2 button-custom">
                         <PlusIcon className="h-5 w-5" />
                         Crear Equipo
                     </Button>
@@ -257,6 +257,7 @@ export function Teams() {
                             Crear un nuevo Equipo
                         </Typography>
                         <button
+                            color="none"
                             onClick={() => {
                                 handleOpen(); // Cerrar
                                 setNewTeam({

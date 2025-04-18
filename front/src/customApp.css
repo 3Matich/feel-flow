@@ -36,13 +36,15 @@
     }
 
     .button-save {
-        @apply text-success-light dark:text-success-light bg-light-button-success dark:bg-dark-button-success
+        @apply text-success-light dark:text-success-light bg-light-button-success dark:bg-dark-button-success rounded-full !important
     }
 
     .button-cancel {
-        @apply text-alert-light dark:text-alert-light
+        @apply text-alert-light dark:text-alert-light rounded-full !important
     }
 
-
+    .button-custom {
+        @apply bg-gradient-to-r from-pink-400 to-pink-600 text-white font-medium rounded-full text-sm normal-case shadow-md transition-all duration-300 !important
+    }
 }
 
