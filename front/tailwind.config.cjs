@@ -38,7 +38,7 @@ module.exports = withMT({
 
         // Tema Oscuro
         "dark-primary": "#010D26", // Azul eléctrico ############ Sidebar y Navbar
-        "dark-secondary": "#F25D50", // Coral
+        "dark-secondary":  "#880e38",// "#F25D50", // pink-900
         "dark-bg": "#121212", // Fondo oscuro
         "dark-text": "#EAEAEA", // Texto principal
         "dark-text-secondary": "#A1A1A1", // Texto secundario

@@ -78,7 +78,7 @@ export function Kudos() {
                         </div>
                         */}
                     </div>
-                    <Button className="mt-6" fullWidth color={sidenavColor}>
+                    <Button className="mt-6 button-custom" fullWidth color="none">
                         Guardar
                     </Button>
                 </form>

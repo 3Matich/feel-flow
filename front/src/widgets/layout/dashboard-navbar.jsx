@@ -93,9 +93,9 @@ export function DashboardNavbar() {
                   <BellIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}
                 </IconButton>
               </MenuHandler>
-              <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary">
+              <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary"> 
                 {notifications.map((notif) => (
-                  <MenuItem key={notif.id} className="flex items-center gap-3">
+                  <MenuItem key={notif.id} className="flex items-center gap-3 hover:!bg-pink-800">
                     <Avatar
                       src={notif.avatar}
                       alt={notif.title}
@@ -105,14 +105,14 @@ export function DashboardNavbar() {
                     <div>
                       <Typography
                         variant="small"
-                        color="text-light-secondary dark:text-dark-secondary"
+                        // color="text-light-secondary dark:text-dark-secondary"
                         className="mb-1 font-normal"
                       >
                         <strong>{notif.title}</strong> {notif.message}
                       </Typography>
                       <Typography
                         variant="small"
-                        color="text-light-secondary dark:text-dark-secondary"
+                        // color="text-light-secondary dark:text-dark-secondary"
                         className="flex items-center gap-1 text-xs font-normal opacity-60"
                       >
                         <ClockIcon className="h-3.5 w-3.5" /> {notif.time}
