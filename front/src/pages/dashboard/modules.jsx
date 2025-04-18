@@ -7,9 +7,10 @@ import {
     TabPanel,
 } from "@material-tailwind/react";
 import {
-    Square3Stack3DIcon,
-    UserCircleIcon,
-    Cog6ToothIcon,
+    GiftIcon,
+    PresentationChartLineIcon,
+    FaceSmileIcon,
+    HeartIcon,
 } from "@heroicons/react/24/solid";
 import { 
     TwelveSteps,
@@ -17,32 +18,31 @@ import {
     Kudos,
     Dashboard,
 } from "@/widgets/modules";
-import { element } from "prop-types";
 
 export function Modules() {
     const data = [
         {
             label: "Dashboard",
             value: "dashboard",
-            icon: Square3Stack3DIcon,
+            icon: PresentationChartLineIcon,
             element: <Dashboard />,
         },
         {
             label: "12 Pasos de la Felicidad",
             value: "twelveSteps",
-            icon: Square3Stack3DIcon,
+            icon: HeartIcon,
             element: <TwelveSteps />,
         },
         {
             label: "Niko Niko",
             value: "nikoNiko",
-            icon: UserCircleIcon,
+            icon: FaceSmileIcon,
             element: <NikoNiko />,
         },
         {
             label: "Kudos",
             value: "kudos",
-            icon: Cog6ToothIcon,
+            icon: GiftIcon,
             element: <Kudos />,
         },
     ];

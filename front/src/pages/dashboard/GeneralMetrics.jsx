@@ -12,15 +12,15 @@ export function GeneralMetrics() {
   return (
     <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
       {statisticsCardsData.map(({ icon, title, value }) => (
-        <div key={title} className="p-4 bg-white shadow-md rounded-lg flex items-center gap-4 border border-gray-200">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-300">
+        <div key={title} className="p-4 shadow-md rounded-lg flex items-center gap-4 border card">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full">
             {React.createElement(icon, {
-              className: "w-6 h-6 text-gray-700",
+              className: "w-6 h-6",
             })}
           </div>
           <div>
-            <p className="text-gray-600 text-sm">{title}</p>
-            <p className="text-lg font-semibold text-gray-900">{value}</p>
+            <h5 className="text-sm">{title}</h5>
+            <p className="text-lg">{value}</p>
           </div>
         </div>
       ))}

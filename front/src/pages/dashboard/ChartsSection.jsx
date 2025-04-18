@@ -131,7 +131,7 @@ export function ChartsSection() {
   return (
     <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
       {/* Tendencia Emocional - Gráfico de Línea */}
-      <Card>
+      <Card className="card">
         <CardBody>
           <Typography variant="h6" className="mb-4">Tendencia Emocional</Typography>
           <Chart options={tendenciaEmocionalChartOptions} series={tendenciaEmocionalChartSeries} type="line" height={300} />
@@ -139,7 +139,7 @@ export function ChartsSection() {
       </Card>
 
       {/* Distribución de Felicidad - Radar Chart */}
-      <Card>
+      <Card className="card">
         <CardBody>
           <Typography variant="h6" className="mb-4">Distribución de Felicidad</Typography>
           <Chart options={felicidadChartOptions} series={felicidadChartSeries} type="radar" height={300} />
@@ -147,7 +147,7 @@ export function ChartsSection() {
       </Card>
 
       {/* Tipos de Kudos por Miembro - Bubble Chart */}
-      <Card>
+      <Card className="card">
         <CardBody>
           <Typography variant="h6" className="mb-4">Tipos de Kudos por Miembro</Typography>
           <Chart options={kudosChartOptions} series={kudosChartSeries} type="bubble" height={300} />

@@ -111,19 +111,19 @@ export function Resumenes() {
       </Dialog>
 
       {/* Sección de Herramientas de Agilidad */}
-      <div className="mt-8 p-4 bg-gray-100 rounded-lg shadow-md">
+      <div className="mt-8 p-4 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4">Herramientas de Agilidad</h2>
         <div className="flex gap-4">
           <div className="flex items-center gap-2">
-            <CheckCircleIcon className="w-6 h-6 text-green-500" />
+            <CheckCircleIcon className="w-6 h-6" />
             <span>Definición de Hecho (DoD)</span>
           </div>
           <div className="flex items-center gap-2">
-            <ClockIcon className="w-6 h-6 text-blue-500" />
+            <ClockIcon className="w-6 h-6" />
             <span>Timeboxing para eventos clave</span>
           </div>
           <div className="flex items-center gap-2">
-            <FlagIcon className="w-6 h-6 text-red-500" />
+            <FlagIcon className="w-6 h-6" />
             <span>Gestión de impedimentos</span>
           </div>
         </div>

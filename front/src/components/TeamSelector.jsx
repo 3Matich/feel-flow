@@ -33,7 +33,7 @@ function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMo
                 variant="outlined"
                 sx={{
                   width: 200,
-                  backgroundColor: "white",
+                  // backgroundColor: "pink",
                 }}
               />
             )}
@@ -55,7 +55,7 @@ function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMo
                 variant="outlined"
                 sx={{
                   width: 200,
-                  backgroundColor: "white",
+                  // backgroundColor: "white",
                 }}
               />
             )}
