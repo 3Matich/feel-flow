@@ -195,10 +195,10 @@ export function Team() {
 
             {/* Modal para invitar miembros */}
 
-            <Dialog open={open} handler={handleOpen} size="sm" className={`transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
-                <DialogHeader className="flex justify-between items-center">
+            <Dialog open={open} handler={handleOpen} size="sm" className={`card transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
+                <DialogHeader className="flex justify-between items-center card-header">
                     <Typography variant="h5">Invitar a un nuevo miembro</Typography>
-                    <IconButton variant="text" color="gray" onClick={handleOpen}>
+                    <IconButton variant="text" color="none" className="card-header" onClick={handleOpen}>
                         <X size={20} />
                     </IconButton>
                 </DialogHeader>
@@ -216,8 +216,8 @@ export function Team() {
                     )}
                 </DialogBody>
                 <DialogFooter>
-                    <Button variant="gradient" color="red" onClick={handleOpen} className="mr-2">Cancelar</Button>
-                    <Button variant="gradient" color="indigo" onClick={copyToClipboard}>Copiar Link</Button>
+                    <Button variant="filled" color="none" onClick={handleOpen} className="mr-2 button-cancel">Cancelar</Button>
+                    <Button variant="filled" color="none" onClick={copyToClipboard} className="button-custom">Copiar Link</Button>
                 </DialogFooter>
             </Dialog>
 
