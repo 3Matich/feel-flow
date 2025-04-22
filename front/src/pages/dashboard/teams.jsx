@@ -1,29 +1,155 @@
 import React, { useState, useEffect } from "react";
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
-    Avatar,
-    Button,
-    Dialog,
-    DialogHeader,
-    DialogBody,
-    DialogFooter,
-    Input,
-    Textarea,
-    Spinner,
-    Alert,
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+  Avatar,
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Input,
+  Textarea,
+  Spinner,
+  Alert,
 } from "@material-tailwind/react";
-import { EyeIcon, EyeSlashIcon, CheckCircleIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { teamsData } from "@/data";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  CheckCircleIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+} from "@heroicons/react/24/solid";
+import { createTeam } from "@/services/equipos/createTeam";
+import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
 
 export function Teams() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [isFocused, setIsFocused] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [size, setSize] = useState("xs");
-    const [newTeam, setNewTeam] = useState({
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [size, setSize] = useState("xs");
+  const [teams, setTeams] = useState([]);
+  const [newTeam, setNewTeam] = useState({
+    name: "",
+    description: "",
+    leaderFirstName: "",
+    leaderLastName: "",
+    leaderUsername: "",
+    leaderPassword: "",
+    leaderConfirmPassword: "",
+    logo: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const backendTeams = await getAvailableTeams();
+        const transformedTeams = backendTeams.map((team) => ({
+          name: team.nameTeam,
+          description: team.descriptionTeam,
+          leader: `${team.teamLeaderDTO.name} ${team.teamLeaderDTO.surname}`,
+          logo: "",
+        }));
+        setTeams(transformedTeams);
+      } catch (err) {
+        console.error("❌ Error al obtener equipos del backend:", err);
+        setTeams([]);
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  const handleOpen = () => setOpen(!open);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewTeam((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewTeam((prev) => ({ ...prev, logo: file }));
+      setLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      setNewTeam((prev) => ({ ...prev, logo: file }));
+      setLogoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setLogoPreview(null);
+    setNewTeam((prev) => ({ ...prev, logo: "" }));
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+    if (!newTeam.name) newErrors.name = "El nombre del equipo es requerido";
+    if (!newTeam.leaderFirstName) newErrors.leaderFirstName = "El nombre del líder es requerido";
+    if (!newTeam.leaderLastName) newErrors.leaderLastName = "El apellido del líder es requerido";
+    if (!newTeam.leaderUsername) {
+      newErrors.leaderUsername = "El email del líder es requerido";
+    } else if (!/\S+@\S+\.\S+/.test(newTeam.leaderUsername)) {
+      newErrors.leaderUsername = "Ingrese un email válido";
+    }
+    if (!newTeam.leaderPassword) newErrors.leaderPassword = "La contraseña es requerida";
+    if (!newTeam.leaderConfirmPassword) newErrors.leaderConfirmPassword = "La confirmación de la contraseña es requerida";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCreateTeam = async () => {
+    if (!validateForm()) return;
+
+    setIsSaving(true);
+    setErrorMessage("");
+    const teamData = {
+      name: newTeam.name,
+      description: newTeam.description,
+      leaderFirstName: newTeam.leaderFirstName,
+      leaderLastName: newTeam.leaderLastName,
+      leaderUsername: newTeam.leaderUsername,
+      leaderPassword: newTeam.leaderPassword,
+    };
+
+    try {
+      const result = await createTeam(teamData);
+      console.log("✅ Equipo creado:", result);
+
+      setTeams((prev) => [
+        ...prev,
+        {
+          name: teamData.name,
+          description: teamData.description,
+          logo: logoPreview,
+          leader: `${teamData.leaderFirstName} ${teamData.leaderLastName}`,
+        },
+      ]);
+
+      setNewTeam({
         name: "",
         description: "",
         leaderFirstName: "",
@@ -32,219 +158,122 @@ export function Teams() {
         leaderPassword: "",
         leaderConfirmPassword: "",
         logo: "",
-    });
-    const [teams, setTeams] = useState(teamsData);
-    const [errors, setErrors] = useState({});
-    const [logoPreview, setLogoPreview] = useState(null);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
+      });
 
-    const handleOpen = () => setOpen(!open);
+      setLogoPreview(null);
+      setOpen(false);
+      setSuccessMessage("¡Equipo creado con éxito!");
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewTeam((prev) => ({ ...prev, [name]: value }));
-    };
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
+    } catch (error) {
+      console.error("❌ Error creando equipo:", error);
+      setErrorMessage(error.message || "Error al crear equipo");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-    const handleLogoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setNewTeam((prev) => ({ ...prev, logo: file }));
-            setLogoPreview(URL.createObjectURL(file));
-        }
-    };
+  const filteredTeams = teams.filter(({ name, leader }) =>
+    name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    leader.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-    };
+  return (
+    <>
+      {successMessage && (
+        <Alert
+          color="green"
+          icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
+          className="mb-4"
+          onClose={() => setSuccessMessage("")}
+        >
+          {successMessage}
+        </Alert>
+      )}
 
-    const handleDrop = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        const file = event.dataTransfer.files[0];
-        if (file) {
-            setNewTeam((prev) => ({ ...prev, logo: file }));
-            setLogoPreview(URL.createObjectURL(file));
-        }
-    };
+      {errorMessage && (
+        <Alert
+          color="red"
+          icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
+          className="mb-4"
+          onClose={() => setErrorMessage("")}
+        >
+          {errorMessage}
+        </Alert>
+      )}
 
-    const handleRemoveLogo = () => {
-        setLogoPreview(null);
-        setNewTeam((prev) => ({ ...prev, logo: "" }));
-    };
-
-    const validateForm = () => {
-        let newErrors = {};
-        if (!newTeam.name) newErrors.name = "El nombre del equipo es requerido";
-        if (!newTeam.leaderFirstName) newErrors.leaderFirstName = "El nombre del líder es requerido";
-        if (!newTeam.leaderLastName) newErrors.leaderLastName = "El apellido del líder es requerido";
-        if (!newTeam.leaderUsername) {
-            newErrors.leaderUsername = "El email del líder es requerido";
-        } else if (!/\S+@\S+\.\S+/.test(newTeam.leaderUsername)) {
-            newErrors.leaderUsername = "Ingrese un email válido";
-        }
-        if (!newTeam.leaderPassword) newErrors.leaderPassword = "La contraseña es requerida";
-        if (!newTeam.leaderConfirmPassword) newErrors.leaderConfirmPassword = "La confirmación de la contraseña es requerida";
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-    const [passwordValid, setPasswordValid] = useState(false); // Para validar si la contraseña es fuerte
-    const [passwordMatch, setPasswordMatch] = useState(true); // Para validar que las contraseñas coinciden
-
-    useEffect(() => {
-        const password = newTeam.leaderPassword;
-        const passwordConfirm = newTeam.leaderConfirmPassword;
-
-        let newErrors = { ...errors };
-
-        // Validación de fortaleza de la contraseña (solo si el usuario ha ingresado algo)
-        if (password) {
-            const isStrongPassword = password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
-            setPasswordValid(isStrongPassword);
-
-            if (!isStrongPassword) {
-                newErrors.leaderPassword = "Debe tener al menos 8 caracteres, una mayúscula y un número";
-            } else {
-                delete newErrors.leaderPassword;
-            }
-        } else {
-            setPasswordValid(false);
-        }
-
-        // Validación de coincidencia de contraseñas (solo si ambas están llenas)
-        if (password && passwordConfirm) {
-            const passwordsMatch = password === passwordConfirm;
-            setPasswordMatch(passwordsMatch);
-
-            if (!passwordsMatch) {
-                newErrors.leaderConfirmPassword = "Las contraseñas no coinciden";
-            } else {
-                delete newErrors.leaderConfirmPassword;
-            }
-        }
-
-        setErrors(newErrors);
-    }, [newTeam.leaderPassword, newTeam.leaderConfirmPassword]);
-
-
-
-    const handleCreateTeam = () => {
-        if (validateForm()) {
-            setIsSaving(true);
-            const teamData = { ...newTeam, logo: logoPreview || "" };
-
-            setTimeout(() => {
-                setTeams([...teams, teamData]);
-
-                setNewTeam({
-                    name: "",
-                    description: "",
-                    leaderFirstName: "",
-                    leaderLastName: "",
-                    leaderUsername: "",
-                    leaderPassword: "",
-                    leaderConfirmPassword: "",
-                    logo: "",
-                });
-                setLogoPreview(null);
-                setOpen(false);
-                setIsSaving(false);
-
-                setSuccessMessage("¡Equipo creado con éxito!");
-
-                setTimeout(() => {
-                    setSuccessMessage("");
-                }, 3000);
-            }, 2000);
-        }
-    };
-
-    const filteredTeams = teamsData.filter(({ name, leader }) =>
-        name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        leader.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    return (
-        <>
-            {successMessage && (
-                <Alert
-                    color="green"
-                    icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
-                    className="mb-4"
-                    onClose={() => setSuccessMessage("")}
+      <Card color="transparent" className="mb-6 p-4 mt-10">
+        <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
+          <Typography variant="h4" color="blue">Listado de Equipos</Typography>
+          <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
+            <PlusIcon className="h-5 w-5" />
+            Crear Equipo
+          </Button>
+        </CardHeader>
+        <CardBody className="mb-1">
+          {filteredTeams.length === 0 ? (
+            <Typography color="gray" className="text-center text-lg">No hay equipos creados</Typography>
+          ) : (
+            <>
+              <div className="relative w-full mb-3">
+                <label
+                  className={`absolute left-4 transition-all duration-300 bg-white px-1 pointer-events-none ${isFocused || searchQuery
+                    ? "text-xs top-0 transform -translate-y-1/2 text-blue-600"
+                    : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
+                    }`}
                 >
-                    {successMessage}
-                </Alert>
-            )}
+                  Buscar equipo o Team Leader
+                </label>
 
-            <Card color="transparent" className="mb-6 p-4 mt-10 text-light-text-secondary dark:text-dark-text-secondary">
-                <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
-                    <Typography variant="h4" className="text-light-text dark:text-dark-text">Listado de Equipos</Typography>
-                    <Button onClick={handleOpen} color="none" variant="filled" className="flex items-center gap-2 button-custom">
-                        <PlusIcon className="h-5 w-5" />
-                        Crear Equipo
-                    </Button>
-                </CardHeader>
-                <CardBody className="mb-1">
-                    <div className="relative w-full mb-3">
-                        <label
-                            className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
-                                ? "text-xs top-2 transform -translate-y-1/2 text-blue-600"
-                                : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
-                                }`}
-                        >
-                            Buscar equipo o Team Leader
-                        </label>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  className="w-full border border-gray-300 rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
+                />
 
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            className="w-full border border-light-border dark: border-dark-border rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base bg-light-card dark:bg-dark-card"
-                        />
+                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              </div>
 
-                        <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    </div>
-
-                    <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
-                        <thead>
-                            <tr className="table-header">
-                                {["Equipo", "Team Leader"].map((el) => (
-                                    <th
-                                        key={el}
-                                        className="table-header-cell"
-                                    >
-                                        {el}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredTeams.map(({ logo, name, leader }, key) => (
-                                <tr key={name} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50">
-                                    <td className="table-body-cell flex items-center gap-4">
-                                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                                        <Typography>
-                                            {name}
-                                        </Typography>
-                                    </td>
-                                    <td className="table-body-cell">
-                                        <Typography className="text-sm">
-                                            {leader}
-                                        </Typography>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </CardBody>
-            </Card>
+              <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
+                <thead>
+                  <tr className="bg-blue-gray-50">
+                    {["Equipo", "Team Leader"].map((el) => (
+                      <th
+                        key={el}
+                        className="border-b border-blue-gray-100 py-3 px-5 text-left text-blue-gray-600 uppercase text-sm font-bold"
+                      >
+                        {el}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTeams.map(({ logo, name, leader }) => (
+                    <tr key={name} className="hover:bg-blue-gray-50 transition-all">
+                      <td className="py-3 px-5 border-b border-blue-gray-100 flex items-center gap-4">
+                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
+                        <Typography className="font-semibold text-blue-gray-700">
+                          {name}
+                        </Typography>
+                      </td>
+                      <td className="py-3 px-5 border-b border-blue-gray-100">
+                        <Typography className="text-sm font-semibold text-blue-gray-700">
+                          {leader}
+                        </Typography>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </CardBody>
+      </Card>
 
             <Dialog
                 open={open}

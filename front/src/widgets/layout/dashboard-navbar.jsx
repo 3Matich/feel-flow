@@ -1,3 +1,4 @@
+// DashboardNavbar.jsx
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
@@ -22,13 +23,29 @@ import {
   useMaterialTailwindController,
   setOpenConfigurator,
 } from "@/context";
+import { GetNotifications } from "@/services/GetNotifications";
 
-const events = [
-    { user: "Pedro", action: "actualizó el estado de Kudos", time: "Hace 2 horas", avatar: "/img/team-2.jpeg"},
-    { user: "María", action: "completó la encuesta de 12 Pasos", time: "Hace 4 horas", avatar: "/img/team-3.jpeg" },
-    { user: "Carlos", action: "agregó un comentario en Niko Niko", time: "Ayer", avatar: "/img/team-4.jpeg" },
-    { user: "Lucia", action: "marcó Niko Niko como revisado", time: "Hace 1 día", avatar: "https://randomuser.me/api/portraits/women/1.jpg" },
-];
+// Función para calcular el tiempo relativo
+function getRelativeTime(dateString) {
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffMs = now - date; // diferencia en milisegundos
+
+  const diffSeconds = Math.floor(diffMs / 1000);
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffSeconds < 60) {
+    return `Hace ${diffSeconds} segundos`;
+  } else if (diffMinutes < 60) {
+    return `Hace ${diffMinutes} minutos`;
+  } else if (diffHours < 24) {
+    return `Hace ${diffHours} horas`;
+  } else {
+    return `Hace ${diffDays} días`;
+  }
+}
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -36,17 +53,54 @@ export function DashboardNavbar() {
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
 
+  // Estado para notificaciones (inicialmente vacío)
   const [notifications, setNotifications] = useState([]);
 
+  // Cargar notificaciones vía GET cuando se monta (opcional, para tener un respaldo inicial)
   useEffect(() => {
-    const formattedEvents = events.map((event, index) => ({
-      id: index + 1,
-      title: event.user,
-      message: event.action,
-      time: event.time,
-      avatar: event.avatar, // Imagen específica para cada notificación
-    }));
-    setNotifications(formattedEvents);
+    const fetchNotifications = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      const data = await GetNotifications(token); // Este servicio ya lo tienes implementado
+      setNotifications(data);
+    };
+    fetchNotifications();
+  }, []);
+
+  // Conexión WebSocket para recibir notificaciones en tiempo real
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return;
+    // Ejemplo básico: ajusta la URL según la configuración de tu servidor
+    const ws = new WebSocket(`ws://localhost:8080/ws/notifications?token=${token}`);
+    
+    ws.onopen = () => {
+      console.log("WebSocket conectado para notificaciones.");
+    };
+    
+    ws.onmessage = (event) => {
+      try {
+        const newNotif = JSON.parse(event.data);
+        console.log("Notificación recibida vía WebSocket:", newNotif);
+        // Agregar la nueva notificación al inicio de la lista
+        setNotifications((prev) => [newNotif, ...prev]);
+      } catch (error) {
+        console.error("Error al parsear la notificación:", error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket desconectado.");
+    };
+
+    // Limpieza: cerrar la conexión al desmontar
+    return () => {
+      ws.close();
+    };
   }, []);
 
   return (
@@ -62,30 +116,11 @@ export function DashboardNavbar() {
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
-          {/* <Breadcrumbs className={`bg-transparent p-0 ${fixedNavbar ? "mt-1" : ""}`}>
-            <Link to={`/${layout}`}>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
-              >
-                {layout}
-              </Typography>
-            </Link>
-            <Typography variant="small" color="blue-gray" className="font-normal">
-              {page}
-            </Typography>
-          </Breadcrumbs> */}
-          <Typography variant="h6"> {/* color="blue-gray" */}
+          <Typography variant="h6">
             {page}
           </Typography>
         </div>
         <div className="flex items-center">
-          {/*
-          <IconButton variant="text" color="blue-gray" onClick={onLogout}>
-            <ArrowLeftOnRectangleIcon className="h-5 w-5 text-blue-gray-500" />
-          </IconButton>
-          */}
           <Badge content={notifications.length}>
             <Menu>
               <MenuHandler>
@@ -93,33 +128,35 @@ export function DashboardNavbar() {
                   <BellIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}
                 </IconButton>
               </MenuHandler>
-              <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary"> 
-                {notifications.map((notif) => (
-                  <MenuItem key={notif.id} className="flex items-center gap-3 hover:!bg-pink-800">
-                    <Avatar
-                      src={notif.avatar}
-                      alt={notif.title}
-                      size="sm"
-                      variant="circular"
-                    />
-                    <div>
-                      <Typography
-                        variant="small"
-                        // color="text-light-secondary dark:text-dark-secondary"
-                        className="mb-1 font-normal"
-                      >
-                        <strong>{notif.title}</strong> {notif.message}
-                      </Typography>
-                      <Typography
-                        variant="small"
-                        // color="text-light-secondary dark:text-dark-secondary"
-                        className="flex items-center gap-1 text-xs font-normal opacity-60"
-                      >
-                        <ClockIcon className="h-3.5 w-3.5" /> {notif.time}
-                      </Typography>
-                    </div>
-                  </MenuItem>
-                ))}
+              <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary">
+                {notifications.length > 0 ? (
+                  notifications.map((notif, index) => (
+                    <MenuItem key={index} className="flex items-center gap-3 hover:!bg-pink-800">
+                      {/* <Avatar
+                        src={notif.avatar || "/img/default-avatar.png"}
+                        alt={notif.title}
+                        size="sm"
+                        variant="circular"
+                      /> */}
+                      <div>
+                        <Typography
+                          variant="small"
+                          className="mb-1"
+                        >
+                          <strong>{notif.title}</strong> {notif.body}
+                        </Typography>
+                        <Typography
+                          variant="small"
+                          className="flex items-center gap-1 text-xs opacity-60"
+                        >
+                          <ClockIcon className="h-3.5 w-3.5" /> {getRelativeTime(notif.createdAt)}
+                        </Typography>
+                      </div>
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem>Sin notificaciones</MenuItem>
+                )}
               </MenuList>
             </Menu>
           </Badge>

@@ -28,7 +28,7 @@ export function Sidenav({ brandImg, brandName, routes, onLogout }) {
         className={`relative`}
       >
         <Link to="/" className="py-6 px-8 text-center flex items-center justify-start space-x-4">
-          <Avatar src="/img/logo.png" alt={brandName} size="l" />
+          <Avatar src="/img/logo.png" alt={brandName} size="lg" />
           <Typography
             variant="h4"
           //color={sidenavType === "dark" ? "white" : "blue-gray"}
