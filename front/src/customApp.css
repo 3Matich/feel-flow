@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .table-header {
+        @apply bg-blue-100 dark:bg-blue-900 text-light-text dark:text-dark-text !important
+    }
+
+    .table-header-cell {
+        @apply border-b border-blue-gray-100 py-3 px-5 uppercase text-sm font-bold !important
+    }
+
+    .table-body {
+        @apply transition-all border-b border-blue-gray-100 !important
+    }
+
+    .table-body-cell {
+        @apply py-3 px-5 !important
+    }
+
+    .card {
+        @apply bg-light-card dark:bg-dark-card text-light-text-secondary dark:text-dark-text-secondary !important
+    }
+
+    .card-header {
+        @apply text-light-text dark:text-dark-text !important
+    }
+
+    .card-body {
+        @apply text-light-text-secondary dark:text-dark-text-secondary !important
+    }
+
+    .border {
+        @apply border-light-border dark:border-dark-border !important
+    }
+
+    .button-save {
+        @apply text-success-light dark:text-success-light text-sm font-medium bg-light-button-success dark:bg-dark-button-success rounded-full !important
+    }
+
+    .button-cancel {
+        @apply text-alert-light dark:text-alert-light rounded-full text-sm font-medium !important
+    }
+
+    .button-custom {
+        @apply bg-gradient-to-r from-pink-400 to-pink-600 text-white font-medium rounded-full text-sm normal-case shadow-md transition-all duration-300 !important
+    }
+}
+
+@layer base {
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-light-text dark:text-dark-text font-semibold;
+    }
+
+    p {
+        @apply text-light-text-secondary dark:text-dark-text-secondary font-normal;
+    }
+
+    input {
+        @apply border text-light-text-secondary dark:text-dark-text-secondary /*dark:!bg-blue-gray-800 dark:text-dark-text-secondary*/
+    }
+}

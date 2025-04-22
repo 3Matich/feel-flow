@@ -47,7 +47,7 @@ function getRelativeTime(dateString) {
   }
 }
 
-export function DashboardNavbar({ onLogout }) {
+export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar } = controller;
   const { pathname } = useLocation();
@@ -106,9 +106,9 @@ export function DashboardNavbar({ onLogout }) {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all mb-4 ${
+      className={`rounded-xl transition-all mb-4 text-light-text dark:text-dark-text ${
         fixedNavbar
-          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+        ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5 bg-light-primary dark:bg-dark-primary border-light-border dark:border-dark-border"
           : "px-0 py-1"
       }`}
       fullWidth
@@ -116,7 +116,7 @@ export function DashboardNavbar({ onLogout }) {
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
-          <Typography variant="h6" color="blue-gray">
+          <Typography variant="h6">
             {page}
           </Typography>
         </div>
@@ -124,14 +124,14 @@ export function DashboardNavbar({ onLogout }) {
           <Badge content={notifications.length}>
             <Menu>
               <MenuHandler>
-                <IconButton variant="text" color="blue-gray">
-                  <BellIcon className="h-5 w-5 text-blue-gray-500" />
+                <IconButton variant="text"> {/* color="blue-gray" */}
+                  <BellIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}
                 </IconButton>
               </MenuHandler>
-              <MenuList className="w-max border-0">
+              <MenuList className="w-max border-0 bg-light-secondary dark:bg-dark-secondary">
                 {notifications.length > 0 ? (
                   notifications.map((notif, index) => (
-                    <MenuItem key={index} className="flex items-center gap-3">
+                    <MenuItem key={index} className="flex items-center gap-3 hover:!bg-pink-800">
                       {/* <Avatar
                         src={notif.avatar || "/img/default-avatar.png"}
                         alt={notif.title}
@@ -141,15 +141,13 @@ export function DashboardNavbar({ onLogout }) {
                       <div>
                         <Typography
                           variant="small"
-                          color="blue-gray"
-                          className="mb-1 font-normal"
+                          className="mb-1"
                         >
                           <strong>{notif.title}</strong> {notif.body}
                         </Typography>
                         <Typography
                           variant="small"
-                          color="blue-gray"
-                          className="flex items-center gap-1 text-xs font-normal opacity-60"
+                          className="flex items-center gap-1 text-xs opacity-60"
                         >
                           <ClockIcon className="h-3.5 w-3.5" /> {getRelativeTime(notif.createdAt)}
                         </Typography>
@@ -157,7 +155,7 @@ export function DashboardNavbar({ onLogout }) {
                     </MenuItem>
                   ))
                 ) : (
-                  <MenuItem className="text-gray-500">Sin notificaciones</MenuItem>
+                  <MenuItem>Sin notificaciones</MenuItem>
                 )}
               </MenuList>
             </Menu>
@@ -165,10 +163,10 @@ export function DashboardNavbar({ onLogout }) {
 
           <IconButton
             variant="text"
-            color="blue-gray"
+            // color="blue-gray"
             onClick={() => setOpenConfigurator(dispatch, true)}
           >
-            <Cog6ToothIcon className="h-5 w-5 text-blue-gray-500" />
+            <Cog6ToothIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}
           </IconButton>
         </div>
       </div>

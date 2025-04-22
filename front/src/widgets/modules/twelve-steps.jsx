@@ -162,11 +162,11 @@ export function TwelveSteps() {
                 <img src={icon} alt={stepsDescriptions[currentIndex + index]} className="w-28 h-28" />
                 <Typography color="gray" className="font-normal text-center mt-0 leading-tight">
                   <strong>{stepsDescriptions[currentIndex + index]}</strong>
+
                 </Typography>
               </div>
             ))}
           </div>
-
           <Button onClick={handleNext} className="h-full w-14 flex items-center justify-center bg-[#353535] bg-opacity-10 hover:bg-opacity-30">
             <span className="mr-1">&gt;</span>
             <ChevronRightIcon className="w-6 h-6" />

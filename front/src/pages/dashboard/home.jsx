@@ -27,6 +27,10 @@ import {
   Cog6ToothIcon,
   Squares2X2Icon,
   EyeIcon,
+  GiftIcon,
+  PresentationChartLineIcon,
+  FaceSmileIcon,
+  HeartIcon,
 } from "@heroicons/react/24/solid";
 
 export function Home() {
@@ -302,7 +306,7 @@ export function Home() {
     {
       label: "Dashboard",
       value: "home",
-      icon: EyeIcon,
+      icon: PresentationChartLineIcon,
       element: (
         <div className="mt-12">
           <ChartsSection />
@@ -313,23 +317,17 @@ export function Home() {
     {
       label: "Niko Niko",
       value: "nikoNiko",
-      icon: UserCircleIcon,
+      icon: FaceSmileIcon,
       element: (
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
-          <h1 className="text-2xl font-bold text-center mb-4">
-            Niko Niko - {selectedTeam?.label ?? "Equipo"}
-          </h1>
-          {loading && (
-            <p className="text-blue-500 font-semibold text-center">
-              Cargando datos...
-            </p>
-          )}
-          {error && (
-            <p className="text-red-500 font-semibold text-center">
-              {error}
-            </p>
-          )}
-          <div className="flex justify-center pt-0 mt-0 mb-6">
+        <div className="rounded-lg shadow-lg relative">
+          {/* <h1 className="text-2xl font-bold text-center mb-4">
+            Niko Niko - {selectedTeam || "Equipo"}
+          </h1> */}
+
+          {loading && <p className="text-center">Cargando equipos...</p>}
+          {error && <p className="text-center">{error}</p>}
+
+          <div className="flex justify-center">
             <TeamSelector
               teams={teams}
               selectedTeam={selectedTeam}
@@ -339,7 +337,7 @@ export function Home() {
               setSelectedMonth={setSelectedMonth}
             />
           </div>
-          <div className="mt-4">
+          <div className="mt-8">
             <NikoNikoTable nikoDataByMember={nikoDataByMember} />
           </div>
         </div>
@@ -348,7 +346,7 @@ export function Home() {
     {
       label: "12 Pasos de la Felicidad",
       value: "felicidad",
-      icon: Squares2X2Icon,
+      icon: HeartIcon,
       element: (
         <div>
           {teamData && modulesData.length > 0 ? (
@@ -363,9 +361,7 @@ export function Home() {
               selectedData={selectedData}
             />
           ) : (
-            <p className="text-blue-500 font-semibold text-center">
-              Cargando datos...
-            </p>
+            <p className="text-center">Cargando datos...</p>
           )}
         </div>
       ),
@@ -373,9 +369,9 @@ export function Home() {
     {
       label: "Kudos",
       value: "kudos",
-      icon: Cog6ToothIcon,
+      icon: GiftIcon,
       element: (
-        <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
+        <div className="rounded-lg shadow-lg relative mt-4">
           {teamData && modulesData.length > 0 ? (
           <KudosChart
             teamData={teamData}
@@ -388,7 +384,7 @@ export function Home() {
             selectedData={kudosSummary}
           />
         ) : (
-          <p className="text-blue-500 font-semibold text-center">
+          <p className="text-center">
             Cargando datos...
           </p>
         )}
@@ -404,11 +400,11 @@ export function Home() {
       </Helmet>
       <GeneralMetrics />
       <div className="mt-12">
-        <Tabs value="home">
-          <TabsHeader>
+        <Tabs value="home" indicatorProps={{className: "bg-pink-500 shadow-none rounded-full",}}>
+          <TabsHeader className="bg-pink-100 rounded-full" indicatorProps={{ className: "bg-pink-400 rounded-full" }}>
             {tabsData.map(({ label, value, icon }) => (
               <Tab key={value} value={value}>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-black">
                   {React.createElement(icon, { className: "w-5 h-5" })}
                   {label}
                 </div>

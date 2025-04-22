@@ -23,10 +23,10 @@ function HappinessChart({
   });
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
-      <h1 className="text-2xl font-bold text-center mb-10">
+    <div className="rounded-lg shadow-lg mt-4 relative">
+      {/* <h1 className="text-2xl font-bold text-center mb-10">
         12 pasos de la felicidad - {teamData.teamName}
-      </h1>
+      </h1> */}
       <div className="flex flex-col sm:flex-row justify-center items-center mb-12 gap-4">
         {/* Autocomplete para seleccionar módulo (fecha) */}
         <Autocomplete
@@ -44,7 +44,10 @@ function HappinessChart({
               {...params}
               label="Fecha del Módulo"
               variant="outlined"
-              sx={{ width: 200, backgroundColor: "white" }}
+              sx={{
+                width: 200,
+                backgroundColor: "pink",
+              }}
             />
           )}
         />
@@ -65,14 +68,17 @@ function HappinessChart({
               {...params}
               label="Selecciona Miembro"
               variant="outlined"
-              sx={{ width: 200, backgroundColor: "white" }}
+              sx={{
+                width: 200,
+                backgroundColor: "pink",
+              }}
             />
           )}
         />
       </div>
-
+      {/* Aumentamos la separación vertical */}
+      <div className="mt-20">
       {/* Se usa 'selectedData' => array de { categoryName, average } */}
-      <div className="mt-16 pb-16">
         {renderChart(selectedData)}
       </div>
     </div>

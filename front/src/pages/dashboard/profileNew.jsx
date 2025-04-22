@@ -112,10 +112,10 @@ export function ProfileNew() {
   };
 
   if (!profile) return <div>Cargando perfil...</div>;
-
+  
   return (
     <>
-      <Card className="mx-3 mt-8 mb-6 bg-light-bg dark:bg-feel-1 lg:mx-4 border border-blue-gray-100">
+      <Card className="mx-3 mt-8 mb-6 card lg:mx-4 border">
         <CardBody className="p-4">
           {/* Sección superior: Avatar y datos básicos */}
           <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
@@ -135,9 +135,10 @@ export function ProfileNew() {
                   mount: { scale: 1, y: 0 },
                   unmount: { scale: 0.9, y: -100 },
                 }}
+                className="card"
               >
-                <DialogHeader>Seleccione un avatar de usuario</DialogHeader>
-                <hr />
+                <DialogHeader className="text-light-text dark:text-dark-text">Seleccione un avatar de usuario</DialogHeader>
+                <hr className="my-8 border-blue-gray-500 dark:border-white" />
                 <DialogBody>
                   <div className="flex flex-wrap justify-center">
                     {["0000.png", "0001.png", "0002.png", "0003.png", "0004.png", "0005.png", "0006.png", "0007.png"].map((avatar, index) => (
@@ -158,8 +159,8 @@ export function ProfileNew() {
                     ))}
                   </div>
                 </DialogBody>
-                <hr />
-                <DialogHeader>O bien, suba una foto</DialogHeader>
+                <hr className="my-8 border-blue-gray-500 dark:border-white" />
+                <DialogHeader className="text-light-text dark:text-dark-text">O bien, suba una foto</DialogHeader>
                 <DialogBody>
                   <div className="flex flex-warp justify-center">
                     <div
@@ -217,7 +218,7 @@ export function ProfileNew() {
               </div>
             </div>
           </div>
-
+          
           {/* Sección principal: Información de perfil y edición */}
           <div className="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-2">
             {isEditing && (

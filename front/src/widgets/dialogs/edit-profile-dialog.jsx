@@ -30,7 +30,6 @@ const CODES = ["+54", "+33", "+49", "+34", "+1"];
 const NATIONALITIES = ["Argentina", "Uruguay", "Chile", "Paraguay", "Brasil", "Peru", "Bolivia", "Ecuador", "Colombia", "Venezuela", "Mexico", "España"];
 
 
-
 export function EditProfileDialog({ data, onSave, onCancel, open }) {
 
   const [country, setCountry] = React.useState(0);

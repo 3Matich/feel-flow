@@ -66,7 +66,7 @@ export function StatusChart() {
       {modules.map((module) => (
         <Card key={module.name} className="p-4">
           <CardBody className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">{module.name}</h2>
+            <h2 className="text-lg">{module.name}</h2>
             <Tooltip content={module.status}>
               <span className={`w-8 h-8 rounded-full ${module.color}`} />
             </Tooltip>

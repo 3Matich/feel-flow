@@ -8,8 +8,8 @@ const completionData = [
 
 export function CompletionChart() {
     return (
-        <Card className="p-4 h-[350px] flex flex-col items-center justify-center">
-            <h2 className="text-lg font-semibold">Progreso de los Módulos</h2>
+        <Card className="p-4 h-[350px] flex flex-col items-center justify-center card">
+            <h2 className="text-lg">Progreso de los Módulos</h2>
             <CardBody className="flex justify-center">
                 {completionData.length === 0 ? (
                     <p className="text-red-500 italic">No hay datos disponibles para mostrar.</p>
