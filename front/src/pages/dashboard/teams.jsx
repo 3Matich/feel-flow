@@ -206,21 +206,21 @@ export function Teams() {
 
       <Card color="transparent" className="mb-6 p-4 mt-10">
         <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
-          <Typography variant="h4" color="blue">Listado de Equipos</Typography>
-          <Button onClick={handleOpen} color="indigo" className="flex items-center gap-2">
+          <Typography variant="h4">Listado de Equipos</Typography>
+          <Button onClick={handleOpen} className="flex items-center gap-2 button-custom">
             <PlusIcon className="h-5 w-5" />
             Crear Equipo
           </Button>
         </CardHeader>
         <CardBody className="mb-1">
           {filteredTeams.length === 0 ? (
-            <Typography color="gray" className="text-center text-lg">No hay equipos creados</Typography>
+            <Typography className="text-center text-lg">No hay equipos creados</Typography>
           ) : (
             <>
               <div className="relative w-full mb-3">
                 <label
-                  className={`absolute left-4 transition-all duration-300 bg-white px-1 pointer-events-none ${isFocused || searchQuery
-                    ? "text-xs top-0 transform -translate-y-1/2 text-blue-600"
+                  className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
+                    ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
                     : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
                     }`}
                 >
@@ -233,19 +233,19 @@ export function Teams() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
-                  className="w-full border border-gray-300 rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
+                  className="w-full border rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
                 />
 
-                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5" />
               </div>
 
               <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
                 <thead>
-                  <tr className="bg-blue-gray-50">
+                  <tr className="table-header">
                     {["Equipo", "Team Leader"].map((el) => (
                       <th
                         key={el}
-                        className="border-b border-blue-gray-100 py-3 px-5 text-left text-blue-gray-600 uppercase text-sm font-bold"
+                        className="border py-3 px-5 text-left table-header-cell text-sm"
                       >
                         {el}
                       </th>
@@ -254,15 +254,15 @@ export function Teams() {
                 </thead>
                 <tbody>
                   {filteredTeams.map(({ logo, name, leader }) => (
-                    <tr key={name} className="hover:bg-blue-gray-50 transition-all">
-                      <td className="py-3 px-5 border-b border-blue-gray-100 flex items-center gap-4">
+                    <tr key={name} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all">
+                      <td className="py-3 px-5 border table-body-cell flex items-center gap-4">
                         <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                        <Typography className="font-semibold text-blue-gray-700">
+                        <Typography>
                           {name}
                         </Typography>
                       </td>
-                      <td className="py-3 px-5 border-b border-blue-gray-100">
-                        <Typography className="text-sm font-semibold text-blue-gray-700">
+                      <td className="py-3 px-5 border table-body-cell">
+                        <Typography className="text-sm">
                           {leader}
                         </Typography>
                       </td>
@@ -275,242 +275,242 @@ export function Teams() {
         </CardBody>
       </Card>
 
-            <Dialog
-                open={open}
-                handler={handleOpen}
-                className={`card {size === "xs" ? "max-w-xs" : ""}`}
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        className={`card {size === "xs" ? "max-w-xs" : ""}`}
+      >
+        <DialogHeader className="flex items-center justify-between card-header">
+          <div className="flex justify-between items-center w-full">
+            <Typography variant="h4">
+              Crear un nuevo Equipo
+            </Typography>
+            <button
+              color="none"
+              onClick={() => {
+                handleOpen(); // Cerrar
+                setNewTeam({
+                  name: "",
+                  description: "",
+                  leaderFirstName: "",
+                  leaderLastName: "",
+                  leaderUsername: "",
+                  leaderPassword: "",
+                  leaderConfirmPassword: "",
+                  logo: "",
+                });
+              }}
+              className="hover:text-gray-500 focus:outline-none"
             >
-                <DialogHeader className="flex items-center justify-between card-header">
-                    <div className="flex justify-between items-center w-full">
-                        <Typography variant="h4">
-                            Crear un nuevo Equipo
-                        </Typography>
-                        <button
-                            color="none"
-                            onClick={() => {
-                                handleOpen(); // Cerrar
-                                setNewTeam({
-                                    name: "",
-                                    description: "",
-                                    leaderFirstName: "",
-                                    leaderLastName: "",
-                                    leaderUsername: "",
-                                    leaderPassword: "",
-                                    leaderConfirmPassword: "",
-                                    logo: "",
-                                });
-                            }}
-                            className="hover:text-gray-500 focus:outline-none"
-                        >
-                            ✕
-                        </button>
-                    </div>
+              ✕
+            </button>
+          </div>
 
-                </DialogHeader>
-                <DialogBody className="card-body">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Campo Nombre del Equipo */}
-                        <div className="relative">
-                            <Input
-                                label="Nombre del Equipo"
-                                name="name"
-                                value={newTeam.name}
-                                onChange={handleChange}
-                                error={errors.name}
-                                className="w-full"
-                            />
-                            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-                        </div>
+        </DialogHeader>
+        <DialogBody className="card-body">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Campo Nombre del Equipo */}
+            <div className="relative">
+              <Input
+                label="Nombre del Equipo"
+                name="name"
+                value={newTeam.name}
+                onChange={handleChange}
+                error={errors.name}
+                className="w-full"
+              />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+            </div>
 
-                        {/* Campo Nombre del Líder */}
-                        <div className="relative">
-                            <Input
-                                label="Nombre del Líder"
-                                name="leaderFirstName"
-                                value={newTeam.leaderFirstName}
-                                onChange={handleChange}
-                                error={errors.leaderFirstName}
-                                className="w-full"
-                            />
-                            {errors.leaderFirstName && <p className="text-red-500 text-sm">{errors.leaderFirstName}</p>}
-                        </div>
+            {/* Campo Nombre del Líder */}
+            <div className="relative">
+              <Input
+                label="Nombre del Líder"
+                name="leaderFirstName"
+                value={newTeam.leaderFirstName}
+                onChange={handleChange}
+                error={errors.leaderFirstName}
+                className="w-full"
+              />
+              {errors.leaderFirstName && <p className="text-red-500 text-sm">{errors.leaderFirstName}</p>}
+            </div>
 
-                        {/* Campo Apellido del Líder */}
-                        <div className="relative">
-                            <Input
-                                label="Apellido del Líder"
-                                name="leaderLastName"
-                                value={newTeam.leaderLastName}
-                                onChange={handleChange}
-                                error={errors.leaderLastName}
-                                className="w-full"
-                            />
-                            {errors.leaderLastName && <p className="text-red-500 text-sm">{errors.leaderLastName}</p>}
-                        </div>
+            {/* Campo Apellido del Líder */}
+            <div className="relative">
+              <Input
+                label="Apellido del Líder"
+                name="leaderLastName"
+                value={newTeam.leaderLastName}
+                onChange={handleChange}
+                error={errors.leaderLastName}
+                className="w-full"
+              />
+              {errors.leaderLastName && <p className="text-red-500 text-sm">{errors.leaderLastName}</p>}
+            </div>
 
-                        {/* Campo Email del Líder */}
-                        <div className="relative">
-                            <Input
-                                label="Email del Líder"
-                                name="leaderUsername"
-                                value={newTeam.leaderUsername}
-                                onChange={handleChange}
-                                error={errors.leaderUsername}
-                                className="w-full"
-                            />
-                            {errors.leaderUsername && <p className="text-red-500 text-sm">{errors.leaderUsername}</p>}
-                        </div>
+            {/* Campo Email del Líder */}
+            <div className="relative">
+              <Input
+                label="Email del Líder"
+                name="leaderUsername"
+                value={newTeam.leaderUsername}
+                onChange={handleChange}
+                error={errors.leaderUsername}
+                className="w-full"
+              />
+              {errors.leaderUsername && <p className="text-red-500 text-sm">{errors.leaderUsername}</p>}
+            </div>
 
-                        {/* Campo Contraseña */}
-                        <div className="relative">
-                            <Input
-                                label="Contraseña"
-                                type={showPassword ? "text" : "password"}
-                                name="leaderPassword"
-                                value={newTeam.leaderPassword}
-                                onChange={handleChange}
-                                error={!!errors.leaderPassword}
-                                className="w-full"
-                            />
-                            <button
-                                type="button"
-                                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                                {showPassword ? (
-                                    <EyeSlashIcon className="h-5 w-5" />
-                                ) : (
-                                    <EyeIcon className="h-5 w-5" />
-                                )}
-                            </button>
-                            {errors.leaderPassword && <p className="text-red-500 text-sm">{errors.leaderPassword}</p>}
-                        </div>
+            {/* Campo Contraseña */}
+            <div className="relative">
+              <Input
+                label="Contraseña"
+                type={showPassword ? "text" : "password"}
+                name="leaderPassword"
+                value={newTeam.leaderPassword}
+                onChange={handleChange}
+                error={!!errors.leaderPassword}
+                className="w-full"
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+              {errors.leaderPassword && <p className="text-red-500 text-sm">{errors.leaderPassword}</p>}
+            </div>
 
-                        {/* Campo Confirmar Contraseña */}
-                        <div className="relative">
-                            <Input
-                                label="Confirmar Contraseña"
-                                type={showConfirmPassword ? "text" : "password"}
-                                name="leaderConfirmPassword"
-                                value={newTeam.leaderConfirmPassword}
-                                onChange={handleChange}
-                                error={!!errors.leaderConfirmPassword}
-                                className="w-full"
-                            />
-                            <button
-                                type="button"
-                                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            >
-                                {showConfirmPassword ? (
-                                    <EyeSlashIcon className="h-5 w-5" />
-                                ) : (
-                                    <EyeIcon className="h-5 w-5" />
-                                )}
-                            </button>
-                            {errors.leaderConfirmPassword && <p className="text-red-500 text-sm">{errors.leaderConfirmPassword}</p>}
-                        </div>
+            {/* Campo Confirmar Contraseña */}
+            <div className="relative">
+              <Input
+                label="Confirmar Contraseña"
+                type={showConfirmPassword ? "text" : "password"}
+                name="leaderConfirmPassword"
+                value={newTeam.leaderConfirmPassword}
+                onChange={handleChange}
+                error={!!errors.leaderConfirmPassword}
+                className="w-full"
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+              {errors.leaderConfirmPassword && <p className="text-red-500 text-sm">{errors.leaderConfirmPassword}</p>}
+            </div>
 
-                        {/* Campo Descripción */}
-                        <div className="relative col-span-2">
-                            <Textarea
-                                label="Descripción"
-                                name="description"
-                                value={newTeam.description}
-                                onChange={handleChange}
-                                error={errors.description}
-                                className="w-full"
-                                onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
-                                onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
-                            />
-                            {!isFocused && (
-                                <div className="absolute top-2 right-3 text-xs">
-                                    (Opcional)
-                                </div>
-                            )}
-                        </div>
+            {/* Campo Descripción */}
+            <div className="relative col-span-2">
+              <Textarea
+                label="Descripción"
+                name="description"
+                value={newTeam.description}
+                onChange={handleChange}
+                error={errors.description}
+                className="w-full"
+                onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
+                onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
+              />
+              {!isFocused && (
+                <div className="absolute top-2 right-3 text-xs">
+                  (Opcional)
+                </div>
+              )}
+            </div>
 
 
 
-                        {/* Campo Logo */}
-                        <div className="mb-1 col-span-2 flex flex-col items-center">
-                            <Typography variant="large" className="mb-2">
-                                Logo del Equipo
-                            </Typography>
-                            <div
-                                onDrop={handleDrop}
-                                onDragOver={handleDragOver}
-                                className="relative flex items-center justify-center border-2 border-dashed p-4 rounded-md w-72 h-40 mx-auto"
-                            >
-                                {logoPreview ? (
-                                    <div className="relative w-32 h-32 mx-auto">
-                                        <img src={logoPreview} alt="Logo preview" className="object-cover w-full h-full rounded-md" />
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRemoveLogo();
-                                            }}
-                                            className="absolute -top-2 -right-0 text-gray-700 hover:text-black bg-gray p-1 text-lg font-bold transition-opacity opacity-70 hover:opacity-100 z-10"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <label
-                                        htmlFor="logo-input"
-                                        className="cursor-pointer text-center text-gray-500 hover:text-blue-500 transition"
-                                    >
-                                        Arrastra y suelta un logo aquí, o haz clic para seleccionar
-                                    </label>
-                                )}
-                                <input
-                                    id="logo-input"
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={handleLogoChange}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </DialogBody>
-
-
-                <DialogFooter className="flex justify-center gap-2">
-                    <Button
-                        variant="text"
-                        onClick={() => {
-                            handleOpen(); // Cerrar 
-                            setNewTeam({ // Limpiar los valores del formulario
-                                name: "",
-                                description: "",
-                                leaderFirstName: "",
-                                leaderLastName: "",
-                                leaderUsername: "",
-                                leaderPassword: "",
-                                leaderConfirmPassword: "",
-                                logo: "",
-                            });
-                        }}
-                        className="mr-4 button-cancel"
+            {/* Campo Logo */}
+            <div className="mb-1 col-span-2 flex flex-col items-center">
+              <Typography variant="large" className="mb-2">
+                Logo del Equipo
+              </Typography>
+              <div
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                className="relative flex items-center justify-center border-2 border-dashed p-4 rounded-md w-72 h-40 mx-auto"
+              >
+                {logoPreview ? (
+                  <div className="relative w-32 h-32 mx-auto">
+                    <img src={logoPreview} alt="Logo preview" className="object-cover w-full h-full rounded-md" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveLogo();
+                      }}
+                      className="absolute -top-2 -right-0 text-gray-700 hover:text-black bg-gray p-1 text-lg font-bold transition-opacity opacity-70 hover:opacity-100 z-10"
                     >
-                        Cancelar
-                    </Button>
-                    <Button
-                        onClick={handleCreateTeam}
-                        disabled={isSaving}
-                        // color="indigo"
-                        className="button-save"
-                    >
-                        {isSaving ? (
-                            <Spinner className="h-5 w-5 text-white" />
-                        ) : (
-                            "Crear Equipo"
-                        )}
-                    </Button>
-                </DialogFooter>
-            </Dialog>
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <label
+                    htmlFor="logo-input"
+                    className="cursor-pointer text-center text-gray-500 hover:text-blue-500 transition"
+                  >
+                    Arrastra y suelta un logo aquí, o haz clic para seleccionar
+                  </label>
+                )}
+                <input
+                  id="logo-input"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleLogoChange}
+                />
+              </div>
+            </div>
+          </div>
+        </DialogBody>
 
-        </>
-    );
+
+        <DialogFooter className="flex justify-center gap-2">
+          <Button
+            variant="text"
+            onClick={() => {
+              handleOpen(); // Cerrar 
+              setNewTeam({ // Limpiar los valores del formulario
+                name: "",
+                description: "",
+                leaderFirstName: "",
+                leaderLastName: "",
+                leaderUsername: "",
+                leaderPassword: "",
+                leaderConfirmPassword: "",
+                logo: "",
+              });
+            }}
+            className="mr-4 button-cancel"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleCreateTeam}
+            disabled={isSaving}
+            // color="indigo"
+            className="button-save"
+          >
+            {isSaving ? (
+              <Spinner className="h-5 w-5 text-white" />
+            ) : (
+              "Crear Equipo"
+            )}
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+    </>
+  );
 }

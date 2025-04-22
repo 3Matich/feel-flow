@@ -14,12 +14,10 @@ import {
 
 import { 
   Home, 
-  Profile, 
-  Tables, 
+  Profile,
   Notifications, 
   Modules,
-  Team, 
-  ProfileNew,
+  Team,
   WellnessHub,
   OwnTracking,
   Teams,
@@ -130,7 +128,7 @@ export const routes = [
         icon: <UserCircleIcon {...icon} />,
         name: "Perfil",
         path: "/perfil",
-        element: <ProfileNew />,
+        element: <Profile />,
       },
       {
         // Para Autogestión, se usa un icono que representa el control personal

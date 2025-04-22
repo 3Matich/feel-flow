@@ -135,7 +135,7 @@ export function TwelveSteps() {
               onChange={(e) => setCloseDate(e.target.value)}
             />
           </div>
-          <Button className="mt-4" fullWidth onClick={handleCreateModule}>
+          <Button className="mt-6 button-custom" fullWidth onClick={handleCreateModule}>
             Guardar
           </Button>
         </form>
@@ -167,6 +167,7 @@ export function TwelveSteps() {
               </div>
             ))}
           </div>
+          
           <Button onClick={handleNext} className="h-full w-14 flex items-center justify-center bg-[#353535] bg-opacity-10 hover:bg-opacity-30">
             <span className="mr-1">&gt;</span>
             <ChevronRightIcon className="w-6 h-6" />

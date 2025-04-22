@@ -98,6 +98,8 @@ function NikoNikoTable({ nikoDataByMember }) {
                   {getFaceWithColor(nikoData[member]?.[dayIndex - 1])}
                 </td>
               ))}
+            </tr>
+            ))}
           {members.map((member) => (
             <tr key={member} className="border table-body">
               <td className="px-2 py-2 table-body-cell text-center align-middle">
