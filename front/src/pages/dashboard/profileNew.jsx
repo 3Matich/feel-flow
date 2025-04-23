@@ -1,3 +1,5 @@
+// src/widgets/profile/ProfileNew.jsx
+
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -20,22 +22,25 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { getUserData } from "@/services/session";
-// import { getUser } from "@/services/Users/GetUser";
 import { ProfileInfoCard } from "@/widgets/cards";
 import { EditProfileDialog } from "@/widgets/dialogs";
 import { useDragAndDrop } from "@/hooks";
 import { platformSettingsData } from "@/data";
 
 import { getUser } from "@/api/users/getUser";
+import { getUserImage } from "@/services/getUserImage"; // ← service GET
+import { uploadUserImage } from "@/services/uploadUserImage"; // ← service POST
 
 export function ProfileNew() {
   const [profile, setProfile] = useState(null);
+  const [userImageSrc, setUserImageSrc] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState("0000.png");
-  const { handleDragOver, handleDrop, handleImageChange, handleRemoveImage, logoPreview } = useDragAndDrop();
   const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
   const [settings, setSettings] = useState(platformSettingsData);
+  const { handleDragOver, handleDrop, handleImageChange, handleRemoveImage, logoPreview } =
+    useDragAndDrop();
 
   // Aplicar tema oscuro en el html
   useEffect(() => {
@@ -51,16 +56,12 @@ export function ProfileNew() {
   // Obtener datos del usuario desde la API
   useEffect(() => {
     const { authUserID } = getUserData();
-
     async function fetchProfile() {
       try {
         const data = await getUser(authUserID);
-        // const {enterpriseName, enterpriseID, name, surname, username, userID, country, phoneNumber, description} = await getUser(authUserID);
         if (data && typeof data === "object") {
-          setProfile((prev) => ({
-            ...prev,
-            ...data,
-            // Usamos los nuevos campos o asignamos un default si faltan
+          setProfile(prev => ({ ...prev, ...data 
+                        // Usamos los nuevos campos o asignamos un default si faltan
             // country: data.country,
             // phoneNumber: phoneNumber,
             // description: data.description,
@@ -73,7 +74,6 @@ export function ProfileNew() {
         console.error("Error al cargar el perfil:", error.message);
       }
     }
-
     fetchProfile();
   }, []);
 
@@ -93,17 +93,40 @@ export function ProfileNew() {
       console.error("Error al actualizar el perfil:", error.message);
     }
   };
-  */
+*/
+
+  // Cargar imagen de avatar desde el endpoint (base64)
+  useEffect(() => {
+    // const { token } = getUserData(); // si quisieras usar getUserData para el token
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      console.warn("No se encontró token de autenticación. Avatar omitido.");
+      return;
+    }
+
+    async function fetchAvatar() {
+      try {
+        const { fileType, fileData } = await getUserImage(token);
+        const uri = `data:${fileType};base64,${fileData}`;
+        setUserImageSrc(uri);
+      } catch (err) {
+        console.error("Error al obtener avatar:", err);
+      }
+    }
+
+    fetchAvatar();
+  }, []);
+
   const handleOpenAvatarDialog = () => setOpen(!open);
 
-  const handleSwitchChange = (changeKey) => {
+  const handleSwitchChange = changeKey => {
     if (changeKey === "darkMode") {
       setDarkMode(!darkMode);
     } else {
-      setSettings((prev) =>
-        prev.map((category) => ({
+      setSettings(prev =>
+        prev.map(category => ({
           ...category,
-          options: category.options.map((option) =>
+          options: category.options.map(option =>
             option.change === changeKey ? { ...option, checked: !option.checked } : option
           ),
         }))
@@ -121,7 +144,8 @@ export function ProfileNew() {
           <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
             <div className="flex items-center gap-6">
               <Avatar
-                src={logoPreview || `/img/avatar/${selectedAvatar}`}
+                /* 1️⃣ Prioridad: userImageSrc (backend) → logoPreview → ícono elegido */
+                src={userImageSrc || logoPreview || `/img/avatar/${selectedAvatar}`}
                 alt="avatar"
                 size="xl"
                 variant="rounded"
@@ -140,11 +164,21 @@ export function ProfileNew() {
                 <hr />
                 <DialogBody>
                   <div className="flex flex-wrap justify-center">
-                    {["0000.png", "0001.png", "0002.png", "0003.png", "0004.png", "0005.png", "0006.png", "0007.png"].map((avatar, index) => (
+                    {[
+                      "0000.png",
+                      "0001.png",
+                      "0002.png",
+                      "0003.png",
+                      "0004.png",
+                      "0005.png",
+                      "0006.png",
+                      "0007.png",
+                    ].map((avatar, index) => (
                       <div
                         key={index}
                         onClick={() => {
                           setSelectedAvatar(avatar);
+                          setUserImageSrc(null); // ← limpiamos para que se vea el ícono
                           handleOpenAvatarDialog();
                         }}
                         className="m-2 cursor-pointer"
@@ -169,9 +203,13 @@ export function ProfileNew() {
                     >
                       {logoPreview ? (
                         <div className="relative w-32 h-32 mx-auto">
-                          <img src={logoPreview} alt="Logo preview" className="object-cover w-full h-full rounded-md" />
+                          <img
+                            src={logoPreview}
+                            alt="Logo preview"
+                            className="object-cover w-full h-full rounded-md"
+                          />
                           <button
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               handleRemoveImage();
                             }}
@@ -199,8 +237,33 @@ export function ProfileNew() {
                   </div>
                 </DialogBody>
                 <DialogFooter>
-                  <Button variant="text" color="green" onClick={handleOpenAvatarDialog} className="mr-1">
-                    <span>Save</span>
+                  <Button
+                    variant="text"
+                    color="green"
+                    onClick={async () => {
+                      if (!logoPreview) {
+                        alert("No se ha seleccionado una imagen");
+                        return;
+                      }
+                      if (!logoPreview.startsWith("data:image/")) {
+                        alert("El archivo seleccionado no es una imagen válida.");
+                        return;
+                      }
+                      try {
+                        // extraemos solo la parte base64
+                        const base64 = logoPreview.split(",")[1];
+                        await uploadUserImage(base64);
+                        setUserImageSrc(logoPreview); // actualizamos vista con la nueva
+                        // const { name, surname, ... } = profile; // ejemplo si necesitas actualizar algo más
+                        alert("Imagen subida con éxito");
+                        handleOpenAvatarDialog();
+                      } catch (err) {
+                        alert("Error al subir la imagen");
+                      }
+                    }}
+                    className="mr-1"
+                  >
+                    <span>Guardar</span>
                   </Button>
                   <Button variant="text" color="red" onClick={handleOpenAvatarDialog} className="mr-1">
                     <span>Cancel</span>
@@ -223,7 +286,6 @@ export function ProfileNew() {
             {isEditing && (
               <EditProfileDialog
                 data={profile}
-                // desc={profile.description}
                 // onSave={handleUpdateProfile}
                 onCancel={() => setIsEditing(false)}
                 open={isEditing}
@@ -256,11 +318,11 @@ export function ProfileNew() {
                 Configuraciones de la Plataforma
               </Typography>
               <div className="flex flex-col gap-8">
-                {settings.map((category) => (
+                {settings.map(category => (
                   <div key={category.title} className="mb-4">
                     <h2 className="text-l font-semibold">{category.title}</h2>
                     <div className="mt-4 space-y-3">
-                      {category.options.map((option) => (
+                      {category.options.map(option => (
                         <div key={option.label} className="flex items-center justify-between">
                           <span>{option.label}</span>
                           <Switch
