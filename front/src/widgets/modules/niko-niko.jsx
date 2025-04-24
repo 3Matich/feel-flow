@@ -157,7 +157,7 @@ export function NikoNiko() {
           </div>
 
           <Button
-            className="mt-6 bg-[#282424] hover:bg-opacity-80"
+            className="mt-6 button-custom"
             fullWidth
             type="submit"
           >

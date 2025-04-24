@@ -22,7 +22,7 @@ export function Dashboard() {
         <>
             <div className="text-center">
                 <h1 className="text-2xl font-bold">Actividad en los Módulos</h1>
-                <p className="text-gray-600">Visualiza rápidamente el estado y la actividad de los modulos.</p>
+                <p>Visualiza rápidamente el estado y la actividad de los modulos.</p>
             </div>
             <div className="grid grid-cols-3 gap-5 p-4">
                 <StatusChart />

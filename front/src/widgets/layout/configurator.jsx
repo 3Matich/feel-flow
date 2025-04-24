@@ -13,6 +13,7 @@ import {
   setSidenavColor,
   setSidenavType,
   setFixedNavbar,
+  setDarkMode,
 } from "@/context";
 
 function formatNumber(number, decPlaces) {
@@ -45,6 +46,24 @@ export function Configurator() {
   const { openConfigurator, sidenavColor, sidenavType, fixedNavbar } =
     controller;
   const [stars, setStars] = React.useState(0);
+  const [darkMode, setDarkMode] = React.useState(
+    sessionStorage.getItem("theme") === "dark"
+  );
+
+  // Aplicar tema oscuro en el `html`
+  React.useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      sessionStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      sessionStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
+  const handleSwitchChange = () => {
+    setDarkMode(!darkMode);
+  }
 
   const sidenavColors = {
     white: "from-gray-100 to-gray-100 border-gray-200",
@@ -55,32 +74,32 @@ export function Configurator() {
     pink: "from-pink-400 to-pink-600",
   };
 
-  React.useEffect(() => {
-    const stars = fetch(
-      "https://api.github.com/repos/creativetimofficial/material-tailwind-dashboard-react"
-    )
-      .then((response) => response.json())
-      .then((data) => setStars(formatNumber(data.stargazers_count, 1)));
-  }, []);
+  // React.useEffect(() => {
+  //   const stars = fetch(
+  //     "https://api.github.com/repos/creativetimofficial/material-tailwind-dashboard-react"
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => setStars(formatNumber(data.stargazers_count, 1)));
+  // }, []);
 
   return (
     <aside
-      className={`fixed top-0 right-0 z-50 h-screen w-96 bg-white px-2.5 shadow-lg transition-transform duration-300 ${
-        openConfigurator ? "translate-x-0" : "translate-x-96"
-      }`}
+      className={`fixed top-0 right-0 z-50 h-screen w-96 bg-white px-2.5 shadow-lg transition-transform duration-300 ${openConfigurator ? "translate-x-0" : "translate-x-96"
+        } bg-light-bg dark:bg-dark-primary border`}
     >
       <div className="flex items-start justify-between px-6 pt-8 pb-6">
         <div>
-          <Typography variant="h5" color="blue-gray">
-            Dashboard Configurator
+          <Typography variant="h5" className="text-light-text dark:text-dark-text">
+            Personaliza nuestra aplicacion
           </Typography>
-          <Typography className="font-normal text-blue-gray-600">
-            See our dashboard options.
+          <Typography className="font-normal text-light-text-secondary dark:text-dark-text-secondary">
+            Mira nuestras opciones
           </Typography>
         </div>
         <IconButton
           variant="text"
           color="blue-gray"
+          className="hover:text-red-500"
           onClick={() => setOpenConfigurator(dispatch, false)}
         >
           <XMarkIcon strokeWidth={2.5} className="h-5 w-5" />
@@ -88,56 +107,64 @@ export function Configurator() {
       </div>
       <div className="py-4 px-6">
         <div className="mb-12">
-          <Typography variant="h6" color="blue-gray">
-            Sidenav Colors
+          <Typography variant="h6 text-light-text-secondary dark:text-dark-text-secondary">
+            Colores de la barra de navegacion
           </Typography>
           <div className="mt-3 flex items-center gap-2">
             {Object.keys(sidenavColors).map((color) => (
               <span
                 key={color}
-                className={`h-6 w-6 cursor-pointer rounded-full border bg-gradient-to-br transition-transform hover:scale-105 ${
-                  sidenavColors[color]
-                } ${
-                  sidenavColor === color ? "border-black" : "border-transparent"
-                }`}
+                className={`h-6 w-6 cursor-pointer rounded-full border bg-gradient-to-br transition-transform hover:scale-105 ${sidenavColors[color]
+                  } ${sidenavColor === color ? "border-black" : "border-transparent"
+                  }`}
                 onClick={() => setSidenavColor(dispatch, color)}
               />
             ))}
           </div>
         </div>
+        {/*
         <div className="mb-12">
-          <Typography variant="h6" color="blue-gray">
-            Sidenav Types
+          <Typography variant="h6 text-light-text-secondary dark:text-dark-text-secondary">
+            Tipo de barra de navegacion
           </Typography>
-          <Typography variant="small" color="gray">
-            Choose between 3 different sidenav types.
+          <Typography variant="small" className="text-light-text-secondary dark:text-dark-text-secondary">
+            Elige entre tres tipos diferentes.
           </Typography>
-          <div className="mt-3 flex items-center gap-2">
+
+          <div className="mt-5 flex items-center gap-1">
             <Button
               variant={sidenavType === "dark" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "dark")}
+              color={sidenavColor === "dark" && darkMode ? "white" : sidenavColor}
+              // className={`${sidenavType === "dark" ? "" : "dark:bg-dark-card dark:text-dark-text" }`}
             >
-              Dark
+              Negro
             </Button>
             <Button
               variant={sidenavType === "transparent" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "transparent")}
+              color={sidenavColor}
+              // className={`${sidenavType === "transparent" ? "" : "dark:bg-dark-card dark:text-dark-text"}`}
             >
-              Transparent
+              Transparente
             </Button>
             <Button
               variant={sidenavType === "white" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "white")}
+              color={sidenavColor}
+              // className={`${sidenavType === "white" ? "" : "dark:bg-dark-card dark:text-dark-text"}`}
             >
-              White
+              Blanco
             </Button>
           </div>
+
         </div>
+        */}
         <div className="mb-12">
           <hr />
-          <div className="flex items-center justify-between py-5">
-            <Typography variant="h6" color="blue-gray">
-              Navbar Fixed
+          <div className="flex items-center justify-between py-5 text-light-text dark:text-dark-text">
+            <Typography variant="h6">
+              Barra de navegación fija
             </Typography>
             <Switch
               id="navbar-fixed"
@@ -146,6 +173,16 @@ export function Configurator() {
             />
           </div>
           <hr />
+          <div className="flex items-center justify-between py-5 text-light-text dark:text-dark-text">
+            <Typography variant="h6">
+              Modo Oscuro
+            </Typography>
+            <Switch
+              id="dark-mode"
+              value={darkMode}
+              onChange={handleSwitchChange}
+            />
+          </div>
           {/*  
           <div className="my-8 flex flex-col gap-4">
             <a

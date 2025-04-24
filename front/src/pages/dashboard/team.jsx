@@ -110,29 +110,29 @@ export function Team() {
         </Alert>
       )}
 
-      <Card color="transparent" className="mb-6 p-6 mt-6 shadow-lg rounded-xl border border-gray-200">
+      <Card color="transparent" className="mb-6 p-6 mt-6 shadow-lg rounded-xl border">
         <CardHeader color="transparent" shadow={false} className="p-3 flex justify-between items-center rounded-lg">
           <div className="flex items-center gap-2">
             <img
               src="/img/scuderia.jpg"
               alt="Equipo"
-              className="w-20 h-20 object-cover rounded-full border-4 border-white shadow-lg"
+              className="w-20 h-20 object-cover rounded-full border-4 shadow-lg"
             />
 
             {isEditing ? (
               <Input
                 type="text"
                 value={teamName}
-                className="border border-gray-300 rounded-lg p-2 text-lg font-semibold text-gray-900 w-full"
+                className="border rounded-lg p-2 text-lg w-full card"
                 disabled
               />
             ) : (
-              <Typography variant="h4" color="blue" className="font-semibold leading-tight">
+              <Typography variant="h4" className="leading-tight">
                 {teamName}
               </Typography>
             )}
           </div>
-          <IconButton variant="text" color="indigo" onClick={handleEditToggle} className="ml-2">
+          <IconButton variant="text" color="pink" onClick={handleEditToggle} className="ml-2">
             <Pencil size={20} />
           </IconButton>
         </CardHeader>
@@ -141,20 +141,20 @@ export function Team() {
             <Textarea
               value={teamDescription}
               onChange={() => {}}
-              className="border border-gray-300 rounded-lg p-2 text-gray-700 w-full resize-none"
+              className="border rounded-lg p-2 w-full resize-none card"
               rows={3}
               disabled
             />
           ) : (
-            <Typography className="text-gray-700 leading-tight">{teamDescription}</Typography>
+            <Typography className="leading-tight">{teamDescription}</Typography>
           )}
 
           {isEditing && (
-            <div className="flex gap-2">
-              <Button variant="gradient" color="red" onClick={handleEditToggle} disabled={isSaving}>
+            <div className="flex gap-2 mt-2">
+              <Button variant="filled" className="button-cancel" onClick={handleEditToggle} disabled={isSaving}>
                 Cancelar
               </Button>
-              <Button variant="gradient" color="indigo" onClick={handleSave} disabled={isSaving}>
+              <Button variant="filled" className="button-save" onClick={handleSave} disabled={isSaving}>
                 {isSaving ? <Spinner className="h-4 w-4" /> : "Guardar"}
               </Button>
             </div>
@@ -162,24 +162,24 @@ export function Team() {
         </CardBody>
       </Card>
 
-      <Card color="transparent" className="p-2 shadow-lg rounded-xl border border-gray-200">
-        <CardHeader variant="gradient" color="blue" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg">
-          <Typography variant="h6" color="white" className="font-medium">Miembros del equipo</Typography>
-          <Button color="white" onClick={handleOpen} className="flex items-center gap-2">
+      <Card color="transparent" className="p-2 shadow-lg rounded-xl border card-header">
+        <CardHeader variant="gradient" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg card">
+          <Typography variant="h6" className="font-medium">Miembros del equipo</Typography>
+          <Button onClick={handleOpen} variant="filled" className="flex items-center gap-2 hover:shadow-lg button-custom">
             <UserPlusIcon className="h-5 w-5" />
             Invitar Miembro
           </Button>
         </CardHeader>
         <CardBody className="px-4 pt-0 pb-4">
           {teamMembers.length === 0 ? (
-            <Typography className="text-center text-gray-500">Este equipo aún no tiene miembros asignados.</Typography>
+            <Typography className="text-center">Este equipo aún no tiene miembros asignados.</Typography>
           ) : (
-            <table className="w-full min-w-[640px] table-auto border-collapse">
+            <table className="w-full min-w-[640px] table-auto card">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="table-header">
                   {"Usuario,Descripción,Empresa,Teléfono".split(",").map((el) => (
-                    <th key={el} className="border-b border-gray-300 py-3 px-5 text-left text-gray-700">
-                      <Typography variant="small" className="text-[11px] font-bold uppercase">
+                    <th key={el} className="border table-header-cell py-3 px-5 text-left">
+                      <Typography variant="small" className="font-bold card-header">
                         {el}
                       </Typography>
                     </th>
@@ -188,21 +188,21 @@ export function Team() {
               </thead>
               <tbody>
                 {teamMembers.map((member) => (
-                  <tr key={member.uuid} className="hover:bg-gray-50 transition-colors">
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      <Typography className="font-semibold text-gray-800">
+                  <tr key={member.uuid} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-colors">
+                    <td className="py-3 px-5 table-body-cell">
+                      <Typography>
                         {member.name} {member.surname}
                       </Typography>
-                      <Typography className="text-xs text-gray-500">{member.username}</Typography>
+                      <Typography className="text-xs">{member.username}</Typography>
                     </td>
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      <Typography className="text-sm text-gray-700">{member.description}</Typography>
+                    <td className="py-3 px-5 table-body-cell">
+                      <Typography className="text-sm">{member.description}</Typography>
                     </td>
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      <Typography className="text-sm text-gray-700">{member.enterpriseInfoHomeDTO?.name || '-'}</Typography>
+                    <td className="py-3 px-5 table-body-cell">
+                      <Typography className="text-sm">{member.enterpriseInfoHomeDTO?.name || '-'}</Typography>
                     </td>
-                    <td className="py-3 px-5 border-b border-gray-200">
-                      <Typography className="text-sm text-gray-700">{member.phoneNumber}</Typography>
+                    <td className="py-3 px-5 table-body-cell">
+                      <Typography className="text-sm">{member.phoneNumber}</Typography>
                     </td>
                   </tr>
                 ))}
@@ -212,16 +212,16 @@ export function Team() {
         </CardBody>
       </Card>
 
-      <Dialog open={open} handler={handleOpen} size="sm" className={`transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
+      <Dialog open={open} handler={handleOpen} size="sm" className={`card transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
         <DialogHeader className="flex justify-between items-center">
           <Typography variant="h5">Invitar a un nuevo miembro</Typography>
-          <IconButton variant="text" color="gray" onClick={handleOpen}>
+          <IconButton variant="text" color="pink" onClick={handleOpen}>
             <X size={20} />
           </IconButton>
         </DialogHeader>
         <DialogBody>
-          <div className="mt-4 flex items-center gap-2 border border-gray-300 rounded-lg p-2">
-            <Typography className="text-sm text-blue-500 truncate w-full">
+          <div className="mt-4 flex items-center gap-2 border rounded-lg p-2">
+            <Typography className="text-sm truncate w-full">
               {inviteLink}
             </Typography>
             <IconButton onClick={copyToClipboard} color={copied ? "green" : "indigo"} className={`transition-transform duration-200 ${copied ? 'scale-110' : ''}`}>
@@ -229,12 +229,12 @@ export function Team() {
             </IconButton>
           </div>
           {copied && (
-            <Typography className="mt-2 text-green-500 text-sm animate-bounce">¡Link copiado!</Typography>
+            <Typography className="mt-2 text-sm animate-bounce">¡Link copiado!</Typography>
           )}
         </DialogBody>
         <DialogFooter>
-          <Button variant="gradient" color="red" onClick={handleOpen} className="mr-2">Cancelar</Button>
-          <Button variant="gradient" color="indigo" onClick={copyToClipboard}>Copiar Link</Button>
+          <Button variant="filled" className="button-cancel mr-2" onClick={handleOpen}>Cancelar</Button>
+          <Button variant="filled" className="button-custom" onClick={copyToClipboard}>Copiar Link</Button>
         </DialogFooter>
       </Dialog>
     </>

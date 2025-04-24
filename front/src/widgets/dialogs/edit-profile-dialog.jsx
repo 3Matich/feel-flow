@@ -30,7 +30,6 @@ const CODES = ["+54", "+33", "+49", "+34", "+1"];
 const NATIONALITIES = ["Argentina", "Uruguay", "Chile", "Paraguay", "Brasil", "Peru", "Bolivia", "Ecuador", "Colombia", "Venezuela", "Mexico", "España"];
 
 
-
 export function EditProfileDialog({ data, onSave, onCancel, open }) {
 
   const [country, setCountry] = React.useState(0);
@@ -113,10 +112,10 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
   };
 
   return (
-    <Dialog open={open} handler={onCancel}>
+    <Dialog open={open} handler={onCancel} className="card">
       <DialogHeader>
         <div>
-          <Typography variant="h5" color="blue-gray" className="mb-1">
+          <Typography variant="h5" className="mb-1">
             {formData.name} {formData.surname}
           </Typography>
         </div>
@@ -134,6 +133,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
             value={formData.description}
             onChange={handleChange}
             name="description"
+            className="text-light-text-secondary dark:text-dark-text-secondary"
             // error={errors.description}
           />
           <hr />
@@ -220,10 +220,10 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
         </div>
       </DialogBody>
       <DialogFooter>
-        <Button variant="text" color="red" onClick={onCancel}>
+        <Button variant="text" className="button-cancel" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button variant="gradient" color="green" onClick={handleSubmit}>
+        <Button variant="gradient" className="button-save" onClick={handleSubmit}>
           Guardar Cambios
         </Button>
       </DialogFooter>

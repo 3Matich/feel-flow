@@ -70,20 +70,20 @@ function NikoNikoTable({ nikoDataByMember }) {
   };
 
   return (
-    <div className="mt-4 bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+    <div className="mt-4 rounded-lg shadow-lg p-6 overflow-x-auto">
       <table className="w-full text-sm table-auto border-separate border-spacing-0">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-2 py-3 text-gray-600 font-semibold text-center w-32">
+        <thead>
+          <tr className="table-header">
+            <th className="px-2 py-3 table-header-cell text-center w-32">
               Miembro
             </th>
-            <th className="px-2 py-3 text-gray-600 font-semibold text-center w-20">
+            <th className="px-2 py-3 table-header-cell text-center w-20">
               Jornada
             </th>
             {currentDays.map((day) => (
               <th
                 key={day}
-                className="px-2 py-2 text-gray-600 text-center w-20"
+                className="px-2 py-2 text-center table-header-cell w-20"
               >
                 Día {day}
               </th>
@@ -92,14 +92,14 @@ function NikoNikoTable({ nikoDataByMember }) {
         </thead>
         <tbody>
           {members.map((member) => (
-            <tr key={member} className="border-b">
-              <td className="px-2 py-2 font-medium text-gray-700 text-center align-middle">
+            <tr key={member} className="border-b table-body">
+              <td className="px-2 py-2 table-body-cell text-center align-middle">
                 {member.split(" ")[0].toUpperCase()}
               </td>
-              <td className="px-2 py-2 text-xs text-gray-500 text-center align-middle">
+              <td className="px-2 py-2 text-xs table-body-cell text-center align-middle">
                 <div className="flex flex-col items-center gap-1 leading-tight">
-                  <span className="text-[10px] text-gray-500">Comienzo</span>
-                  <span className="text-[10px] text-gray-500">Fin</span>
+                  <span className="text-[10px]">Comienzo</span>
+                  <span className="text-[10px]">Fin</span>
                 </div>
               </td>
               {currentDays.map((dayNumber) => {
@@ -112,7 +112,7 @@ function NikoNikoTable({ nikoDataByMember }) {
                         {getFaceWithColor(dayData.end)}
                       </div>
                     ) : (
-                      <div className="text-sm text-gray-400">No data</div>
+                      <div className="text-sm">No data</div>
                     )}
                   </td>
                 );
@@ -127,7 +127,7 @@ function NikoNikoTable({ nikoDataByMember }) {
         <button
           onClick={() => setDayPage((prev) => Math.max(prev - 1, 0))}
           disabled={dayPage === 0}
-          className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50 text-lg"
+          className="w-9 h-9 rounded-full bg-pink-400 text-white hover:bg-pink-700 font-bold disabled:opacity-50 text-lg"
         >
           ←
         </button>
@@ -136,7 +136,7 @@ function NikoNikoTable({ nikoDataByMember }) {
             setDayPage((prev) => Math.min(prev + 1, totalDayPages - 1))
           }
           disabled={dayPage === totalDayPages - 1}
-          className="w-9 h-9 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50 text-lg"
+          className="w-9 h-9 rounded-full bg-pink-400 text-white hover:bg-pink-700 font-bold disabled:opacity-50 text-lg"
         >
           →
         </button>

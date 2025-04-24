@@ -111,7 +111,7 @@ export function Kudos() {
 
           {/* Botón con color personalizado */}
           <Button
-            className="mt-4 bg-[#282424] hover:bg-opacity-80"
+            className="mt-4 button-custom"
             onClick={handleCreateModule}
           >
             Guardar

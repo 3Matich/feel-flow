@@ -15,7 +15,7 @@ function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMo
   }));
 
   return (
-    <div className="mt-12 flex flex-col items-center">
+    <div className="mt-4 flex flex-col items-center">
       <div className="flex gap-6">
         {/* Autocomplete para seleccionar equipo */}
         <div className="flex flex-col items-center">
@@ -33,7 +33,7 @@ function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMo
                 variant="outlined"
                 sx={{
                   width: 200,
-                  backgroundColor: "white",
+                  backgroundColor: "pink",
                 }}
               />
             )}
@@ -55,7 +55,7 @@ function TeamSelector({ teams, selectedTeam, setSelectedTeam, months, selectedMo
                 variant="outlined"
                 sx={{
                   width: 200,
-                  backgroundColor: "white",
+                  backgroundColor: "pink",
                 }}
               />
             )}

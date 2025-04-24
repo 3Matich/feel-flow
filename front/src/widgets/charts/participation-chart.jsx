@@ -11,8 +11,8 @@ const participationData = [
 
 export function ParticipationChart() {
     return (
-        <Card className="p-4 h-[350px] flex flex-col items-center justify-center">
-            <h2 className="text-lg font-semibold">Participación en Encuestas</h2>
+        <Card className="p-4 h-[350px] flex flex-col items-center justify-center card">
+            <h2 className="text-lg">Participación en Encuestas</h2>
             <CardBody className="flex justify-center">
                 {participationData.length === 0 ? (
                     <p className="text-gray-500 italic">No hay respuestas aún.</p>
