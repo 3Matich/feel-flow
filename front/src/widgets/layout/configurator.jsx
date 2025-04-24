@@ -90,11 +90,13 @@ export function Configurator() {
       <div className="flex items-start justify-between px-6 pt-8 pb-6">
         <div>
           <Typography variant="h5" className="text-light-text dark:text-dark-text">
-            Personaliza nuestra aplicacion
+            Personaliza la aplicación
           </Typography>
+          {/* 
           <Typography className="font-normal text-light-text-secondary dark:text-dark-text-secondary">
             Mira nuestras opciones
-          </Typography>
+          </Typography> \
+          */}
         </div>
         <IconButton
           variant="text"
@@ -106,6 +108,7 @@ export function Configurator() {
         </IconButton>
       </div>
       <div className="py-4 px-6">
+        {/* 
         <div className="mb-12">
           <Typography variant="h6 text-light-text-secondary dark:text-dark-text-secondary">
             Colores de la barra de navegacion
@@ -122,6 +125,7 @@ export function Configurator() {
             ))}
           </div>
         </div>
+        */}
         {/*
         <div className="mb-12">
           <Typography variant="h6 text-light-text-secondary dark:text-dark-text-secondary">
