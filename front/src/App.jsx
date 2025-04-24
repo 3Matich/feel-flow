@@ -35,7 +35,7 @@ function App() {
       ) : (
         <>
           <Route path="/auth/*" element={<Auth onLogin={handleLogin} />} />
-          <Route path="*" element={<Navigate to="/auth/sign-in-new" replace />} />
+          <Route path="*" element={<Navigate to="/auth/sign-in" replace />} />
         </>
       )}
     </Routes>

@@ -1,9 +1,12 @@
 // pages/Home.js
-import { GeneralMetrics } from "./GeneralMetrics";
-import { ChartsSection } from "./ChartsSection";
-import { LatestRecords } from "./LatestRecords";
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
+
+import { 
+  GeneralMetrics, 
+  ChartsSection,
+  LatestRecords,
+} from "@/widgets/charts";
 import { GetEquipos } from "../../services/GetEquipos";
 import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
 import { GetModulesAndUsers } from "../../services/GetModulesAndUsers";
@@ -13,8 +16,7 @@ import TeamSelector from "../../components/TeamSelector";
 import NikoNikoTable from "../../components/NikoNikoTable";
 import HappinessChart from "../../components/HappinessChart";
 import KudosChart from "../../components/KudosChart"; // Nuevo componente para Kudos
-import PodiumChart from "../../components/PodiumChart";
-import { Autocomplete, TextField } from "@mui/material";
+
 import {
   Tabs,
   TabsHeader,
@@ -23,10 +25,6 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import {
-  UserCircleIcon,
-  Cog6ToothIcon,
-  Squares2X2Icon,
-  EyeIcon,
   GiftIcon,
   PresentationChartLineIcon,
   FaceSmileIcon,

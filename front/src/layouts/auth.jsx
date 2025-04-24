@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Navbar, Footer } from "@/widgets/layout";
 import routes from "@/routes";
-import { SignInNew } from "@/pages/auth";
+import { SignIn } from "@/pages/auth";
 
 export function Auth({ onLogin }) {
   const navbarRoutes = [
@@ -40,7 +40,7 @@ export function Auth({ onLogin }) {
           ({ layout, pages }) =>
             layout === "auth" &&
             pages.map(({ path, element }) => (
-              <Route key={path} path={path} element={element.type === SignInNew ? <SignInNew onLogin={onLogin} /> : element} />
+              <Route key={path} path={path} element={element.type === SignIn ? <SignIn onLogin={onLogin} /> : element} />
             ))
         )}
       </Routes>

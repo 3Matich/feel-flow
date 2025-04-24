@@ -15,7 +15,6 @@ import {
 import { 
   Home, 
   Profile,
-  Notifications, 
   Modules,
   Team,
   WellnessHub,
@@ -24,7 +23,7 @@ import {
   Resumenes,
 } from "@/pages/dashboard";
 
-import { SignIn, SignUp, SignInNew, SignUpNew } from "@/pages/auth";
+import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -101,22 +100,10 @@ export const routes = [
         element: <SignIn />,
       },
       {
-        icon: <ServerStackIcon {...icon} />,
-        name: "sign in new",
-        path: "/sign-in-new",
-        element: <SignInNew />,
-      },
-      {
         icon: <RectangleStackIcon {...icon} />,
         name: "sign up",
         path: "/sign-up",
         element: <SignUp />,
-      },
-      {
-        icon: <RectangleStackIcon {...icon} />,
-        name: "sign up new",
-        path: "/sign-up-new",
-        element: <SignUpNew />,
       },
     ],
   },
