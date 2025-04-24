@@ -12,7 +12,7 @@ export function ActivityFeed() {
     return (
         <Card className="p-4 h-[350px] card">
             <h2 className="text-lg font-semibold flex items-center gap-2">
-                <BellIcon className="w-5 h-5 text-blue-500" /> Últimos Eventos
+                <BellIcon className="w-5 h-5 text-pink-500" /> Últimos Eventos
             </h2>
             <CardBody className="overflow-y-auto max-h-[280px]">
                 {events.length === 0 ? (

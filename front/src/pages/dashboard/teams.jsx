@@ -239,13 +239,13 @@ export function Teams() {
                 <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5" />
               </div>
 
-              <table className="w-full min-w-full table-auto border-collapse mt-5 rounded-md overflow-hidden">
+              <table className="w-full min-w-full table-auto mt-5 rounded-md card">
                 <thead>
                   <tr className="table-header">
                     {["Equipo", "Team Leader"].map((el) => (
                       <th
                         key={el}
-                        className="border py-3 px-5 text-left table-header-cell text-sm"
+                        className="border py-3 px-5 text-left table-header-cell"
                       >
                         {el}
                       </th>
@@ -254,19 +254,19 @@ export function Teams() {
                 </thead>
                 <tbody>
                   {filteredTeams.map(({ logo, name, leader }) => (
-                    <tr key={name} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all">
-                      <td className="py-3 px-5 border table-body-cell flex items-center gap-4">
-                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                        <Typography>
-                          {name}
-                        </Typography>
-                      </td>
-                      <td className="py-3 px-5 border table-body-cell">
-                        <Typography className="text-sm">
-                          {leader}
-                        </Typography>
-                      </td>
-                    </tr>
+                      <tr key={name} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all">
+                        <td className="py-3 px-5 table-body-cell flex items-center gap-4">
+                          <Avatar src={logo} alt={name} size="sm" variant="rounded" />
+                          <Typography>
+                            {name}
+                          </Typography>
+                        </td>
+                        <td className="py-3 px-5 table-body-cell">
+                          <Typography>
+                            {leader}
+                          </Typography>
+                        </td>
+                      </tr>
                   ))}
                 </tbody>
               </table>

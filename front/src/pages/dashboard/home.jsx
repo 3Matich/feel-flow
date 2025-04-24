@@ -10,7 +10,7 @@ import { GetModulesAndUsers } from "../../services/GetModulesAndUsers";
 import { GetTwelveStepsSummary } from "../../services/GetTwelveStepsSummary";
 import { GetKudosSummary } from "../../services/GetKudosSummary";
 import TeamSelector from "../../components/TeamSelector";
-// import NikoNikoTable from "../../components/NikoNikoTable";
+import NikoNikoTable from "../../components/NikoNikoTable";
 import HappinessChart from "../../components/HappinessChart";
 import KudosChart from "../../components/KudosChart"; // Nuevo componente para Kudos
 import PodiumChart from "../../components/PodiumChart";
@@ -338,7 +338,7 @@ export function Home() {
             />
           </div>
           <div className="mt-8">
-            {/* <NikoNikoTable nikoDataByMember={nikoDataByMember} /> */}
+            <NikoNikoTable nikoDataByMember={nikoDataByMember} />
           </div>
         </div>
       ),
@@ -348,7 +348,7 @@ export function Home() {
       value: "felicidad",
       icon: HeartIcon,
       element: (
-        <div>
+        <div className="mt-4">
           {teamData && modulesData.length > 0 ? (
             <HappinessChart
               teamData={teamData}

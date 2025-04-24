@@ -72,18 +72,18 @@ export function Sidenav({ brandImg, brandName, routes, onLogout }) {
                         variant={isActive ? "gradient" : "text"}
                         color={
                           isActive
-                            ? sidenavColor
+                            ? "pink"
                             : sidenavType === "dark"
                               ? "white"
                               : "blue-gray"
                         }
-                        className={`flex items-center gap-4 px-4 capitalize ${isActive && sidenavColor === "dark" ? "text-dark-text" : "text-light-text"} dark:text-dark-text`}
+                        // className={`flex items-center gap-4 px-4 capitalize ${isActive && sidenavColor === "dark" ? "text-dark-text" : "text-light-text"} dark:text-dark-text`}
+                        className={`flex items-center gap-4 px-4 capitalize ${isActive && "sidenav-text"} text-light-text dark:text-dark-text`}
                         fullWidth
                       >
                         {icon}
                         <Typography
-                          color="inherit"
-                          className="font-medium capitalize"
+                          className={`font-medium capitalize ${isActive && "sidenav-text"}`}
                         >
                           {name}
                         </Typography>

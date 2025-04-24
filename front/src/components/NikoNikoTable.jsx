@@ -70,42 +70,33 @@ function NikoNikoTable({ nikoDataByMember }) {
   };
 
   return (
-    <div className="mt-4 rounded-lg shadow-lg">
-      <table className="w-full table-auto border-separate border-spacing-0">
+    <div className="mt-4 rounded-lg shadow-lg p-6 overflow-x-auto">
+      <table className="w-full text-sm table-auto border-separate border-spacing-0">
         <thead>
           <tr className="table-header">
-            <th className="px-4 py-3 table-header-cell text-center w-32">
+            <th className="px-2 py-3 table-header-cell text-center w-32">
               Miembro
             </th>
-            <th className="px-2 py-3 text-gray-600 font-semibold text-center w-20">
+            <th className="px-2 py-3 table-header-cell text-center w-20">
               Jornada
             </th>
             {currentDays.map((day) => (
-              <th key={day} className="px-2 py-2 table-header-cell text-center w-12">
+              <th
+                key={day}
+                className="px-2 py-2 text-center table-header-cell w-20"
+              >
                 Día {day}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {currentMembers.map((member) => (
-            <tr key={member} className="border table-body">
-              <td className="px-4 py-2 table-body-cell text-center font-bold">
-                {member}
-              </td>
-              {currentDays.map((dayIndex) => (
-                <td key={dayIndex} className="px-2 py-1 text-center align-middle table-body-cell">
-                  {getFaceWithColor(nikoData[member]?.[dayIndex - 1])}
-                </td>
-              ))}
-            </tr>
-            ))}
           {members.map((member) => (
-            <tr key={member} className="border table-body">
+            <tr key={member} className="border-b table-body">
               <td className="px-2 py-2 table-body-cell text-center align-middle">
                 {member.split(" ")[0].toUpperCase()}
               </td>
-              <td className="px-2 py-1 text-center align-middle table-body-cell">
+              <td className="px-2 py-2 text-xs table-body-cell text-center align-middle">
                 <div className="flex flex-col items-center gap-1 leading-tight">
                   <span className="text-[10px]">Comienzo</span>
                   <span className="text-[10px]">Fin</span>

@@ -174,7 +174,7 @@ export function Team() {
           {teamMembers.length === 0 ? (
             <Typography className="text-center">Este equipo aún no tiene miembros asignados.</Typography>
           ) : (
-            <table className="w-full min-w-[640px] table-auto border-collapse">
+            <table className="w-full min-w-[640px] table-auto card">
               <thead>
                 <tr className="table-header">
                   {"Usuario,Descripción,Empresa,Teléfono".split(",").map((el) => (
@@ -189,19 +189,19 @@ export function Team() {
               <tbody>
                 {teamMembers.map((member) => (
                   <tr key={member.uuid} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-colors">
-                    <td className="py-3 px-5 border table-body-cell">
+                    <td className="py-3 px-5 table-body-cell">
                       <Typography>
                         {member.name} {member.surname}
                       </Typography>
                       <Typography className="text-xs">{member.username}</Typography>
                     </td>
-                    <td className="py-3 px-5 border table-body-cell">
+                    <td className="py-3 px-5 table-body-cell">
                       <Typography className="text-sm">{member.description}</Typography>
                     </td>
-                    <td className="py-3 px-5 border table-body-cell">
+                    <td className="py-3 px-5 table-body-cell">
                       <Typography className="text-sm">{member.enterpriseInfoHomeDTO?.name || '-'}</Typography>
                     </td>
-                    <td className="py-3 px-5 border table-body-cell">
+                    <td className="py-3 px-5 table-body-cell">
                       <Typography className="text-sm">{member.phoneNumber}</Typography>
                     </td>
                   </tr>

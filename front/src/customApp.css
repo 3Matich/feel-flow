@@ -4,11 +4,11 @@
 
 @layer components {
     .table-header {
-        @apply bg-blue-100 dark:bg-blue-900 text-light-text dark:text-dark-text !important
+        @apply bg-pink-100 dark:bg-pink-500 text-light-text dark:text-dark-text !important
     }
 
     .table-header-cell {
-        @apply border-b border-blue-gray-100 py-3 px-5 uppercase text-sm font-bold !important
+        @apply border-b border-blue-gray-100 py-3 px-5 uppercase font-semibold !important
     }
 
     .table-body {
@@ -46,6 +46,10 @@
     .button-custom {
         @apply bg-gradient-to-r from-pink-400 to-pink-600 text-white font-medium rounded-full text-sm normal-case shadow-md transition-all duration-300 !important
     }
+
+    .sidenav-text {
+        @apply text-white !important
+    }
 }
 
 @layer base {
@@ -59,6 +63,6 @@
     }
 
     input {
-        @apply border text-light-text-secondary dark:text-dark-text-secondary /*dark:!bg-blue-gray-800 dark:text-dark-text-secondary*/
+        @apply border text-light-text-secondary dark:text-dark-text-secondary /*dark:!bg-blue-gray-800 dark:text-dark-text-secondary */
     }
 }

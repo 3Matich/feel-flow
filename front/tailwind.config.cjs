@@ -38,9 +38,9 @@ module.exports = withMT({
 
         // Tema Oscuro
         "dark-primary": "#010D26", // Azul eléctrico ############ Sidebar y Navbar
-        "dark-secondary":  "#880e38",// "#F25D50", // pink-900
+        "dark-secondary": "#F25D50",// 880e38"#F25D50", // pink-900
         "dark-bg": "#121212", // Fondo oscuro
-        "dark-text": "#EAEAEA", // Texto principal
+        "dark-text": "#f1f1f1", // EAEAEA Texto principal
         "dark-text-secondary": "#A1A1A1", // Texto secundario
         "dark-card": "#1A1A2E", // Fondo de tarjetas
         "dark-border": "#1F2937", // Bordes y sombras
@@ -50,7 +50,7 @@ module.exports = withMT({
       },
       backgroundColor: { // Fondos div principal
         "light-bg": "#F8F9FA", //
-        "dark-bg": "#05183C", //121212
+        "dark-bg": "#010f19", //010d14 010d1e 05183C 121212
       },
       backgroundImage: {
         'gradient-custom': "linear-gradient(to right, #FFEDD9 0%, #FFEDD9 13.37%, #F1664A 26.75%, #F1664A 43.84%, #183E7B 60.93%, #183E7B 80.46%, #000B23 100%)",
