@@ -68,6 +68,7 @@ export function DashboardNavbar() {
   }, []);
 
   // Conexión WebSocket para recibir notificaciones en tiempo real
+  /*
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (!token) return;
@@ -102,7 +103,7 @@ export function DashboardNavbar() {
       ws.close();
     };
   }, []);
-
+  */
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}

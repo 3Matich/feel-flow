@@ -19,16 +19,21 @@ import {
 import { ClipboardCopy, X } from "lucide-react";
 import { CheckCircleIcon, Pencil } from "lucide-react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
+import { GetTeam } from "@/api/teams/getTeams";
+
+import { FeelFlowSpinner } from "@/components";
+
+import { EditTeam, ViewTeam } from "@/widgets/pages/team";
+import { NotFoundPage } from ".";
 
 export function Team() {
   const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [teamData, setTeamData] = useState(null);
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const inviteLink = teamData ? `https://localhost:5173/auth/signup?invite=${teamData.uuid}` : "";
 
@@ -50,53 +55,43 @@ export function Team() {
     }, 2000);
   };
 
-  const handleEditToggle = () => {
-    if (!isSaving) {
-      setIsEditing(!isEditing);
+  const handleEdit = () => {
+    setIsEditing(!isEditing);
+    fetchTeam();
+  }
+
+  const fetchTeam = async () => {
+    try {
+      setLoading(true); // 👈 importante para que aparezca el spinner si querés
+      const allTeams = await GetTeam();
+
+      if (allTeams.length > 0) {
+        setTeamData(allTeams[0]);
+      } else {
+        // console.warn("⚠️ No hay equipos disponibles");
+        setTeamData(null); // o un valor vacío
+      }
+    } catch (error) {
+      console.error("❌ Error al obtener equipos:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSave = () => {
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsEditing(false);
-      setIsSaving(false);
-      setSuccessMessage("¡Equipo actualizado con éxito! ✅");
-
-      setTimeout(() => setSuccessMessage(""), 3000);
-    }, 1500);
-  };
-
   useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        const allTeams = await getAvailableTeams();
-        console.log("📦 Equipos disponibles:", allTeams);
-        if (allTeams.length > 0) {
-          setTeamData(allTeams[0]);
-        } else {
-          console.warn("⚠️ No hay equipos disponibles");
-        }
-      } catch (error) {
-        console.error("❌ Error al obtener equipos:", error);
-      }
-    };
-
     fetchTeam();
   }, []);
 
-  if (!teamData) {
-    return (
-      <Typography variant="h6" className="p-6 text-center text-gray-700">
-        Cargando datos del equipo...
-      </Typography>
-    );
+  if (loading) {
+    return <FeelFlowSpinner />;
   }
 
-  const teamName = teamData.nameTeam;
-  const teamDescription = teamData.descriptionTeam;
-  const teamMembers = teamData.regularUsers || [];
+  if (!teamData && !loading) {
+    return <NotFoundPage />;
+  }
 
+  const teamMembers = teamData.regularUsers || [];
+  
   return (
     <>
       {successMessage && (
@@ -110,58 +105,12 @@ export function Team() {
         </Alert>
       )}
 
-      <Card color="transparent" className="mb-6 p-6 mt-6 shadow-lg rounded-xl border">
-        <CardHeader color="transparent" shadow={false} className="p-3 flex justify-between items-center rounded-lg">
-          <div className="flex items-center gap-2">
-            <img
-              src="/img/scuderia.jpg"
-              alt="Equipo"
-              className="w-20 h-20 object-cover rounded-full border-4 shadow-lg"
-            />
+      {isEditing
+        ? (<EditTeam uuid={teamData.uuid} teamName={teamData.nameTeam} teamDescription={teamData.descriptionTeam} handleEdit={handleEdit} />)
+        : (<ViewTeam teamName={teamData.nameTeam} teamDescription={teamData.descriptionTeam} handleEdit={handleEdit} />)
+      }
 
-            {isEditing ? (
-              <Input
-                type="text"
-                value={teamName}
-                className="border rounded-lg p-2 text-lg w-full card"
-                disabled
-              />
-            ) : (
-              <Typography variant="h4" className="leading-tight">
-                {teamName}
-              </Typography>
-            )}
-          </div>
-          <IconButton variant="text" color="pink" onClick={handleEditToggle} className="ml-2">
-            <Pencil size={20} />
-          </IconButton>
-        </CardHeader>
-        <CardBody className="pt-3 pb-2">
-          {isEditing ? (
-            <Textarea
-              value={teamDescription}
-              onChange={() => {}}
-              className="border rounded-lg p-2 w-full resize-none card"
-              rows={3}
-              disabled
-            />
-          ) : (
-            <Typography className="leading-tight">{teamDescription}</Typography>
-          )}
-
-          {isEditing && (
-            <div className="flex gap-2 mt-2">
-              <Button variant="filled" className="button-cancel" onClick={handleEditToggle} disabled={isSaving}>
-                Cancelar
-              </Button>
-              <Button variant="filled" className="button-save" onClick={handleSave} disabled={isSaving}>
-                {isSaving ? <Spinner className="h-4 w-4" /> : "Guardar"}
-              </Button>
-            </div>
-          )}
-        </CardBody>
-      </Card>
-
+      {/* Tabla de miembros */}
       <Card color="transparent" className="p-2 shadow-lg rounded-xl border card-header">
         <CardHeader variant="gradient" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg card">
           <Typography variant="h6" className="font-medium">Miembros del equipo</Typography>
@@ -212,6 +161,7 @@ export function Team() {
         </CardBody>
       </Card>
 
+      {/* Invitar miembro */}
       <Dialog open={open} handler={handleOpen} size="sm" className={`card transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
         <DialogHeader className="flex justify-between items-center">
           <Typography variant="h5">Invitar a un nuevo miembro</Typography>
