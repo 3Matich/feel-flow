@@ -1,15 +1,12 @@
 import {
-  Card,
   Input,
   Checkbox,
   Button,
   Typography,
 } from "@material-tailwind/react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar los íconos
-import { bool } from "prop-types";
-import { invariant } from "framer-motion";
 
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,11 +32,6 @@ export function SignUp() {
 
   const [passwordValid, setPasswordValid] = useState(false); // Para validar si la contraseña es fuerte
   const [passwordMatch, setPasswordMatch] = useState(true); // Para validar que las contraseñas coinciden
-  const [hasInviteToken, setHasInviteToken] = useState(false);
-
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search); // Usamos URLSearchParams para obtener el token desde la URL
-  const inviteToken = queryParams.get('inviteToken'); // Suponiendo que el token esté bajo el parámetro 'token'
 
   // Validación en tiempo real de la contraseña
   useEffect(() => {
@@ -52,12 +44,6 @@ export function SignUp() {
     // Validación de fortaleza de la contraseña
     const isStrongPassword = password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password);
     setPasswordValid(isStrongPassword);
-
-    if (inviteToken) {
-      setHasInviteToken(true);
-    } else {
-      setHasInviteToken(false);
-    }
   }, [formData.password, formData.passwordConfirm]);
 
   const handleChange = (e) => {
@@ -136,8 +122,6 @@ export function SignUp() {
       // Aquí puedes manejar el envío del formulario, por ejemplo, enviar los datos a un API
       console.log("Formulario enviado:", formData);
     }
-    console.log("Formulario enviado:", formData);
-
   };
 
   return (
@@ -172,22 +156,22 @@ export function SignUp() {
             {/* Nombre y Apellido */}
             <div className="flex gap-4">
               <div className="flex-grow">
-                <Input
-                  label="Nombre"
-                  name="firstName"
-                  onChange={handleChange}
-                  value={formData.firstName}
+                <Input 
+                  label="Nombre" 
+                  name="firstName" 
+                  onChange={handleChange} 
+                  value={formData.firstName} 
                   error={errors.firstName}
                 />
                 {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
               </div>
 
               <div className="flex-grow">
-                <Input
-                  label="Apellido"
-                  name="lastName"
-                  onChange={handleChange}
-                  value={formData.lastName}
+                <Input 
+                  label="Apellido" 
+                  name="lastName" 
+                  onChange={handleChange} 
+                  value={formData.lastName} 
                   error={errors.lastName}
                 />
                 {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
@@ -196,17 +180,17 @@ export function SignUp() {
 
             {/* Usuario */}
             <div>
-              <Input
-                label="Usuario"
-                name="email"
-                onChange={handleChange}
-                value={formData.email}
+              <Input 
+                label="Usuario" 
+                name="email" 
+                onChange={handleChange} 
+                value={formData.email} 
                 error={errors.email}
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
 
-
+            
             {/* Contraseña */}
             <div className="relative">
               <Input
@@ -254,18 +238,16 @@ export function SignUp() {
             </div>
 
             {/* Empresa */}
-            {!hasInviteToken &&
-              (<div>
-                <Input
-                  label="Empresa"
-                  name="company"
-                  onChange={handleChange}
-                  value={formData.company}
-                  error={errors.company}
-                />
-                {errors.company && <p className="text-red-500 text-sm">{errors.company}</p>}
-              </div>)
-            }
+            <div>
+              <Input 
+                label="Empresa" 
+                name="company" 
+                onChange={handleChange} 
+                value={formData.company} 
+                error={errors.company}
+              />
+              {errors.company && <p className="text-red-500 text-sm">{errors.company}</p>}
+            </div>
 
             {/* Aceptar términos */}
             <div className="flex items-center">

@@ -3,7 +3,7 @@ import { Button } from '@material-tailwind/react';
 
 export function NotFoundPage() {
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="flex items-center justify-center h-screen">
             <div >
                 <img 
                     className="h-96 w-full object-cover object-center" 

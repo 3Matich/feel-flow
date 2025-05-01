@@ -4,56 +4,28 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-  Avatar,
   Button,
-  IconButton,
-  Input,
-  Textarea,
-  Spinner,
   Alert
 } from "@material-tailwind/react";
-import { ClipboardCopy, X } from "lucide-react";
 import { CheckCircleIcon, Pencil } from "lucide-react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { GetTeam } from "@/api/teams/getTeams";
 
 import { FeelFlowSpinner } from "@/components";
 
-import { EditTeam, ViewTeam } from "@/widgets/pages/team";
+import { EditTeam, ViewTeam, InviteMember } from "@/widgets/pages/team";
 import { NotFoundPage } from ".";
+
 
 export function Team() {
   const [isEditing, setIsEditing] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
   const [teamData, setTeamData] = useState(null);
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [closing, setClosing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const inviteLink = teamData ? `https://localhost:5173/auth/signup?invite=${teamData.uuid}` : "";
+  // const inviteLink = teamData ? `https://localhost:5173/auth/signup?invite=${teamData.uuid}` : "";
 
-  const handleOpen = () => {
-    if (closing) return;
-    setOpen(!open);
-    setCopied(false);
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(inviteLink);
-    setCopied(true);
-    setTimeout(() => {
-      setClosing(true);
-      setTimeout(() => {
-        setOpen(false);
-        setClosing(false);
-      }, 300);
-    }, 2000);
-  };
+  const handleOpenInvite = () => setOpen(!open);
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -67,9 +39,11 @@ export function Team() {
 
       if (allTeams.length > 0) {
         setTeamData(allTeams[0]);
+        setLoading(false);
       } else {
         // console.warn("⚠️ No hay equipos disponibles");
         setTeamData(null); // o un valor vacío
+        setLoading(false);
       }
     } catch (error) {
       console.error("❌ Error al obtener equipos:", error);
@@ -90,21 +64,11 @@ export function Team() {
     return <NotFoundPage />;
   }
 
+
   const teamMembers = teamData.regularUsers || [];
   
   return (
     <>
-      {successMessage && (
-        <Alert
-          color="green"
-          icon={<CheckCircleIcon className="h-6 w-6 text-white" />}
-          className="mb-4"
-          onClose={() => setSuccessMessage("")}
-        >
-          {successMessage}
-        </Alert>
-      )}
-
       {isEditing
         ? (<EditTeam uuid={teamData.uuid} teamName={teamData.nameTeam} teamDescription={teamData.descriptionTeam} handleEdit={handleEdit} />)
         : (<ViewTeam teamName={teamData.nameTeam} teamDescription={teamData.descriptionTeam} handleEdit={handleEdit} />)
@@ -114,7 +78,7 @@ export function Team() {
       <Card color="transparent" className="p-2 shadow-lg rounded-xl border card-header">
         <CardHeader variant="gradient" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg card">
           <Typography variant="h6" className="font-medium">Miembros del equipo</Typography>
-          <Button onClick={handleOpen} variant="filled" className="flex items-center gap-2 hover:shadow-lg button-custom">
+          <Button onClick={handleOpenInvite} variant="filled" className="flex items-center gap-2 hover:shadow-lg button-custom">
             <UserPlusIcon className="h-5 w-5" />
             Invitar Miembro
           </Button>
@@ -162,31 +126,11 @@ export function Team() {
       </Card>
 
       {/* Invitar miembro */}
-      <Dialog open={open} handler={handleOpen} size="sm" className={`card transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>
-        <DialogHeader className="flex justify-between items-center">
-          <Typography variant="h5">Invitar a un nuevo miembro</Typography>
-          <IconButton variant="text" color="pink" onClick={handleOpen}>
-            <X size={20} />
-          </IconButton>
-        </DialogHeader>
-        <DialogBody>
-          <div className="mt-4 flex items-center gap-2 border rounded-lg p-2">
-            <Typography className="text-sm truncate w-full">
-              {inviteLink}
-            </Typography>
-            <IconButton onClick={copyToClipboard} color={copied ? "green" : "indigo"} className={`transition-transform duration-200 ${copied ? 'scale-110' : ''}`}>
-              <ClipboardCopy size={20} />
-            </IconButton>
-          </div>
-          {copied && (
-            <Typography className="mt-2 text-sm animate-bounce">¡Link copiado!</Typography>
-          )}
-        </DialogBody>
-        <DialogFooter>
-          <Button variant="filled" className="button-cancel mr-2" onClick={handleOpen}>Cancelar</Button>
-          <Button variant="filled" className="button-custom" onClick={copyToClipboard}>Copiar Link</Button>
-        </DialogFooter>
-      </Dialog>
+      <InviteMember
+        uuid={teamData.uuid}
+        open={open}
+        handleOpen={handleOpenInvite}
+      />
     </>
   );
 }

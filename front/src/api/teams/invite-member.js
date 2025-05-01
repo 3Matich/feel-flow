@@ -1,29 +1,28 @@
 import { host } from "@/configs";
 import { getAuthData } from "../services";
 
-export async function UpdateTeam(id, data) {
+export async function InviteMember( idTeam ) {
+    let url = `${host}/api/v1/team/${idTeam}/invite`
     let { token } = getAuthData();
-    let url = `${host}/api/v1/team/${id}`;
 
     try {
         const response = await fetch(url, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            }
         });
-
         if (response.status === 200) {
-            return true; // Devuelve true si la actualización fue exitosa
+            return response.json(); // Devuelve true si la actualización fue exitosa
         } else if (response.status === 403) {
-            window.location.href = '../pages/sign_in.html';
+            return 403;
         } else {
             return false; // Devuelve false en caso de otro código de estado
         }
     } catch (error) {
         console.error('Error en la actualización:', error);
-        return false; // Devuelve false en caso de error
+        return 500; // Devuelve false en caso de error
     }
+
 }

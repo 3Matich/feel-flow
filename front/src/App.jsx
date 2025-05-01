@@ -11,9 +11,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(
     JSON.parse(sessionStorage.getItem("isAuthenticated")) || false
   );
-  console.log("Autenticado: ", sessionStorage.getItem("isAuthenticated"))
-
-  console.log(isAuthenticated);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -34,7 +31,7 @@ function App() {
         </>
       ) : (
         <>
-          <Route path="/auth/*" element={<Auth onLogin={handleLogin} />} />
+            <Route path="/auth/*" element={<Auth onLogin={handleLogin} />} />
           <Route path="*" element={<Navigate to="/auth/sign-in" replace />} />
         </>
       )}
