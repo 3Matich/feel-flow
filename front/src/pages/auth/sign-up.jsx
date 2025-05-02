@@ -15,6 +15,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar l
 import { bool } from "prop-types";
 import { invariant } from "framer-motion";
 import { JoinToTeam } from "@/api/users/join-to-team";
+import { SignUpAdmin } from "@/api/auth/sing-up";
 import { DialogSuccess, DialogErrorInvite } from "@/components/Forms";
 
 export function SignUp() {
@@ -192,7 +193,26 @@ export function SignUp() {
           console.error("Error al unirse al equipo", error);
         }
       } else {
-        console.log("Formulario enviado:", formData);
+        const adminData = {
+          name: formData.firstName,
+          surname: formData.lastName,
+          username: formData.email,
+          password: formData.password,
+          enterpriseDTO: {
+            name: formData.company
+          },
+          country: formData.country,
+          description: formData.description,
+          phoneNumber: formData.phoneNumber,
+        };
+        try {
+          const addAdmin = await SignUpAdmin(adminData);
+          if (addAdmin === 201) {
+            setShowSuccessDialog(true);
+          }
+        } catch (error) {
+          console.error("Error al crear el usuario", error);
+        }
       }
     }
   };
@@ -312,7 +332,7 @@ export function SignUp() {
 
             <div className="relative">
               <Textarea
-                rows={3}
+                rows={1}
                 resize={true}
                 size="md"
                 variant="standard"
@@ -322,7 +342,6 @@ export function SignUp() {
                 name="description"
                 className="border rounded-xl text-light-text-secondary dark:text-dark-text-secondary"
                 error={errors.description}
-              // error={errors.description}
               />
             </div>
 
@@ -334,7 +353,6 @@ export function SignUp() {
                 onChange={handleChange}
                 className="text-light-text-secondary dark:text-dark-text-secondary"
                 error={errors.country}
-              // error={errors.country}
               />
             </div>
 
@@ -343,8 +361,6 @@ export function SignUp() {
                 content={formData.phoneNumber}
                 name="phoneNumber"
                 onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))}
-                // error={errors.phoneNumber}
-              // error={errors.phoneNumber}
               />
             </div>
 
