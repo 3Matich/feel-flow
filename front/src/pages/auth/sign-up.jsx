@@ -4,12 +4,16 @@ import {
   Checkbox,
   Button,
   Typography,
+  Textarea,
 } from "@material-tailwind/react";
+import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
+
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar los íconos
 import { bool } from "prop-types";
 import { invariant } from "framer-motion";
+import { JoinToTeam } from "@/api/users/join-to-team";
 
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +25,9 @@ export function SignUp() {
     password: "",
     passwordConfirm: "",
     company: "",
+    country: "",
+    description: "",
+    phoneNumber: "",
     acceptTerms: false,
   });
   const [errors, setErrors] = useState({
@@ -30,6 +37,9 @@ export function SignUp() {
     password: "",
     passwordConfirm: "",
     company: "",
+    country: "",
+    description: "",
+    phoneNumber: "",
     acceptTerms: "",
   });
 
@@ -116,10 +126,25 @@ export function SignUp() {
       valid = false;
     }
 
-    if (!formData.company) {
+    if (!formData.company && !hasInviteToken) {
       newErrors.company = "Por favor, ingresa el nombre de tu empresa.";
       valid = false;
     }
+
+    // if (!formData.description) {
+    //   newErrors.description = "Por favor, ingresa una descripción.";
+    //   valid = false;
+    // }
+
+    // if (!formData.country) {
+    //   newErrors.country = "Por favor, ingresa tu nacionalidad.";
+    //   valid = false;
+    // }
+
+    // if (!formData.phoneNumber) {
+    //   newErrors.phoneNumber = "Por favor, ingresa tu número de teléfono.";
+    //   valid = false;
+    // }
 
     if (!formData.acceptTerms) {
       newErrors.acceptTerms = "Debes aceptar los términos y condiciones.";
@@ -134,10 +159,28 @@ export function SignUp() {
     e.preventDefault();
     if (validateForm()) {
       // Aquí puedes manejar el envío del formulario, por ejemplo, enviar los datos a un API
-      console.log("Formulario enviado:", formData);
+      if (hasInviteToken) {
+        console.log("Formulario enviado:", formData);
+        const memberData = {
+          name: formData.firstName,
+          surname: formData.lastName,
+          username: formData.email,
+          password: formData.password,
+          country: formData.country,
+          description: formData.description,
+          // phoneNumber: formData.phoneNumber,
+        };
+        console.log("Formulario enviado:", memberData);
+        const joinTeam = JoinToTeam(inviteToken, memberData)
+        if (joinTeam == 201) {
+          // dialogo de exito
+          console.log("Te uniste al equipo")
+        }
+      } else {
+        console.log("Formulario enviado:", memberData);
+      }
     }
-    console.log("Formulario enviado:", formData);
-
+    console.log("No se pudo validar el formulario")
   };
 
   return (
@@ -251,6 +294,45 @@ export function SignUp() {
               {!passwordMatch && formData.passwordConfirm && (
                 <p className="text-red-500 text-sm">Las contraseñas no coinciden.</p>
               )}
+            </div>
+
+            <div className="relative">
+              <Textarea
+                rows={3}
+                resize={true}
+                size="md"
+                variant="standard"
+                label="Sobre ti"
+                value={formData.description}
+                onChange={handleChange}
+                name="description"
+                className="border rounded-xl text-light-text-secondary dark:text-dark-text-secondary"
+                error={errors.description}
+              // error={errors.description}
+              />
+            </div>
+
+            <div className="relative">
+              <CountriesSelect
+                userCountry={formData.country}
+                label="Nacionalidad"
+                name="country"
+                onChange={handleChange}
+                className="text-light-text-secondary dark:text-dark-text-secondary"
+                error={errors.country}
+              // error={errors.country}
+              />
+            </div>
+
+            <div className="relative">
+              <InputPhoneFloatingLabel
+                label="Teléfono"
+                content={formData.phoneNumber}
+                name="phoneNumber"
+                onChange={handleChange}
+                error={errors.phoneNumber}
+              // error={errors.phoneNumber}
+              />
             </div>
 
             {/* Empresa */}
