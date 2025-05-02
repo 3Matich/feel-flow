@@ -6,6 +6,7 @@ import {
   Typography,
   Textarea,
 } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
 
 import { Link, useLocation } from "react-router-dom";
@@ -14,10 +15,14 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar l
 import { bool } from "prop-types";
 import { invariant } from "framer-motion";
 import { JoinToTeam } from "@/api/users/join-to-team";
+import { DialogSuccess, DialogErrorInvite } from "@/components/Forms";
 
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para confirmar la contraseña
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const navigate = useNavigate();
+  const [showErrorInvalid, setShowErrorInvalid] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -155,12 +160,17 @@ export function SignUp() {
     return valid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSuccessClose = () => {
+    setShowSuccessDialog(false);
+    setShowErrorInvalid(false);
+    navigate("/auth/sign-in");
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowErrorInvalid(false);
     if (validateForm()) {
-      // Aquí puedes manejar el envío del formulario, por ejemplo, enviar los datos a un API
       if (hasInviteToken) {
-        console.log("Formulario enviado:", formData);
         const memberData = {
           name: formData.firstName,
           surname: formData.lastName,
@@ -168,19 +178,23 @@ export function SignUp() {
           password: formData.password,
           country: formData.country,
           description: formData.description,
-          // phoneNumber: formData.phoneNumber,
+          phoneNumber: formData.phoneNumber,
         };
-        console.log("Formulario enviado:", memberData);
-        const joinTeam = JoinToTeam(inviteToken, memberData)
-        if (joinTeam == 201) {
-          // dialogo de exito
-          console.log("Te uniste al equipo")
+        try {
+          const joinTeamResponse = await JoinToTeam(inviteToken, memberData);
+          if (joinTeamResponse === 200) {
+            setShowSuccessDialog(true);
+          }
+          if (joinTeamResponse === 404) {
+            setShowErrorInvalid(true);
+          }
+        } catch (error) {
+          console.error("Error al unirse al equipo", error);
         }
       } else {
-        console.log("Formulario enviado:", memberData);
+        console.log("Formulario enviado:", formData);
       }
     }
-    console.log("No se pudo validar el formulario")
   };
 
   return (
@@ -326,11 +340,10 @@ export function SignUp() {
 
             <div className="relative">
               <InputPhoneFloatingLabel
-                label="Teléfono"
                 content={formData.phoneNumber}
                 name="phoneNumber"
-                onChange={handleChange}
-                error={errors.phoneNumber}
+                onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))}
+                // error={errors.phoneNumber}
               // error={errors.phoneNumber}
               />
             </div>
@@ -378,6 +391,8 @@ export function SignUp() {
             </Typography>
           </div>
         </form>
+        <DialogSuccess open={showSuccessDialog} handleOpen={handleSuccessClose} />
+        <DialogErrorInvite open={showErrorInvalid} handleOpen={handleSuccessClose} />
       </div>
     </section>
   );

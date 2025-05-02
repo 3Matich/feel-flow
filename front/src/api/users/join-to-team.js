@@ -10,13 +10,17 @@ export async function JoinToTeam(invitation_link, data) {
             body: JSON.stringify(data),
         });
 
-        if (response.status !== 201) {
+        if (response.status !== 200) {
             const errorData = await response.json();
+            console.log(errorData);
             return { errors: errorData };
         }
 
         return response.status;
     } catch (error) {
+        return 404
+        console.warn("hola")
+        console.log(error.message);
         throw new Error(error.message || "Error al comunicarse con el servidor");
     }
 } 

@@ -1,15 +1,16 @@
 import { Input, Typography } from "@material-tailwind/react";
 
-export function InputPhoneFloatingLabel({ content, onChange, name }) {
+export function InputPhoneFloatingLabel({ content, onChange, name, error }) {
   return (
     <Input
       maxLength={16}
-      label="Contact Number"
+      label="Número de Contacto"
       name={name}
-      pattern="^\\+\\d{1,3}\\s\\d{1,4}-\\d{1,4}-\\d{4}$"
+      // pattern="^\\+\\d{1,3}\\s\\d{1,4}-\\d{1,4}-\\d{4}$"
       className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-      value={content}
+      // value={content}
       onChange={(e) => onChange(e.target.value)}
+      error={error}
       icon={
         <svg
           xmlns="http://www.w3.org/2000/svg"
