@@ -28,6 +28,8 @@ import { getUser } from "@/api/users/getUser";
 import { getUserImage } from "@/services/getUserImage"; // ← service GET
 import { uploadUserImage } from "@/services/uploadUserImage"; // ← service POST
 
+import { FeelFlowSpinner } from "@/components";
+
 export function Profile() {
   const [profile, setProfile] = useState(null);
   const [userImageSrc, setUserImageSrc] = useState(null);
@@ -40,47 +42,30 @@ export function Profile() {
 
 
   // Obtener datos del usuario desde la API
-  useEffect(() => {
+  const fetchProfile = async () => {
     const { authUserID } = getUserData();
-    async function fetchProfile() {
-      try {
-        const data = await getUser(authUserID);
-        if (data && typeof data === "object") {
-          setProfile(prev => ({
-            ...prev, ...data
-            // Usamos los nuevos campos o asignamos un default si faltan
-            // country: data.country,
-            // phoneNumber: phoneNumber,
-            // description: data.description,
-            // job: Array.isArray(data.job) ? data.job : ["Posición", "Empresa"],
-          }));
-        } else {
-          console.error("Error al cargar el perfil: Datos no válidos", data);
-        }
-      } catch (error) {
-        console.error("Error al cargar el perfil:", error.message);
+    try {
+      const data = await getUser(authUserID);
+      if (data && typeof data === "object") {
+        setProfile(prev => ({
+          ...prev, ...data
+        }));
+      } else {
+        console.error("Error al cargar el perfil: Datos no válidos", data);
       }
+    } catch (error) {
+      console.error("Error al cargar el perfil:", error.message);
     }
+  }
+
+  useEffect(() => {
     fetchProfile();
   }, []);
 
-  // Función para actualizar el perfil usando los nuevos campos
-  /*
-  const handleUpdateProfile = async (updatedData) => {
-    try {
-      const { name, surname, username, country, phoneNumber, description } = updatedData;
-      const result = await updateUser(name, surname, username, country, phoneNumber, description);
-      if (result) {
-        setProfile((prev) => ({ ...prev, ...updatedData }));
-        setIsEditing(false);
-      } else {
-        console.error("Error al actualizar el perfil: Fallo en la API");
-      }
-    } catch (error) {
-      console.error("Error al actualizar el perfil:", error.message);
-    }
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    fetchProfile();
   };
-*/
 
   // Cargar imagen de avatar desde el endpoint (base64)
   useEffect(() => {
@@ -117,7 +102,7 @@ export function Profile() {
     );
   };
 
-  if (!profile) return <div>Cargando perfil...</div>;
+  if (!profile) return <FeelFlowSpinner />;
 
   return (
     <>
@@ -270,7 +255,7 @@ export function Profile() {
               <EditProfileDialog
                 data={profile}
                 // onSave={handleUpdateProfile}
-                onCancel={() => setIsEditing(false)}
+                onCancel={handleCancelEdit}
                 open={isEditing}
               />
             )}
