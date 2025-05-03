@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { GetEquipos } from "../services/GetEquipos"; // Ajustar ruta si es necesario
+import { GetTeam } from "@/api/teams";
 import TeamSelector from "../components/TeamSelector";
 import NikoNikoTable from "../components/NikoNikoTable";
 import HappinessChart from "../components/HappinessChart";
@@ -49,7 +49,7 @@ function Resultados() {
 
       try {
         setLoading(true);
-        const response = await GetEquipos(token);
+        const response = await GetTeam();
         setTeams(response);
 
         // Simulación de miembros y datos NicoNiko

@@ -1,9 +1,9 @@
 import { host } from "@/configs";
 import { getAuthData } from "../services";
-const { token } = getAuthData();
 
 
 export async function GetTeam() {
+    let { token } = getAuthData();
     let url = `${host}/api/v1/team`;
     const response = await fetch(url, {
         method: 'GET',

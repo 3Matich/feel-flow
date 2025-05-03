@@ -21,6 +21,7 @@ export function InviteMember({ uuid, open, handleOpen }) {
     const [closing, setClosing] = React.useState(false);
     const [link, setLink] = React.useState(false);
     const [inviteLink, setInviteLink] = React.useState("");
+    const hasFetchedRef = React.useRef(false);
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(inviteLink);
@@ -29,21 +30,23 @@ export function InviteMember({ uuid, open, handleOpen }) {
             setClosing(true);
             setTimeout(() => {
                 handleOpen(); // cerrás desde el padre
+                hasFetchedRef.current = false;
                 setClosing(false);
                 setCopied(false);
             }, 300);
         }, 2000);
     };
 
-    React.useEffect(() => {
-        const fetchInviteLink = async () => {
-            const link = await GenerateInvitation(uuid);
-            setInviteLink(link); // Establece el inviteLink cuando se obtiene
-            setLink(!link);
-        };
+    const fetchInviteLink = async () => {
+        const link = await GenerateInvitation(uuid);
+        setInviteLink(link); // Establece el inviteLink cuando se obtiene
+        setLink(!link);
+    };
 
+    if (!hasFetchedRef.current) {
+        hasFetchedRef.current = true;
         fetchInviteLink();
-    }, [uuid]); // Solo se ejecuta cuando el uuid cambia
+    }
 
     return (
         <Dialog open={open} handler={handleOpen} size="sm" className={`card transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>

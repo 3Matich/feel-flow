@@ -7,7 +7,7 @@ import {
   ChartsSection,
   LatestRecords,
 } from "@/widgets/charts";
-import { GetEquipos } from "../../services/GetEquipos";
+import { GetTeam } from "@/api/teams";
 import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
 import { GetModulesAndUsers } from "../../services/GetModulesAndUsers";
 import { GetTwelveStepsSummary } from "../../services/GetTwelveStepsSummary";
@@ -147,7 +147,7 @@ export function Home() {
       if (!token) return;
       try {
         setLoading(true);
-        const response = await GetEquipos(token);
+        const response = await GetTeam();
         setTeams(response);
       } catch (err) {
         console.error("Error al obtener los equipos:", err);

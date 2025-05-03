@@ -23,9 +23,10 @@ export function Team() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // const inviteLink = teamData ? `https://localhost:5173/auth/signup?invite=${teamData.uuid}` : "";
 
-  const handleOpenInvite = () => setOpen(!open);
+  const handleOpenInvite = async () => {
+    setOpen(!open);
+  };
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -66,7 +67,7 @@ export function Team() {
 
 
   const teamMembers = teamData.regularUsers || [];
-  
+
   return (
     <>
       {isEditing
