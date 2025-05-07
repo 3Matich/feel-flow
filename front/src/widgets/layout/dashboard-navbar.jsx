@@ -24,6 +24,7 @@ import {
   setOpenConfigurator,
 } from "@/context";
 import { GetNotifications } from "@/services/GetNotifications";
+import { useOutletContext } from "react-router-dom";
 
 // Función para calcular el tiempo relativo
 function getRelativeTime(dateString) {
@@ -52,6 +53,8 @@ export function DashboardNavbar() {
   const { fixedNavbar } = controller;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+  const context = useOutletContext();
+  const setSessionExpired = context?.setSessionExpired;
 
   // Estado para notificaciones (inicialmente vacío)
   const [notifications, setNotifications] = useState([]);
@@ -59,10 +62,17 @@ export function DashboardNavbar() {
   // Cargar notificaciones vía GET cuando se monta (opcional, para tener un respaldo inicial)
   useEffect(() => {
     const fetchNotifications = async () => {
-      const token = sessionStorage.getItem("token");
-      if (!token) return;
-      const data = await GetNotifications(token); // Este servicio ya lo tienes implementado
-      setNotifications(data);
+      try {
+
+        const token = sessionStorage.getItem("token");
+        if (!token) return;
+        const data = await GetNotifications(token); // Este servicio ya lo tienes implementado
+        setNotifications(data);
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          setSessionExpired?.(true);
+        }
+      };
     };
     fetchNotifications();
   }, []);
@@ -107,11 +117,10 @@ export function DashboardNavbar() {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all mb-4 text-light-text dark:text-dark-text ${
-        fixedNavbar
-        ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5 bg-light-primary dark:bg-dark-primary border-light-border dark:border-dark-border"
+      className={`rounded-xl transition-all mb-4 text-light-text dark:text-dark-text ${fixedNavbar
+          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5 bg-light-primary dark:bg-dark-primary border-light-border dark:border-dark-border"
           : "px-0 py-1"
-      }`}
+        }`}
       fullWidth
       blurred={fixedNavbar}
     >

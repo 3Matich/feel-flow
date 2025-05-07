@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { IconButton } from "@material-tailwind/react";
@@ -10,9 +11,15 @@ import {
 import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 
+import { Outlet } from "react-router-dom";
+import { SessionExpiredDialog } from "@/widgets/dialogs";
+
 export function Dashboard({ onLogout }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
+  const [sessionExpired, setSessionExpired] = useState(false); // Maneja cuando expira la sesion
+ 
+  const handleSessionDialog = () => setSessionExpired(!sessionExpired);
 
   return (
     <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
@@ -28,22 +35,25 @@ export function Dashboard({ onLogout }) {
         <Configurator />
         <IconButton
           size="lg"
-          // color="white"
           className="fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900/10 bg-light-card dark:bg-dark-card text-light-text dark:text-dark-text"
           ripple={false}
           onClick={() => setOpenConfigurator(dispatch, true)}
         >
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton>
-        <Routes>
-          {routes.map(
-            ({ layout, pages }) =>
-              layout === "dashboard" &&
-              pages.map(({ path, element }) => (
-                <Route exact path={path} element={element} />
-              ))
-          )}
-        </Routes>
+        <main>
+          <Outlet context={{ setSessionExpired }} />
+          <Routes>
+            {routes.map(
+              ({ layout, pages }) =>
+                layout === "dashboard" &&
+                pages.map(({ path, element }) => (
+                  <Route exact path={path} element={element} />
+                ))
+            )}
+          </Routes>
+        </main>
+        <SessionExpiredDialog open={sessionExpired} handleOpen={handleSessionDialog} onLogout={onLogout} />
         {/* <div className="text-blue-gray-600">
           <Footer />
         </div> */}
