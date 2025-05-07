@@ -24,13 +24,13 @@ function KudosChart({
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
-      {teamData ? (
+      {/* {teamData ? (
         <h1 className="text-2xl font-bold text-center mb-10">
           Resumen de Kudos - {teamData.teamName}
         </h1>
       ) : (
         <h1 className="text-2xl font-bold text-center mb-10">Resumen de Kudos</h1>
-      )}
+      )} */}
       <div className="flex flex-col sm:flex-row justify-center items-center mb-12 gap-4">
         {/* Autocomplete para seleccionar módulo (fecha) en Kudos */}
         <Autocomplete

@@ -5,12 +5,12 @@ export async function GetNikoNikoSummary(token, idTeam, numberOfMonth) {
       return [];
     }
 
-    // console.log('token:', token);
-    // console.log('idTeam:', idTeam);
-    // console.log('numberOfMonth:', numberOfMonth);
+    console.log('token:', token);
+    console.log('idTeam:', idTeam);
+    console.log('numberOfMonth:', numberOfMonth);
   
-    // let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=${idTeam}`;
-    let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=056d8489-b8f1-43a1-96c6-e43664d41446`;
+    let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=${idTeam}`;
+    // let endpoint = `http://localhost:8080/api/v1/summary/niko-niko?idTeam=056d8489-b8f1-43a1-96c6-e43664d41446`;
     if (numberOfMonth) {
       endpoint += `&numberOfMonth=${numberOfMonth}`;
     }

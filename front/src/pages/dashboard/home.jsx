@@ -2,20 +2,21 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 
-import { 
-  GeneralMetrics, 
+import {
+  GeneralMetrics,
   ChartsSection,
   LatestRecords,
 } from "@/widgets/charts";
 import { GetTeam } from "@/api/teams";
-import { GetNikoNikoSummary } from "../../services/GetNikoNikoSummary";
-import { GetModulesAndUsers } from "../../services/GetModulesAndUsers";
-import { GetTwelveStepsSummary } from "../../services/GetTwelveStepsSummary";
-import { GetKudosSummary } from "../../services/GetKudosSummary";
-import TeamSelector from "../../components/TeamSelector";
-import NikoNikoTable from "../../components/NikoNikoTable";
-import HappinessChart from "../../components/HappinessChart";
-import KudosChart from "../../components/KudosChart"; // Nuevo componente para Kudos
+import { GetNikoNikoSummary } from "@/services/GetNikoNikoSummary";
+import { GetModulesAndUsers } from "@/services/GetModulesAndUsers";
+import { GetTwelveStepsSummary } from "@/services/GetTwelveStepsSummary";
+import { GetKudosSummary } from "@/services/GetKudosSummary";
+
+import TeamSelector from "@/components/TeamSelector";
+import NikoNikoTable from "@/components/NikoNikoTable";
+import HappinessChart from "@/components/HappinessChart";
+import KudosChart from "@/components/KudosChart";
 
 import {
   Tabs,
@@ -32,47 +33,152 @@ import {
 } from "@heroicons/react/24/solid";
 
 export function Home() {
+  // --- Estados generales ---
   const [teams, setTeams] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedTeam, setSelectedTeam] = useState(null);       // objeto { label, value } o null
+  const [selectedMonth, setSelectedMonth] = useState(null);     // número 1–12 o null
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [teamData, setTeamData] = useState(null);
 
-  // Estados para Niko Niko
+  // --- Niko Niko ---
   const [nikoDataByMember, setNikoDataByMember] = useState({});
 
-  // Estados para 12 Pasos de la Felicidad
-  const [modulesData, setModulesData] = useState([]); // Datos del endpoint modules-and-users
-  const [selectedModule, setSelectedModule] = useState(""); // idModule seleccionado (por fecha)
-  const [memberOptions, setMemberOptions] = useState([]); // Opciones de usuarios del módulo seleccionado
-  const [selectedMember, setSelectedMember] = useState(""); // Para resumen individual; si no se selecciona, se muestra promedio de equipo
-  const [twelveSummary, setTwelveSummary] = useState([]); // Resumen obtenido del endpoint summary/twelve-steps
+  // --- 12 Pasos de la Felicidad ---
+  const [modulesData, setModulesData] = useState([]);
+  const [selectedModule, setSelectedModule] = useState("");
+  const [memberOptions, setMemberOptions] = useState([]);
+  const [selectedMember, setSelectedMember] = useState("");
   const [twelveLoading, setTwelveLoading] = useState(false);
   const [twelveError, setTwelveError] = useState(null);
   const [twelveStepsSummary, setTwelveStepsSummary] = useState(null);
 
-    // Estados para Kudos
-  const [kudosModulesData, setKudosModulesData] = useState([]); // Datos del endpoint modules-and-users (KUDOS)
-  const [selectedKudosModule, setSelectedKudosModule] = useState(""); // idModule para Kudos
-  const [kudosMemberOptions, setKudosMemberOptions] = useState([]); // Opciones de usuarios del módulo de Kudos
-  const [selectedKudosMember, setSelectedKudosMember] = useState(""); // Para resumen individual de Kudos; si no, se muestra el promedio de equipo
-  const [kudosSummary, setKudosSummary] = useState([]); // Resumen obtenido del endpoint summary/kudos
+  // --- Kudos ---
+  const [kudosModulesData, setKudosModulesData] = useState([]);
+  const [selectedKudosModule, setSelectedKudosModule] = useState("");
+  const [kudosMemberOptions, setKudosMemberOptions] = useState([]);
+  const [selectedKudosMember, setSelectedKudosMember] = useState("");
+  const [kudosSummary, setKudosSummary] = useState([]);
   const [kudosLoading, setKudosLoading] = useState(false);
   const [kudosError, setKudosError] = useState(null);
 
-  // Cargar módulos para Kudos (KUDOS)
+  // Meses del año
+  const months = [
+    "Enero", "Febrero", "Marzo", "Abril",
+    "Mayo", "Junio", "Julio", "Agosto",
+    "Septiembre", "Octubre", "Noviembre", "Diciembre",
+  ];
+
+  // ------------------------------
+  // 1) Carga inicial de equipos
+  // ------------------------------
   useEffect(() => {
-    const fetchKudosModules = async () => {
-      if (!selectedTeam) return;
+    const fetchTeams = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        setError("Token no encontrado");
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const response = await GetTeam();
+        setTeams(response);
+        setError(null);
+      } catch (err) {
+        console.error("Error al obtener los equipos:", err);
+        setError("No se pudieron cargar los equipos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeams();
+  }, []);
+
+  // --------------------------------------------------
+  // 2) Carga módulos TWELVE_STEPS siempre al montar,
+  //    y de nuevo si cambia selectedTeam
+  // --------------------------------------------------
+  useEffect(() => {
+    const fetchTwelveModules = async () => {
       const token = sessionStorage.getItem("token");
       if (!token) return;
+      setTwelveLoading(true);
       try {
-        setKudosLoading(true);
+        const data = await GetModulesAndUsers(token, "TWELVE_STEPS", true);
+        setModulesData(data);
+        setTwelveError(null);
+      } catch (err) {
+        console.error("Error módulos 12 pasos:", err);
+        setTwelveError("No se pudieron cargar los módulos de 12 pasos.");
+      } finally {
+        setTwelveLoading(false);
+      }
+    };
+    fetchTwelveModules();
+  }, [selectedTeam]);
+
+  // ----------------------------------------------------
+  // 3) Cuando modulesData o selectedModule cambian, setea
+  //    memberOptions para el selector de usuario
+  // ----------------------------------------------------
+  useEffect(() => {
+    if (!modulesData.length) {
+      setMemberOptions([]);
+      return;
+    }
+    const mod = modulesData.find(m => m.moduleDto.id === selectedModule);
+    if (mod) {
+      setMemberOptions(
+        mod.usersDto.map(u => ({ label: `${u.name} ${u.surname}`, value: u.uuid }))
+      );
+    } else {
+      setMemberOptions([]);
+    }
+  }, [modulesData, selectedModule]);
+
+  // -----------------------------------------------------
+  // 4) Trae el resumen de 12 pasos cuando se selecciona
+  //    módulo o usuario dentro de 12 pasos
+  // -----------------------------------------------------
+  useEffect(() => {
+    const fetchTwelveSummary = async () => {
+      if (!selectedModule) return;
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      setTwelveLoading(true);
+      try {
+        const summary = await GetTwelveStepsSummary(
+          token,
+          selectedModule,
+          selectedMember || ""
+        );
+        setTwelveStepsSummary(summary);
+        setTwelveError(null);
+      } catch (err) {
+        console.error("Error resumen 12 pasos:", err);
+        setTwelveError("No se pudieron cargar los datos de 12 pasos.");
+      } finally {
+        setTwelveLoading(false);
+      }
+    };
+    fetchTwelveSummary();
+  }, [selectedModule, selectedMember]);
+
+  // --------------------------------------------------
+  // 5) Carga módulos KUDOS al montar y al cambiar equipo
+  // --------------------------------------------------
+  useEffect(() => {
+    const fetchKudosModules = async () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return;
+      setKudosLoading(true);
+      try {
         const data = await GetModulesAndUsers(token, "KUDOS", true);
         setKudosModulesData(data);
+        setKudosError(null);
       } catch (err) {
-        console.error("Error al obtener módulos de KUDOS:", err);
+        console.error("Error módulos Kudos:", err);
         setKudosError("No se pudieron cargar los módulos de Kudos.");
       } finally {
         setKudosLoading(false);
@@ -81,225 +187,114 @@ export function Home() {
     fetchKudosModules();
   }, [selectedTeam]);
 
-  // Actualizar opciones de miembros para Kudos según módulo seleccionado
+  // ------------------------------------------------------
+  // 6) Cuando kudosModulesData o selectedKudosModule cambian
+  //    actualiza kudosMemberOptions
+  // ------------------------------------------------------
   useEffect(() => {
-    if (!kudosModulesData || kudosModulesData.length === 0) return;
-    const moduleSelected = kudosModulesData.find(
-      (moduleItem) => moduleItem.moduleDto.id === selectedKudosModule
-    );
-    if (moduleSelected) {
-      const options = moduleSelected.usersDto.map((user) => ({
-        label: `${user.name} ${user.surname}`,
-        value: user.uuid,
-      }));
-      setKudosMemberOptions(options);
+    if (!kudosModulesData.length) {
+      setKudosMemberOptions([]);
+      return;
+    }
+    const mod = kudosModulesData.find(m => m.moduleDto.id === selectedKudosModule);
+    if (mod) {
+      setKudosMemberOptions(
+        mod.usersDto.map(u => ({ label: `${u.name} ${u.surname}`, value: u.uuid }))
+      );
     } else {
       setKudosMemberOptions([]);
     }
   }, [kudosModulesData, selectedKudosModule]);
 
-  // Llamada al resumen de Kudos cuando se selecciona un módulo (y opcionalmente un usuario)
+  // ----------------------------------------------------
+  // 7) Trae el resumen de Kudos al cambiar módulo o usuario
+  // ----------------------------------------------------
   useEffect(() => {
-    const fetchKudosSummary = async () => {
+    const fetchKudos = async () => {
       if (!selectedKudosModule) return;
       const token = sessionStorage.getItem("token");
       if (!token) return;
+      setKudosLoading(true);
       try {
-        setKudosLoading(true);
-        const summary = await GetKudosSummary(token, selectedKudosModule, selectedKudosMember || "");
-        // summary: array de objetos [{ badgeName, numberOfBadges }, ... ]
+        const summary = await GetKudosSummary(
+          token,
+          selectedKudosModule,
+          selectedKudosMember || ""
+        );
         setKudosSummary(summary);
         setKudosError(null);
       } catch (err) {
-        console.error("Error al obtener el resumen de Kudos:", err);
+        console.error("Error resumen Kudos:", err);
         setKudosError("No se pudieron cargar los datos de Kudos.");
       } finally {
         setKudosLoading(false);
       }
     };
-    fetchKudosSummary();
+    fetchKudos();
   }, [selectedKudosModule, selectedKudosMember]);
 
-  const months = [
-    "Enero", "Febrero", "Marzo", "Abril",
-    "Mayo", "Junio", "Julio", "Agosto",
-    "Septiembre", "Octubre", "Noviembre", "Diciembre",
-  ];
-
-  // Estados para Kudos (se mantienen igual)
-  // const [selectedKudosMember, setSelectedKudosMember] = useState("Equipo");
-  // const [selectedKudosSprint, setSelectedKudosSprint] = useState("Sprint 1");
-
-  const kudosData = {
-    "Sprint 1": {
-      Equipo: { "Manos Amigas": 8, "Resolutor Estrella": 5, "Energía Positiva": 7, "Maestro del Detalle": 6 },
-      Juan: { "Manos Amigas": 2, "Resolutor Estrella": 1, "Energía Positiva": 3, "Maestro del Detalle": 2 },
-      Ana: { "Manos Amigas": 3, "Resolutor Estrella": 2, "Energía Positiva": 2, "Maestro del Detalle": 1 },
-      Luis: { "Manos Amigas": 1, "Resolutor Estrella": 1, "Energía Positiva": 1, "Maestro del Detalle": 2 },
-      Marta: { "Manos Amigas": 2, "Resolutor Estrella": 1, "Energía Positiva": 1, "Maestro del Detalle": 1 },
-    },
-  };
-
-  // Cargar equipos al montar
+  // --------------------------------------------------------
+  // 8) Resumen de NikoNiko cuando cambian equipo o mes
+  // --------------------------------------------------------
   useEffect(() => {
-    const fetchTeams = async () => {
+    const fetchNiko = async () => {
+      if (!selectedTeam?.value || !selectedMonth) return;
       const token = sessionStorage.getItem("token");
       if (!token) return;
+      setLoading(true);
       try {
-        setLoading(true);
-        const response = await GetTeam();
-        setTeams(response);
-      } catch (err) {
-        console.error("Error al obtener los equipos:", err);
-        setError("No se pudieron cargar los equipos. Inténtalo más tarde.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTeams();
-  }, []);
-
-  // Cargar datos de Niko Niko summary cuando cambie el equipo o el mes
-  useEffect(() => {
-    const fetchNikoNikoSummary = async () => {
-      if (!selectedTeam) return;
-      const token = sessionStorage.getItem("token");
-      if (!token) return;
-      try {
-        setLoading(true);
-        // const data = await GetNikoNikoSummary(token, selectedTeam?.value, month);
-        const data = await GetNikoNikoSummary(token, selectedTeam?.value, 2);
-        const groupedData = data.reduce((acc, item) => {
-          const fullName = `${item.name} ${item.surname}`.trim();
-          if (!acc[fullName]) {
-            acc[fullName] = [];
-          }
-          acc[fullName].push(item);
+        const data = await GetNikoNikoSummary(
+          token,
+          selectedTeam.value,
+          selectedMonth
+        );
+        const grouped = data.reduce((acc, item) => {
+          const name = `${item.name} ${item.surname}`.trim();
+          if (!acc[name]) acc[name] = [];
+          acc[name].push(item);
           return acc;
         }, {});
-        setNikoDataByMember(groupedData);
+        setNikoDataByMember(grouped);
+        setError(null);
       } catch (err) {
-        console.error("Error al obtener el summary de NikoNiko:", err);
+        console.error("Error NikoNiko:", err);
         setError("No se pudieron cargar los datos de Niko Niko.");
       } finally {
         setLoading(false);
       }
     };
-    fetchNikoNikoSummary();
+    fetchNiko();
   }, [selectedTeam, selectedMonth]);
 
-  // Cargar módulos y usuarios para 12 Pasos de la Felicidad
+  // ------------------------------
+  // 9) Mock de teamData para charts
+  // ------------------------------
   useEffect(() => {
-    const fetchModulesAndUsers = async () => {
-      if (!selectedTeam) return;
-      const token = sessionStorage.getItem("token");
-      if (!token) return;
-      try {
-        setTwelveLoading(true);
-        const data = await GetModulesAndUsers(token, "TWELVE_STEPS", true);
-        setModulesData(data);
-      } catch (err) {
-        console.error("Error al obtener módulos de TWELVE_STEPS:", err);
-        setTwelveError("No se pudieron cargar los módulos de 12 pasos de la felicidad.");
-      } finally {
-        setTwelveLoading(false);
-      }
-    };
-    fetchModulesAndUsers();
-  }, [selectedTeam]);
-
-  // Cuando se selecciona un módulo, actualizar las opciones de miembros (usuarios) basadas en ese módulo
-  useEffect(() => {
-    if (!modulesData || modulesData.length === 0) return;
-    const moduleSelected = modulesData.find(
-      (moduleItem) => moduleItem.moduleDto.id === selectedModule
-    );
-    if (moduleSelected) {
-      const options = moduleSelected.usersDto.map((user) => ({
-        label: `${user.name} ${user.surname}`,
-        value: user.uuid,
-      }));
-      setMemberOptions(options);
-    } else {
-      setMemberOptions([]);
-    }
-  }, [modulesData, selectedModule]);
-
-  // Llamada al resumen de 12 Pasos cuando se selecciona un módulo (y opcionalmente un usuario)
-  useEffect(() => {
-    const fetchTwelveStepsSummary = async () => {
-      if (!selectedModule) return;
-      const token = sessionStorage.getItem("token");
-      if (!token) return;
-      try {
-        setTwelveLoading(true);
-        const summary = await GetTwelveStepsSummary(token, selectedModule, selectedMember || "");
-        // summary debe ser un array de objetos: [{ categoryName, average }, ... ]
-        setTwelveSummary(summary);
-        setTwelveError(null);
-      } catch (err) {
-        console.error("Error al obtener el resumen de 12 pasos:", err);
-        setTwelveError("No se pudieron cargar los datos de 12 pasos.");
-      } finally {
-        setTwelveLoading(false);
-      }
-    };
-    fetchTwelveStepsSummary();
-  }, [selectedModule, selectedMember]);
-
-  // Se sigue usando un fetchMockData para teamData (para mostrar el nombre del equipo)
-  useEffect(() => {
-    const fetchMockData = async () => {
+    async function fetchMock() {
       return {
         teamName: "Equipo Ágil",
         members: [
-          { name: "Juan Pérez", responses: [4, 5, 4, 3, 4, 5, 5, 4, 5, 4, 4, 5] },
-          { name: "Ana López", responses: [5, 4, 3, 4, 5, 4, 4, 3, 4, 3, 5, 4] },
+          { name: "Juan Pérez", responses: [4,5,4,3,4,5,5,4,5,4,4,5] },
+          { name: "Ana López",  responses: [5,4,3,4,5,4,4,3,4,3,5,4] },
         ],
-        averages: [4.5, 4.5, 3.5, 3.5, 4.5, 4.5, 4.5, 3.5, 4.5, 3.5, 4.5, 4.5],
+        averages: [4.5,4.5,3.5,3.5,4.5,4.5,4.5,3.5,4.5,3.5,4.5,4.5],
       };
-    };
-    const fetchData = async () => {
-      const response = await fetchMockData();
-      setTeamData(response);
-    };
-    fetchData();
+    }
+    fetchMock().then(setTeamData);
   }, []);
 
-    // Llamada al resumen de 12 pasos cuando se selecciona un módulo (y opcionalmente un usuario)
-    useEffect(() => {
-      const fetchTwelveStepsSummary = async () => {
-        if (!selectedModule) return;
-        const token = sessionStorage.getItem("token");
-        if (!token) return;
-        try {
-          setLoading(true);
-          // Si se selecciona un usuario, se usa su uuid; si no, se envía vacío para obtener el promedio de equipo
-          const summary = await GetTwelveStepsSummary(
-            token,
-            selectedModule,
-            selectedMember || ""
-          );
-          setTwelveStepsSummary(summary);
-        } catch (err) {
-          console.error("Error al obtener el resumen de 12 pasos:", err);
-          setError("No se pudieron cargar los datos de 12 pasos.");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchTwelveStepsSummary();
-    }, [selectedModule, selectedMember]);
-
-    // selectedData para el gráfico de felicidad (se utilizará el resumen obtenido)
-    const selectedData = twelveStepsSummary || [];
-
-  // Para Niko Niko, se usa teamData (mock) para mostrar averages si no se selecciona miembro
+  // --------------------
+  // Datos para charts
+  // --------------------
+  const selectedData = twelveStepsSummary || [];
   const nikoSelectedData =
-    selectedMember === null || selectedMember === ""
+    !selectedMember
       ? teamData?.averages || []
       : teamData?.members[parseInt(selectedMember, 10)]?.responses || [];
 
+  // --------------------
+  // Estructura de tabs
+  // --------------------
   const tabsData = [
     {
       label: "Dashboard",
@@ -317,27 +312,10 @@ export function Home() {
       value: "nikoNiko",
       icon: FaceSmileIcon,
       element: (
-        <div className="rounded-lg shadow-lg relative">
-          {/* <h1 className="text-2xl font-bold text-center mb-4">
-            Niko Niko - {selectedTeam || "Equipo"}
-          </h1> */}
-
+        <div className="mt-8">
           {loading && <p className="text-center">Cargando equipos...</p>}
           {error && <p className="text-center">{error}</p>}
-
-          <div className="flex justify-center">
-            <TeamSelector
-              teams={teams}
-              selectedTeam={selectedTeam}
-              setSelectedTeam={setSelectedTeam}
-              months={months}
-              selectedMonth={selectedMonth}
-              setSelectedMonth={setSelectedMonth}
-            />
-          </div>
-          <div className="mt-8">
-            <NikoNikoTable nikoDataByMember={nikoDataByMember} />
-          </div>
+          <NikoNikoTable nikoDataByMember={nikoDataByMember} />
         </div>
       ),
     },
@@ -347,7 +325,9 @@ export function Home() {
       icon: HeartIcon,
       element: (
         <div className="mt-4">
-          {teamData && modulesData.length > 0 ? (
+          {twelveLoading && <p className="text-center">Cargando datos...</p>}
+          {twelveError && <p className="text-center">{twelveError}</p>}
+          {!twelveLoading && !twelveError && (
             <HappinessChart
               teamData={teamData}
               modulesData={modulesData}
@@ -358,8 +338,6 @@ export function Home() {
               setSelectedModule={setSelectedModule}
               selectedData={selectedData}
             />
-          ) : (
-            <p className="text-center">Cargando datos...</p>
           )}
         </div>
       ),
@@ -369,23 +347,21 @@ export function Home() {
       value: "kudos",
       icon: GiftIcon,
       element: (
-        <div className="rounded-lg shadow-lg relative mt-4">
-          {teamData && modulesData.length > 0 ? (
-          <KudosChart
-            teamData={teamData}
-            modulesData={kudosModulesData}
-            kudosMemberOptions={kudosMemberOptions}
-            selectedKudosMember={selectedKudosMember}
-            setSelectedKudosMember={setSelectedKudosMember}
-            selectedKudosModule={selectedKudosModule}
-            setSelectedKudosModule={setSelectedKudosModule}
-            selectedData={kudosSummary}
-          />
-        ) : (
-          <p className="text-center">
-            Cargando datos...
-          </p>
-        )}
+        <div className="mt-4">
+          {kudosLoading && <p className="text-center">Cargando datos...</p>}
+          {kudosError && <p className="text-center">{kudosError}</p>}
+          {!kudosLoading && !kudosError && (
+            <KudosChart
+              teamData={teamData}
+              modulesData={kudosModulesData}
+              kudosMemberOptions={kudosMemberOptions}
+              selectedKudosMember={selectedKudosMember}
+              setSelectedKudosMember={setSelectedKudosMember}
+              selectedKudosModule={selectedKudosModule}
+              setSelectedKudosModule={setSelectedKudosModule}
+              selectedData={kudosSummary}
+            />
+          )}
         </div>
       ),
     },
@@ -396,10 +372,30 @@ export function Home() {
       <Helmet>
         <title>Dashboard</title>
       </Helmet>
+
       <GeneralMetrics />
+
+      {/* Selector global de equipo + mes */}
+      <div className="mt-8 flex justify-center">
+        <TeamSelector
+          teams={teams}
+          selectedTeam={selectedTeam}
+          setSelectedTeam={setSelectedTeam}
+          months={months}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+        />
+      </div>
+
+      {/* Pestañas */}
       <div className="mt-12">
-        <Tabs value="home" indicatorProps={{className: "bg-pink-500 shadow-none rounded-full",}}>
-          <TabsHeader className="bg-pink-100 rounded-full" indicatorProps={{ className: "bg-pink-400 rounded-full" }}>
+        <Tabs value="home">
+          <TabsHeader
+            className="bg-pink-100 rounded-full"
+            indicatorProps={{
+              className: "bg-pink-500 shadow-none rounded-full",
+            }}
+          >
             {tabsData.map(({ label, value, icon }) => (
               <Tab key={value} value={value}>
                 <div className="flex items-center gap-2 text-black">
