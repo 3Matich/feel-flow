@@ -22,8 +22,10 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
+
 import { createTeam } from "@/services/equipos/createTeam";
 import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
+import { getTeamImageById } from "@/services/getTeamImageById";
 
 export function Teams() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,16 +54,34 @@ export function Teams() {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
+        // 1) Lista de equipos del backend
         const backendTeams = await getAvailableTeams();
-        const transformedTeams = backendTeams.map((team) => ({
-          name: team.nameTeam,
-          description: team.descriptionTeam,
-          leader: `${team.teamLeaderDTO.name} ${team.teamLeaderDTO.surname}`,
-          logo: "",
-        }));
-        setTeams(transformedTeams);
+
+        // 2) Para cada equipo, intento traer su logo
+        const teamsWithLogos = await Promise.all(
+          backendTeams.map(async (team) => {
+            let logoUrl = "";
+            try {
+              // NOTA: paso team.uuid, no team.id
+              const { fileType, fileData } = await getTeamImageById(team.uuid);
+              logoUrl = `data:${fileType};base64,${fileData}`;
+            } catch (err) {
+              console.warn(`No logo para team ${team.uuid}:`, err);
+            }
+            return {
+              id: team.uuid,          // uso uuid aquí también
+              name: team.nameTeam,
+              description: team.descriptionTeam,
+              leader: `${team.teamLeaderDTO.name} ${team.teamLeaderDTO.surname}`,
+              logo: logoUrl,
+            };
+          })
+        );
+
+
+        setTeams(teamsWithLogos);
       } catch (err) {
-        console.error("❌ Error al obtener equipos del backend:", err);
+        console.error("❌ Error al obtener equipos o logos:", err);
         setTeams([]);
       }
     };
@@ -107,15 +127,20 @@ export function Teams() {
   const validateForm = () => {
     let newErrors = {};
     if (!newTeam.name) newErrors.name = "El nombre del equipo es requerido";
-    if (!newTeam.leaderFirstName) newErrors.leaderFirstName = "El nombre del líder es requerido";
-    if (!newTeam.leaderLastName) newErrors.leaderLastName = "El apellido del líder es requerido";
+    if (!newTeam.leaderFirstName)
+      newErrors.leaderFirstName = "El nombre del líder es requerido";
+    if (!newTeam.leaderLastName)
+      newErrors.leaderLastName = "El apellido del líder es requerido";
     if (!newTeam.leaderUsername) {
       newErrors.leaderUsername = "El email del líder es requerido";
     } else if (!/\S+@\S+\.\S+/.test(newTeam.leaderUsername)) {
       newErrors.leaderUsername = "Ingrese un email válido";
     }
-    if (!newTeam.leaderPassword) newErrors.leaderPassword = "La contraseña es requerida";
-    if (!newTeam.leaderConfirmPassword) newErrors.leaderConfirmPassword = "La confirmación de la contraseña es requerida";
+    if (!newTeam.leaderPassword)
+      newErrors.leaderPassword = "La contraseña es requerida";
+    if (!newTeam.leaderConfirmPassword)
+      newErrors.leaderConfirmPassword =
+        "La confirmación de la contraseña es requerida";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -142,6 +167,7 @@ export function Teams() {
       setTeams((prev) => [
         ...prev,
         {
+          id: result.id, // asumiendo que el backend devuelve el id
           name: teamData.name,
           description: teamData.description,
           logo: logoPreview,
@@ -164,9 +190,7 @@ export function Teams() {
       setOpen(false);
       setSuccessMessage("¡Equipo creado con éxito!");
 
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 3000);
+      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
       console.error("❌ Error creando equipo:", error);
       setErrorMessage(error.message || "Error al crear equipo");
@@ -205,7 +229,11 @@ export function Teams() {
       )}
 
       <Card color="transparent" className="mb-6 p-4 mt-10">
-        <CardHeader color="transparent" shadow={false} className="p-2 mb-4 flex justify-between items-center">
+        <CardHeader
+          color="transparent"
+          shadow={false}
+          className="p-2 mb-4 flex justify-between items-center"
+        >
           <Typography variant="h4">Listado de Equipos</Typography>
           <Button onClick={handleOpen} className="flex items-center gap-2 button-custom">
             <PlusIcon className="h-5 w-5" />
@@ -214,15 +242,18 @@ export function Teams() {
         </CardHeader>
         <CardBody className="mb-1">
           {filteredTeams.length === 0 ? (
-            <Typography className="text-center text-lg">No hay equipos creados</Typography>
+            <Typography className="text-center text-lg">
+              No hay equipos creados
+            </Typography>
           ) : (
             <>
               <div className="relative w-full mb-3">
                 <label
-                  className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
-                    ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
-                    : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
-                    }`}
+                  className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${
+                    isFocused || searchQuery
+                      ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
+                      : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
+                  }`}
                 >
                   Buscar equipo o Team Leader
                 </label>
@@ -243,30 +274,26 @@ export function Teams() {
                 <thead>
                   <tr className="table-header">
                     {["Equipo", "Team Leader"].map((el) => (
-                      <th
-                        key={el}
-                        className="border py-3 px-5 text-left table-header-cell"
-                      >
+                      <th key={el} className="border py-3 px-5 text-left table-header-cell">
                         {el}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTeams.map(({ logo, name, leader }) => (
-                      <tr key={name} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all">
-                        <td className="py-3 px-5 table-body-cell flex items-center gap-4">
-                          <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                          <Typography>
-                            {name}
-                          </Typography>
-                        </td>
-                        <td className="py-3 px-5 table-body-cell">
-                          <Typography>
-                            {leader}
-                          </Typography>
-                        </td>
-                      </tr>
+                  {filteredTeams.map(({ id, logo, name, leader }) => (
+                    <tr
+                      key={id}
+                      className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all"
+                    >
+                      <td className="py-3 px-5 table-body-cell flex items-center gap-4">
+                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
+                        <Typography>{name}</Typography>
+                      </td>
+                      <td className="py-3 px-5 table-body-cell">
+                        <Typography>{leader}</Typography>
+                      </td>
+                    </tr>
                   ))}
                 </tbody>
               </table>
@@ -278,34 +305,28 @@ export function Teams() {
       <Dialog
         open={open}
         handler={handleOpen}
-        className={`card {size === "xs" ? "max-w-xs" : ""}`}
+        className={`card ${size === "xs" ? "max-w-xs" : ""}`}
       >
         <DialogHeader className="flex items-center justify-between card-header">
-          <div className="flex justify-between items-center w-full">
-            <Typography variant="h4">
-              Crear un nuevo Equipo
-            </Typography>
-            <button
-              color="none"
-              onClick={() => {
-                handleOpen(); // Cerrar
-                setNewTeam({
-                  name: "",
-                  description: "",
-                  leaderFirstName: "",
-                  leaderLastName: "",
-                  leaderUsername: "",
-                  leaderPassword: "",
-                  leaderConfirmPassword: "",
-                  logo: "",
-                });
-              }}
-              className="hover:text-gray-500 focus:outline-none"
-            >
-              ✕
-            </button>
-          </div>
-
+          <Typography variant="h4">Crear un nuevo Equipo</Typography>
+          <button
+            onClick={() => {
+              handleOpen();
+              setNewTeam({
+                name: "",
+                description: "",
+                leaderFirstName: "",
+                leaderLastName: "",
+                leaderUsername: "",
+                leaderPassword: "",
+                leaderConfirmPassword: "",
+                logo: "",
+              });
+            }}
+            className="hover:text-gray-500 focus:outline-none"
+          >
+            ✕
+          </button>
         </DialogHeader>
         <DialogBody className="card-body">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -474,14 +495,12 @@ export function Teams() {
             </div>
           </div>
         </DialogBody>
-
-
         <DialogFooter className="flex justify-center gap-2">
           <Button
             variant="text"
             onClick={() => {
-              handleOpen(); // Cerrar 
-              setNewTeam({ // Limpiar los valores del formulario
+              handleOpen();
+              setNewTeam({
                 name: "",
                 description: "",
                 leaderFirstName: "",
@@ -496,12 +515,7 @@ export function Teams() {
           >
             Cancelar
           </Button>
-          <Button
-            onClick={handleCreateTeam}
-            disabled={isSaving}
-            // color="indigo"
-            className="button-save"
-          >
+          <Button onClick={handleCreateTeam} disabled={isSaving} className="button-save">
             {isSaving ? (
               <Spinner className="h-5 w-5 text-white" />
             ) : (
@@ -510,7 +524,6 @@ export function Teams() {
           </Button>
         </DialogFooter>
       </Dialog>
-
     </>
   );
 }
