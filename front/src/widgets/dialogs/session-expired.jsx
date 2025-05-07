@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useRef } from 'react';
 
 const timeOut = 30; // Define la cantidad de segundos antes de cerrar la sesion
+let progressValue = 0;
 
 export const SessionExpiredDialog = ({ open, handleOpen, onLogout }) => {
     const navigate = useNavigate();
@@ -33,9 +34,10 @@ export const SessionExpiredDialog = ({ open, handleOpen, onLogout }) => {
         navigate('/auth/sign-in');
     };
 
-    startTimer()
-    const progressValue = ((timeOut - secondsLeft) / timeOut) * 100;
-
+    if (open) {
+        startTimer()
+        progressValue = ((timeOut - secondsLeft) / timeOut) * 100;   
+    }
 
     return (
         <Dialog
