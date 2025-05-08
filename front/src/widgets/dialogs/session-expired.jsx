@@ -2,7 +2,7 @@ import { Dialog, DialogHeader, DialogBody, DialogFooter, Button, Progress } from
 import { useNavigate } from "react-router-dom";
 import React, { useState, useRef } from 'react';
 
-const timeOut = 30; // Define la cantidad de segundos antes de cerrar la sesion
+const timeOut = 5; // Define la cantidad de segundos antes de cerrar la sesion
 let progressValue = 0;
 
 export const SessionExpiredDialog = ({ open, handleOpen, onLogout }) => {
