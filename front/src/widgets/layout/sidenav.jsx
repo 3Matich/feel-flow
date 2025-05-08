@@ -12,32 +12,63 @@ import {
 } from "@material-tailwind/react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 import { getEnterpriseImage } from "@/services/getEnterpriseImage";
+import { getUser } from "@/api/users/getUser";
+import { getAuthData } from "@/services/session";
+
+function decodeJwt(token) {
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return {};
+  }
+}
 
 export function Sidenav({ brandImg, brandName, routes, onLogout }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType, openSidenav } = controller;
-  const [enterpriseLogo, setEnterpriseLogo] = useState(brandImg);
 
-  // Clases por tipo de sidenav
+  const [enterpriseLogo, setEnterpriseLogo] = useState(brandImg);
+  const [enterpriseName, setEnterpriseName] = useState(brandName);
+
   const sidenavTypes = {
     dark: "bg-gradient-to-br from-gray-800 to-gray-900",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
 
-  // Al montar, intento traer el logo de la enterprise
+  // Carga del logo de la enterprise
   useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const { fileType, fileData } = await getEnterpriseImage();
-        setEnterpriseLogo(`data:${fileType};base64,${fileData}`);
-      } catch (err) {
-        console.error("❌ Error cargando logo de enterprise:", err);
-        // Si falla, queda el brandImg por defecto
-      }
-    };
-    fetchLogo();
-  }, []);
+    getEnterpriseImage()
+      .then(({ fileType, fileData }) =>
+        setEnterpriseLogo(`data:${fileType};base64,${fileData}`)
+      )
+      .catch(() => {
+        setEnterpriseLogo(brandImg);
+      });
+  }, [brandImg]);
+
+  // Carga del nombre de la enterprise desde el perfil de usuario
+  useEffect(() => {
+    const { token } = getAuthData();
+    if (!token) return;
+    const { id: userID } = decodeJwt(token);
+    if (!userID) {
+      console.warn("❌ No se pudo extraer userID del token");
+      return;
+    }
+
+    getUser(userID)
+      .then((user) => {
+        const ent = user.enterpriseInfoHomeDTO;
+        if (ent && typeof ent.name === "string") {
+          setEnterpriseName(ent.name);
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Error fetching user:", err);
+      });
+  }, [brandName]);
 
   return (
     <aside // ${sidenavTypes[sidenavType]} classname color
@@ -45,19 +76,18 @@ export function Sidenav({ brandImg, brandName, routes, onLogout }) {
         } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-light-border dark:border-dark-border`}
     >
       <div className="relative">
-        <Link
-          to="/"
-          className="py-6 px-8 flex items-center space-x-4"
-        >
+        <Link to="/" className="py-6 px-4 flex items-center gap-3">
           <Avatar
             src={enterpriseLogo}
-            alt={brandName}
+            alt={enterpriseName}
             size="xl"
-            className="border-4 border-black"
+            className="flex-shrink-0 border-4 border-black"
           />
-
-          <Typography variant="h4">
-            {brandName}
+          <Typography
+            variant="h5"
+            className="truncate max-w-[calc(100%-4rem)] text-lg"
+          >
+            {enterpriseName}
           </Typography>
         </Link>
 
@@ -80,7 +110,7 @@ export function Sidenav({ brandImg, brandName, routes, onLogout }) {
             <ul key={key} className="mb-4 flex flex-col gap-1">
               {title && (
                 <li className="mx-3.5 mt-4 mb-2">
-                  <Typography variant="small" className="uppercase">
+                  <Typography variant="small" className="uppercase text-xs">
                     {title}
                   </Typography>
                 </li>
@@ -91,14 +121,24 @@ export function Sidenav({ brandImg, brandName, routes, onLogout }) {
                     {({ isActive }) => (
                       <Button
                         variant={isActive ? "gradient" : "text"}
-                        color={isActive ? "pink" : sidenavType === "dark" ? "white" : "blue-gray"}
+                        color={
+                          isActive
+                            ? "pink"
+                            : sidenavType === "dark"
+                            ? "white"
+                            : "blue-gray"
+                        }
                         className={`flex items-center gap-4 px-4 capitalize ${
                           isActive ? "sidenav-text" : ""
                         } text-light-text dark:text-dark-text`}
                         fullWidth
                       >
                         {icon}
-                        <Typography className={`font-medium capitalize ${isActive ? "sidenav-text" : ""}`}>
+                        <Typography
+                          className={`font-medium capitalize text-sm ${
+                            isActive ? "sidenav-text" : ""
+                          }`}
+                        >
                           {name}
                         </Typography>
                       </Button>
