@@ -26,7 +26,7 @@ export function Dashboard({ onLogout }) {
       <Sidenav
         routes={routes}
         brandImg={
-          sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
+          sidenavType === "dark" ? "/img/logo.png" : "/img/logo.png"
         }
         onLogout={onLogout}
       />
