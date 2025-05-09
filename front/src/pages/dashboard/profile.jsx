@@ -1,6 +1,6 @@
 // src/widgets/profile/ProfileNew.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardBody,
@@ -30,6 +30,8 @@ import { uploadUserImage } from "@/services/uploadUserImage"; // ← service POS
 
 import { FeelFlowSpinner } from "@/components";
 
+import { useLocation } from "react-router-dom";
+
 export function Profile() {
   const [profile, setProfile] = useState(null);
   const [userImageSrc, setUserImageSrc] = useState(null);
@@ -37,8 +39,13 @@ export function Profile() {
   const [open, setOpen] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState("0000.png");
   const [settings, setSettings] = useState(platformSettingsData);
-  const { handleDragOver, handleDrop, handleImageChange, handleRemoveImage, logoPreview } =
-    useDragAndDrop();
+  const { handleDragOver, handleDrop, handleImageChange, handleRemoveImage, logoPreview } = useDragAndDrop();
+
+  // Estados para obtener la página y ejecutar los llamados al backend necesarios
+  const { pathname } = useLocation();
+  const segments = pathname.split("/").filter((el) => el !== "");
+  const page = segments[segments.length - 1];
+  const [hasFetchedRef, setHasFetchedRef] = useState(false);
 
 
   // Obtener datos del usuario desde la API
@@ -58,36 +65,26 @@ export function Profile() {
     }
   }
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  async function fetchAvatar() {
+    try {
+      const { fileType, fileData } = await getUserImage();
+      const uri = `data:${fileType};base64,${fileData}`;
+      setUserImageSrc(uri);
+    } catch (err) {
+      console.error("Error al obtener avatar:", err);
+    }
+  }
 
   const handleCancelEdit = () => {
     setIsEditing(false);
-    fetchProfile();
+    setHasFetchedRef(false);
   };
 
-  // Cargar imagen de avatar desde el endpoint (base64)
-  useEffect(() => {
-    // const { token } = getUserData(); // si quisieras usar getUserData para el token
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      console.warn("No se encontró token de autenticación. Avatar omitido.");
-      return;
-    }
-
-    async function fetchAvatar() {
-      try {
-        const { fileType, fileData } = await getUserImage(token);
-        const uri = `data:${fileType};base64,${fileData}`;
-        setUserImageSrc(uri);
-      } catch (err) {
-        console.error("Error al obtener avatar:", err);
-      }
-    }
-
-    fetchAvatar();
-  }, []);
+  if (page == "perfil" && !hasFetchedRef) {
+    setHasFetchedRef(true); // impide que ejecute 2 veces
+    fetchProfile(); // Carga los datos del perfil
+    fetchAvatar(); // Carga el avatar
+  }
 
   const handleOpenAvatarDialog = () => setOpen(!open);
 

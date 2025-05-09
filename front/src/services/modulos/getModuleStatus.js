@@ -1,12 +1,13 @@
 // src/services/modulos/getModuleStatus.js
+import { host } from "@/configs";
+import { getUserData, getAuthData } from "@/services/session";
 
-import { getUserData } from "@/services/session";
-
-export async function getModuleStatus(token, moduleName) {
+export async function getModuleStatus(moduleName) {
   try {
     const { isAdmin } = getUserData();
+    const { token } = getAuthData();
 
-    const url = new URL("http://localhost:8080/api/v1/dashboard/modules-and-users");
+    const url = new URL(`${host}/api/v1/dashboard/modules-and-users`);
     url.searchParams.append("nameModule", moduleName);
     url.searchParams.append("isAdmin", isAdmin === "true");
 

@@ -43,10 +43,14 @@ export function InviteMember({ uuid, open, handleOpen }) {
         setLink(!link);
     };
 
-    if (!hasFetchedRef.current) {
-        hasFetchedRef.current = true;
-        fetchInviteLink();
+    if (open) { // Esto hace que solo se ejecute el POST al back cuando se abre el Dialog
+        if (!hasFetchedRef.current) {
+            hasFetchedRef.current = true;
+            fetchInviteLink();
+        }
     }
+
+    
 
     return (
         <Dialog open={open} handler={handleOpen} size="sm" className={`card transition-opacity duration-300 ${closing ? 'opacity-0' : 'opacity-100'}`}>

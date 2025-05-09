@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
   CardBody,
   Typography,
   Button,
-  Alert
 } from "@material-tailwind/react";
-import { CheckCircleIcon, Pencil } from "lucide-react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { GetTeam } from "@/api/teams/getTeams";
 
@@ -16,12 +14,19 @@ import { FeelFlowSpinner } from "@/components";
 import { EditTeam, ViewTeam, InviteMember } from "@/widgets/pages/team";
 import { NotFoundPage } from ".";
 
+import { useLocation } from "react-router-dom";
 
 export function Team() {
   const [isEditing, setIsEditing] = useState(false);
   const [teamData, setTeamData] = useState(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Estados para obtener la página y ejecutar los llamados al backend necesarios
+  const { pathname } = useLocation();
+  const segments = pathname.split("/").filter((el) => el !== "");
+  const page = segments[segments.length - 1];
+  const [hasFetchedRef, setHasFetchedRef] = useState(false);
 
 
   const handleOpenInvite = async () => {
@@ -30,14 +35,13 @@ export function Team() {
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
-    fetchTeam();
+    setHasFetchedRef(false);
   }
 
   const fetchTeam = async () => {
     try {
       setLoading(true); // 👈 importante para que aparezca el spinner si querés
       const allTeams = await GetTeam();
-
       if (allTeams.length > 0) {
         setTeamData(allTeams[0]);
         setLoading(false);
@@ -53,9 +57,11 @@ export function Team() {
     }
   };
 
-  useEffect(() => {
+  if (page == "miembros" &&  !hasFetchedRef) {
+    console.log("Estas en la pag de miembros");
+    setHasFetchedRef(true);
     fetchTeam();
-  }, []);
+  }
 
   if (loading) {
     return <FeelFlowSpinner />;
