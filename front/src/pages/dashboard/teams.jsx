@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -22,12 +23,14 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
-
 import { createTeam } from "@/services/equipos/createTeam";
 import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
 import { getTeamImageById } from "@/services/getTeamImageById";
+import { GetEquipobyID } from "@/services/GetEquipoId";
+import { GetIdEquipo } from "@/services/GetEquipos";
 
 export function Teams() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [open, setOpen] = useState(false);
@@ -204,6 +207,25 @@ export function Teams() {
     leader.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleClick = async (id) => {
+    const token = sessionStorage.getItem("token");
+    console.log(id)
+    try {
+      const equipoId = await GetIdEquipo(token);
+      console.log(equipoId)
+      if (equipoId) {
+        const response = await GetEquipobyID(token, equipoId);
+        if (response && response.status === 200) {
+          console.log("Equipo encontrado correctamente");
+        } else {
+          console.warn("Error al obtener equipo por ID");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <>
       {successMessage && (
@@ -249,11 +271,10 @@ export function Teams() {
             <>
               <div className="relative w-full mb-3">
                 <label
-                  className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${
-                    isFocused || searchQuery
-                      ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
-                      : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
-                  }`}
+                  className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
+                    ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
+                    : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
+                    }`}
                 >
                   Buscar equipo o Team Leader
                 </label>
@@ -286,10 +307,27 @@ export function Teams() {
                       key={id}
                       className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all"
                     >
-                      <td className="py-3 px-5 table-body-cell flex items-center gap-4">
-                        <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-                        <Typography>{name}</Typography>
+                      <td className="py-3 px-5 table-body-cell">
+                        <div
+                          className="relative flex items-center gap-4 w-full h-full cursor-pointer group"
+                          onClick={() => handleClick(id)}
+                        >
+                          <Avatar src={logo} alt={name} size="sm" variant="rounded" />
+
+                          {/* Contenedor con el texto y tooltip */}
+                          <div className="relative">
+                            <Typography>{name}</Typography>
+
+                            {/* Tooltip más cercano al texto */}
+                            <span className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                              Haz click si quieres ver el detalle del equipo
+                            </span>
+                          </div>
+                        </div>
                       </td>
+
+
+
                       <td className="py-3 px-5 table-body-cell">
                         <Typography>{leader}</Typography>
                       </td>
