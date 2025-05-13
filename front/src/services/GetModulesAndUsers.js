@@ -1,6 +1,7 @@
 // services/GetModulesAndUsers.js
 export async function GetModulesAndUsers(token, nameModule = "TWELVE_STEPS", isAdmin = true) {
-    const endpoint = `http://localhost:8080/api/v1/dashboard/modules-and-users?nameModule=${nameModule}&isAdmin=${isAdmin}`;
+    const admin = sessionStorage.getItem("isAdmin")
+    const endpoint = `http://localhost:8080/api/v1/dashboard/modules-and-users?nameModule=${nameModule}&isAdmin=${admin}`;
   
     try {
       const response = await fetch(endpoint, {
