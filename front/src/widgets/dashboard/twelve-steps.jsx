@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import HappinessChart from "@/components/HappinessChart"
 import { FeelFlowSpinner } from "@/components";
 
@@ -10,26 +10,13 @@ export const TwelveStepsSummary = ({ isActive }) => {
     const [error, setError] = useState(null);
     const [fetchData, setFetchData] = useState(false);
 
-    const [teamData, setTeamData] = useState(null);
     const [modulesData, setModulesData] = useState([]);
     const [selectedModule, setSelectedModule] = useState("");
     const [memberOptions, setMemberOptions] = useState([]);
     const [selectedMember, setSelectedMember] = useState("");
     const [twelveStepsSummary, setTwelveStepsSummary] = useState(null);
 
-    useEffect(() => {
-        async function fetchMock() {
-            return {
-                teamName: "Equipo Ágil",
-                members: [
-                    { name: "Juan Pérez", responses: [4, 5, 4, 3, 4, 5, 5, 4, 5, 4, 4, 5] },
-                    { name: "Ana López", responses: [5, 4, 3, 4, 5, 4, 4, 3, 4, 3, 5, 4] },
-                ],
-                averages: [4.5, 4.5, 3.5, 3.5, 4.5, 4.5, 4.5, 3.5, 4.5, 3.5, 4.5, 4.5],
-            };
-        }
-        fetchMock().then(setTeamData);
-    }, []);
+    const hasFetched = useRef(false); // para evitar múltiples llamadas
 
     let firstModule = 0;
     const fetchTwelveModules = async () => {
@@ -86,21 +73,29 @@ export const TwelveStepsSummary = ({ isActive }) => {
         }));
     }
 
-    if (isActive == "felicidad" && !fetchData) {
-        setFetchData(true);
-        fetchTwelveModules();
-    }
+    // Ejecutar solo una vez cuando isActive === "felicidad"
+    useEffect(() => {
+        if (isActive === "felicidad" && !hasFetched.current) {
+            hasFetched.current = true;
+            fetchTwelveModules();
+        }
+    }, [isActive]);
+
+    // Ejecutar resumen cuando cambie el módulo o el miembro
+    useEffect(() => {
+        if (selectedModule) {
+            fetchTwelveSummary(selectedModule, selectedMember);
+        }
+    }, [selectedModule, selectedMember]);
 
     const selectedData = twelveStepsSummary || [];
 
     const ChangeMember = (e) => {
         setSelectedMember(e);
-        fetchTwelveSummary(selectedModule, selectedMember);
     }
 
     const ChangeModule = (e) => {
         setSelectedModule(e);
-        fetchTwelveSummary(selectedModule, selectedMember);
     }
 
     return (
@@ -110,7 +105,7 @@ export const TwelveStepsSummary = ({ isActive }) => {
             {error && <p className="text-center">{error}</p>}
             {!loading &&
                 <HappinessChart
-                    teamData={teamData}
+                    // teamData={twelveStepsSummary}
                     modulesData={modulesData}
                     memberOptions={memberOptions}
                     selectedMember={selectedMember}

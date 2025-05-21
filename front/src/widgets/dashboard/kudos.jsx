@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import KudosChart from "@/components/KudosChart";
 import { FeelFlowSpinner } from "@/components";
@@ -16,6 +16,8 @@ export const KudosSummary = ({ isActive, Teams }) => {
     const [kudosMemberOptions, setKudosMemberOptions] = useState([]);
     const [selectedKudosMember, setSelectedKudosMember] = useState("");
     const [kudosSummary, setKudosSummary] = useState([]);
+
+    const hasFetched = useRef(false);
 
     let firstModule = 0;
     const fetchKudosModules = async () => {
@@ -61,19 +63,28 @@ export const KudosSummary = ({ isActive, Teams }) => {
         }
     };
 
-    if (isActive == "kudos" && !fetchData) {
-        setFetchData(true);
-        fetchKudosModules();
-    }
+    // Ejecuta solo una vez cuando el componente está activo
+    useEffect(() => {
+        if (isActive === "kudos" && !hasFetched.current) {
+            hasFetched.current = true;
+            setFetchData(true);
+            fetchKudosModules();
+        }
+    }, [isActive]);
+
+    // Ejecuta fetchKudos cada vez que cambian los filtros
+    useEffect(() => {
+        if (selectedKudosModule) {
+            fetchKudos(selectedKudosModule, selectedKudosMember);
+        }
+    }, [selectedKudosModule, selectedKudosMember]);
 
     const changeMember = (e) => {
         setSelectedKudosMember(e);
-        fetchKudos(selectedKudosModule, selectedKudosMember)
     }
 
     const changeModule = (e) => {
         setSelectedKudosModule(e);
-        fetchKudos(selectedKudosModule, selectedKudosMember)
     }
 
     return (
