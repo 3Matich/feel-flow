@@ -1,5 +1,5 @@
 // src/services/equipos/createTeam.js
-import { getAuthData } from "@/api/services/session";
+import { getAuthData } from "@/api";
 
 export async function createTeam(teamData) {
   const { token } = getAuthData();

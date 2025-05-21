@@ -1,5 +1,5 @@
 import { host } from "@/configs";
-import { getAuthData } from "@/services/session";
+import { getAuthData } from "@/api";
 
 export async function GetKudosSummary(idModule, idRegularUser = "") {
   console.log("Modulo: " + idModule)

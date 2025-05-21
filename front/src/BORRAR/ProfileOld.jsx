@@ -4,7 +4,7 @@ import ProfileBanner from "../components/ProfileBanner";
 import ProfileCard from "../components/ProfileCard";
 import ProfileDetails from "../components/ProfileDetails";
 import { getUser } from "../services/Users/GetUser";
-import { getUserData } from "../services/session";  // Para obtener el userID desde el sessionStorage
+import { getUserData } from "@/api";  // Para obtener el userID desde el sessionStorage
 
 function Profile() {
     const [profile, setProfile] = useState(null);

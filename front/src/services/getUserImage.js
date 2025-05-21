@@ -1,6 +1,6 @@
 // src/api/images/getUserImage.js
 import { host } from "@/configs";
-import { getAuthData } from "@/api/services";
+import { getAuthData } from "@/api";
 
 export async function getUserImage() {
   const { token } = getAuthData();

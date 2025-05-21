@@ -5,7 +5,7 @@ import FeelFlow from "../assets/img/FeelFlow.png";
 import { FaHome, FaChartPie, FaUserCircle, FaUsers, FaPuzzlePiece, FaIdCard, FaCog, FaTrophy} from "react-icons/fa";
 
 import { canAccess } from "../hooks/auth/authorization";
-import { getUserData } from "../services/session";
+import { getUserData } from "@/api";
 
 
 function VerticalMenu() {

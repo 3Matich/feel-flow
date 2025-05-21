@@ -1,6 +1,6 @@
 // services/GetModulesAndUsers.js
 import { host } from "@/configs";
-import { getAuthData, getUserData } from "@/api/services";
+import { getAuthData, getUserData } from "@/api";
 
 export async function GetModulesAndUsers(nameModule = "TWELVE_STEPS") {
   const { token } = getAuthData();

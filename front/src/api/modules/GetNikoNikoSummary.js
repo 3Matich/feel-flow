@@ -1,6 +1,6 @@
 // services/GetNikoNikoSummary.js
 import { host } from "@/configs";
-import { getAuthData } from "@/api/services";
+import { getAuthData } from "@/api";
 
 export async function GetNikoNikoSummary(idTeam, numberOfMonth) {
   const { token } = getAuthData();

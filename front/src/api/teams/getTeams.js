@@ -1,5 +1,5 @@
 import { host } from "@/configs";
-import { getAuthData } from "../services";
+import { getAuthData } from "@/api";
 
 
 export async function GetTeam() {

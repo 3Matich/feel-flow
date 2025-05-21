@@ -13,3 +13,5 @@ export * from "@/widgets/dashboard/niko-niko";
 export * from "@/widgets/dashboard/dashboard";
 export * from "@/widgets/dashboard/twelve-steps";
 export * from "@/widgets/dashboard/kudos";
+export * from "@/widgets/charts/latest-notes";
+export * from "@/widgets/charts/latest-records";

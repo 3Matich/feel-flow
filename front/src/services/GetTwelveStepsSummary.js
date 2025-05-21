@@ -1,6 +1,6 @@
 // services/GetTwelveStepsSummary.js
 import { host } from "@/configs";
-import { getAuthData } from "@/api/services";
+import { getAuthData } from "@/api";
 
 export async function GetTwelveStepsSummary(idModule, idRegularUser = "") {
   const { token } = getAuthData();

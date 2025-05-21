@@ -1,5 +1,5 @@
 import { host } from "@/configs";
-import { getAuthData, getUserData } from "../services/session";
+import { getAuthData, getUserData } from "@/api";
 
 export async function updateLoggedUser(changes) {
     const { token } = getAuthData();

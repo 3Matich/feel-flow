@@ -1,4 +1,4 @@
-import { getAuthData } from "../services/session";
+import { getAuthData } from "@/services/session";
 import { host } from "@/configs";
 
 export async function getUser(userID) {
