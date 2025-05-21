@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function NikoNikoTable({ nikoDataByMember }) {
+export function NikoNikoTable({ nikoDataByMember }) {
   const TOTAL_DAYS = 30;
   const daysPerPage = 7;
   const [dayPage, setDayPage] = useState(0);

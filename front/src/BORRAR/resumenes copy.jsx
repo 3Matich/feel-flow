@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography, Card, CardHeader, CardBody, IconButton, Avatar, Tooltip, Progress } from "@material-tailwind/react";
 import { EllipsisVerticalIcon, CheckCircleIcon, ArrowUpIcon, FaceSmileIcon, HandThumbUpIcon } from "@heroicons/react/24/outline";
-import { StatisticsChart } from "@/widgets/charts";
+import { StatisticsChart } from "@/widgets";
 import { StatisticsCard } from "@/widgets/cards";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 

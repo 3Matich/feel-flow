@@ -1,7 +1,12 @@
-// services/GetKudosSummary.js
-export async function GetKudosSummary(token, idModule, idRegularUser = "") {
-  const endpoint = `http://localhost:8080/api/v1/summary/kudos?idModule=${idModule}` + 
-                   (idRegularUser ? `&idRegularUser=${idRegularUser}` : "");
+import { host } from "@/configs";
+import { getAuthData } from "@/services/session";
+
+export async function GetKudosSummary(idModule, idRegularUser = "") {
+  console.log("Modulo: " + idModule)
+  const endpoint = `${host}/api/v1/summary/kudos?idModule=${idModule}` +
+    (idRegularUser ? `&idRegularUser=${idRegularUser}` : "");
+
+  const { token } = getAuthData();
   try {
     const response = await fetch(endpoint, {
       method: "GET",

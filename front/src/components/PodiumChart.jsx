@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 const PodiumChart = ({ data }) => {
   // Lista de premios que se deben mostrar en el chart
   const prizes = ["Manos Amigas", "Resolutor Estrella", "Energía Positiva", "Maestro del Detalle"];
-
+  
   // Íconos para cada premio, respetando la estética original
   const icons = {
     "Manos Amigas": "/icons/kudos_Manos_Amigas.svg",
@@ -31,12 +31,12 @@ const PodiumChart = ({ data }) => {
     counts[prize] = 0;
   });
   data.forEach((item) => {
-    const mappedName = badgeMapping[item.badgeName] || item.badgeName;
+    const mappedName = badgeMapping[item.badgeName] ;
     if (counts.hasOwnProperty(mappedName)) {
       counts[mappedName] = item.numberOfBadges;
     }
   });
-
+  
   // Función para asignar colores basada en el ranking de los counts.
   const assignColors = (counts) => {
     const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
@@ -62,7 +62,6 @@ const PodiumChart = ({ data }) => {
   };
 
   const colorMapping = assignColors(counts);
-
   return (
     <div className="grid grid-cols-4 gap-8 h-80 rounded-lg shadow-md relative">
       {prizes.map((prize) => (
@@ -77,7 +76,7 @@ const PodiumChart = ({ data }) => {
             className="w-28 h-28 mb-2"
           />
           <p className="font-bold text-center">{prize}</p>
-          <p className="text-center text-sm">{data[prize] || 0} kudos</p>
+          <p className="text-center text-sm">{counts[prize] || 0} kudos</p>
         </div>
       ))}
     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Autocomplete, TextField } from "@mui/material";
 
-function TeamSelector({
+export function TeamSelector({
   teams,
   selectedTeam,
   setSelectedTeam,
@@ -17,7 +17,7 @@ function TeamSelector({
     label: m,
     value: i + 1,
   }));
-
+  
   return (
     <div className="mt-4 flex flex-col items-center">
       <div className="flex gap-6">

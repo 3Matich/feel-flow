@@ -66,7 +66,7 @@ function HappinessChart({
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Selecciona Miembro"
+              label="Miembros"
               variant="outlined"
               sx={{
                 width: 200,

@@ -7,11 +7,11 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
-import { GetTeam } from "@/api/teams/getTeams";
+import { GetTeam } from "@/api";
 
 import { FeelFlowSpinner } from "@/components";
 
-import { EditTeam, ViewTeam, InviteMember } from "@/widgets/pages/team";
+import { EditTeam, ViewTeam, InviteMember } from "@/widgets";
 import { NotFoundPage } from ".";
 
 import { useLocation } from "react-router-dom";

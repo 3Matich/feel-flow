@@ -1,6 +1,11 @@
 // services/GetTwelveStepsSummary.js
-export async function GetTwelveStepsSummary(token, idModule, idRegularUser = "") {
-  const endpoint = `http://localhost:8080/api/v1/summary/twelve-steps?idModule=${idModule}` + 
+import { host } from "@/configs";
+import { getAuthData } from "@/api/services";
+
+export async function GetTwelveStepsSummary(idModule, idRegularUser = "") {
+  const { token } = getAuthData();
+  console.log(idModule)
+  const endpoint = `${host}/api/v1/summary/twelve-steps?idModule=${idModule}` + 
                    (idRegularUser ? `&idRegularUser=${idRegularUser}` : "");
   try {
     const response = await fetch(endpoint, {

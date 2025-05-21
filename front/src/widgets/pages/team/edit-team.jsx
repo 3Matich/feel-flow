@@ -13,7 +13,7 @@ import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
 
 
 // Functions
-import { UpdateTeam } from "@/api/teams";
+import { UpdateTeam } from "@/api";
 
 export function EditTeam( {uuid, teamName, teamDescription, handleEdit} ) {
     const [newTeamName, setNewTeamName] = React.useState(teamName);

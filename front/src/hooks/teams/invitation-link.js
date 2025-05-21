@@ -1,6 +1,6 @@
 import { frontHost } from "@/configs";
 
-import { InviteMember } from "@/api/teams";
+import { InviteMember } from "@/api";
 
 export async function GenerateInvitation( idTeam ) {
     // console.log("ID del equipo proporcionado: ", idTeam)

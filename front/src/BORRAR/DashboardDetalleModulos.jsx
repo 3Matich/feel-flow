@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { GetTeam } from "@/api/teams";
+import { GetTeam } from "@/api";
 import TeamSelector from "../components/TeamSelector";
 import NikoNikoTable from "../components/NikoNikoTable";
 import HappinessChart from "../components/HappinessChart";

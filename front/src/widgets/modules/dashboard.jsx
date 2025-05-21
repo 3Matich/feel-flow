@@ -9,7 +9,7 @@ import {
     CompletionChart,
     ParticipationChart,
     StatusChart,
-} from "@/widgets/charts"
+} from "@/widgets"
 
 export function Dashboard() {
     const modules = [
