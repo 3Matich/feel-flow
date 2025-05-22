@@ -88,7 +88,7 @@ export const KudosSummary = ({ isActive, Teams }) => {
     }
 
     return (
-        <div className="mt-4">
+        <div>
             {loading && <FeelFlowSpinner />}
             {error && <p className="text-center">{error}</p>}
             {!loading && !error && (

@@ -22,13 +22,13 @@ import {
 export function Modules() {
     const data = [
         {
-            label: "Estatus",
+            label: "Estado",
             value: "dashboard",
             icon: PresentationChartLineIcon,
             element: <Dashboard />,
         },
         {
-            label: "12 Pasos",
+            label: "12 Pasos de la felicidad",
             value: "twelveSteps",
             icon: HeartIcon,
             element: <TwelveSteps />,

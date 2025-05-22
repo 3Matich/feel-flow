@@ -23,11 +23,11 @@ function HappinessChart({
   });
 
   return (
-    <div className="rounded-lg shadow-lg mt-4 relative">
+    <div className="rounded-lg shadow-lg card relative">
       {/* <h1 className="text-2xl font-bold text-center mb-10">
         12 pasos de la felicidad - {teamData.teamName}
       </h1> */}
-      <div className="flex flex-col sm:flex-row justify-center items-center mb-12 gap-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center mb-12 py-4 gap-4">
         {/* Autocomplete para seleccionar módulo (fecha) */}
         <Autocomplete
           options={moduleOptions}
@@ -77,7 +77,7 @@ function HappinessChart({
         />
       </div>
       {/* Aumentamos la separación vertical */}
-      <div className="mt-20">
+      <div className="mt-20 px-4">
       {/* Se usa 'selectedData' => array de { categoryName, average } */}
         {renderChart(selectedData)}
       </div>

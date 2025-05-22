@@ -21,6 +21,7 @@ import {
   OwnTracking,
   Teams,
   Resumenes,
+  NotFoundPage
 } from "@/pages/dashboard";
 
 import { SignIn, SignUp } from "@/pages/auth";
@@ -39,12 +40,14 @@ export const routes = [
         path: "/general",
         element: <Home />,
       },
+      /*
       {
         icon: <DocumentTextIcon {...icon} />,
         name: "Calendario",
         path: "/calendario",
         element: <Resumenes />,
       },
+      */
       // {
       //   icon: <UserCircleIcon {...icon} />,
       //   name: "profile",
@@ -88,6 +91,20 @@ export const routes = [
         element: <Teams />,
       },
     ],
+    subpages: [
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "sign in",
+        path: "equipos/*",
+        element: <NotFoundPage />,
+      },
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "sign in",
+        path: "miembros/*",
+        element: <NotFoundPage />,
+      },
+    ],
   },
   {
     title: "auth pages",
@@ -106,6 +123,7 @@ export const routes = [
         element: <SignUp />,
       },
     ],
+    subpages: [],
   },
   {
     title: "Personal pages",
@@ -117,6 +135,7 @@ export const routes = [
         path: "/perfil",
         element: <Profile />,
       },
+      /*
       {
         // Para Autogestión, se usa un icono que representa el control personal
         icon: <ClipboardDocumentIcon {...icon} />,
@@ -130,8 +149,10 @@ export const routes = [
         name: "Bienestar",
         path: "/WellnessHub",
         element: <WellnessHub />,
-      }
+      }*/
     ],
+    subpages: [],
+
   },
 ];
 

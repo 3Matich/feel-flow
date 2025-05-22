@@ -57,16 +57,16 @@ export function Home() {
       element: Dashboard
     }, 
     {
-      label: "Niko Niko",
-      value: "nikoNiko",
-      icon: FaceSmileIcon,
-      element: SummaryNikoNiko,
-    }, 
-    {
       label: "12 Pasos de la Felicidad",
       value: "felicidad",
       icon: HeartIcon,
       element: TwelveStepsSummary,
+    }, 
+    {
+      label: "Niko Niko",
+      value: "nikoNiko",
+      icon: FaceSmileIcon,
+      element: SummaryNikoNiko,
     }, 
     {
       label: "Kudos",
@@ -85,7 +85,7 @@ export function Home() {
       <GeneralMetrics />
 
       {/* Pestañas */}
-      <div className="mt-12">
+      <div className="mt-12 mb-8">
         <Tabs value={activeTab}>
           <TabsHeader
             className="bg-pink-100 rounded-full"

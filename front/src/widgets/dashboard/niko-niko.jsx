@@ -60,7 +60,7 @@ export const SummaryNikoNiko = ({ isActive, Teams }) => {
     }
 
     return (
-        <div className="mt-4">
+        <div className="rounded-lg shadow-lg card">
             {/* Selector global de equipo + mes */}
             <div className="mb-8 flex justify-center">
                 <TeamSelector

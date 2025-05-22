@@ -25,8 +25,8 @@ function KudosChart({
   console.debug(selectedData)
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg mt-10 relative">
-      <div className="flex flex-col sm:flex-row justify-center items-center mb-12 gap-4">
+    <div className="rounded-lg shadow-lg card">
+      <div className="flex flex-col sm:flex-row justify-center items-center mb-12 py-4 gap-4">
         {/* Autocomplete para seleccionar módulo (fecha) en Kudos */}
         <Autocomplete
           options={moduleOptions}
@@ -43,7 +43,7 @@ function KudosChart({
               {...params}
               label="Fecha del Módulo (Kudos)"
               variant="outlined"
-              sx={{ width: 200, backgroundColor: "white" }}
+              sx={{ width: 200, backgroundColor: "pink" }}
             />
           )}
         />
@@ -63,12 +63,12 @@ function KudosChart({
               {...params}
               label="Miembros"
               variant="outlined"
-              sx={{ width: 200, backgroundColor: "white" }}
+              sx={{ width: 200, backgroundColor: "pink" }}
             />
           )}
         />
       </div>
-      <div className="mt-16 pb-16">
+      <div className="mt-16 pb-16 px-8">
         {selectedData && selectedData.length > 0 ? (
           <PodiumChart data={selectedData} />
         ) : (

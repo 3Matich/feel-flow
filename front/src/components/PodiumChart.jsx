@@ -63,7 +63,7 @@ const PodiumChart = ({ data }) => {
 
   const colorMapping = assignColors(counts);
   return (
-    <div className="grid grid-cols-4 gap-8 h-80 rounded-lg shadow-md relative">
+    <div className="grid grid-cols-4 gap-8 h-80">
       {prizes.map((prize) => (
         <div
           key={prize}

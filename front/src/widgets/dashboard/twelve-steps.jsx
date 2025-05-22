@@ -99,7 +99,7 @@ export const TwelveStepsSummary = ({ isActive }) => {
     }
 
     return (
-        <div className="mt-4">
+        <div>
             {/* {loading && selectedTeam == null && <p className="text-center">Seleccione un equipo</p>} */}
             {loading && fetchData && <FeelFlowSpinner />}
             {error && <p className="text-center">{error}</p>}

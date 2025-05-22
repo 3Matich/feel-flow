@@ -70,7 +70,7 @@ export function NikoNikoTable({ nikoDataByMember }) {
   };
 
   return (
-    <div className="mt-4 rounded-lg shadow-lg p-6 overflow-x-auto">
+    <div className="mt-4 p-6 overflow-x-auto">
       <table className="w-full text-sm table-auto border-separate border-spacing-0">
         <thead>
           <tr className="table-header">

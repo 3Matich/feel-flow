@@ -13,12 +13,13 @@ import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 
 import { Outlet } from "react-router-dom";
 import { SessionExpiredDialog } from "@/widgets/dialogs";
+import { NotFoundPage } from "@/pages/dashboard";
 
 export function Dashboard({ onLogout }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
   const [sessionExpired, setSessionExpired] = useState(false); // Maneja cuando expira la sesion
- 
+
   const handleSessionDialog = () => setSessionExpired(!sessionExpired);
 
   return (
@@ -42,16 +43,26 @@ export function Dashboard({ onLogout }) {
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton>
         <main>
-          <Outlet context={{ setSessionExpired }} />
           <Routes>
+            {routes.map(
+              ({ layout, subpages }) =>
+                layout === "dashboard" &&
+                subpages.map(({ path, element }) => (
+                  <Route path={path} element={element} />
+                ))
+            )}
             {routes.map(
               ({ layout, pages }) =>
                 layout === "dashboard" &&
-                pages.map(({ path, element }) => (
-                  <Route exact path={path} element={element} />
-                ))
+              pages.map(({ path, element }) => (
+                <Route exact path={path} element={element} />
+              ))
             )}
+            
+            {/* <Route path = "/dashboard/equipos/*" element = {< NotFoundPage />} /> */}
           </Routes>
+          <Outlet context={{ setSessionExpired }} />
+
         </main>
         <SessionExpiredDialog open={sessionExpired} handleOpen={handleSessionDialog} onLogout={onLogout} />
         {/* <div className="text-blue-gray-600">
