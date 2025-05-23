@@ -1,5 +1,12 @@
-// src/widgets/profile/ProfileNew.jsx
-
+/*########################################################################################## 
+######                                                                                ######
+######    SE DESCARTA ESTA IDEA, DESDE EL BACK NO SE PUEDE OBTENER EL PERFIL DE       ######
+######      OTRO USUARIO QUE NO SEA EL LOGUEADO.                                      ######
+######                                                                                ######
+######    NO SE BORRA LA PAGINA POR SI SE DECIDE IMPLEMENTAR ESTA OPCION ANTES        ######
+######      DE LA DEMO                                                                ######
+######                                                                                ######
+##########################################################################################*/
 import React, { useState } from "react";
 import {
   Card,
@@ -32,7 +39,7 @@ import { FeelFlowSpinner } from "@/components";
 
 import { useLocation } from "react-router-dom";
 
-export function Profile() {
+export function Member() {
   const [profile, setProfile] = useState(null);
   const [userImageSrc, setUserImageSrc] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -44,15 +51,13 @@ export function Profile() {
   // Estados para obtener la página y ejecutar los llamados al backend necesarios
   const { pathname } = useLocation();
   const segments = pathname.split("/").filter((el) => el !== "");
-  console.log(segments);
-  const page = segments[segments.length - 1];
-  console.log(page);
+  const page = segments[segments.length - 2];
+  const authUserID = segments[segments.length - 1];
   const [hasFetchedRef, setHasFetchedRef] = useState(false);
 
 
   // Obtener datos del usuario desde la API
   const fetchProfile = async () => {
-    const { authUserID } = getUserData();
     try {
       const data = await getUser(authUserID);
       if (data && typeof data === "object") {
@@ -82,7 +87,7 @@ export function Profile() {
     setHasFetchedRef(false);
   };
 
-  if (page == "perfil" && !hasFetchedRef) {
+  if (page == "miembros" && !hasFetchedRef) {
     setHasFetchedRef(true); // impide que ejecute 2 veces
     fetchProfile(); // Carga los datos del perfil
     fetchAvatar(); // Carga el avatar
@@ -309,4 +314,4 @@ export function Profile() {
   );
 }
 
-export default Profile;
+export default Member;

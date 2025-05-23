@@ -21,7 +21,8 @@ import {
   OwnTracking,
   Teams,
   Resumenes,
-  NotFoundPage
+  NotFoundPage,
+  Member,
 } from "@/pages/dashboard";
 
 import { SignIn, SignUp } from "@/pages/auth";
@@ -98,12 +99,15 @@ export const routes = [
         path: "equipos/*",
         element: <NotFoundPage />,
       },
+      // SE DESCARTA LA OPCION DE VISUALIZAR PERFILES, CADA USER SOLO PUEDE VER SU PERFIL
+      /*
       {
         icon: <ServerStackIcon {...icon} />,
         name: "sign in",
         path: "miembros/*",
-        element: <NotFoundPage />,
+        element: <Member />,
       },
+      */
     ],
   },
   {

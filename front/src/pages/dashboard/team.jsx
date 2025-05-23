@@ -6,8 +6,9 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import { UserPlusIcon } from "@heroicons/react/24/solid";
+import { UserPlusIcon, EyeIcon } from "@heroicons/react/24/solid";
 import { GetTeam } from "@/api";
+import { Navigate } from "react-router-dom";
 
 import { FeelFlowSpinner } from "@/components";
 
@@ -108,6 +109,7 @@ export function Team() {
               </thead>
               <tbody>
                 {teamMembers.map((member) => (
+                  // let url = `/${member.uuid}`
                   <tr key={member.uuid} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-colors">
                     <td className="py-3 px-5 table-body-cell">
                       <Typography>
@@ -124,6 +126,10 @@ export function Team() {
                     <td className="py-3 px-5 table-body-cell">
                       <Typography className="text-sm">{member.phoneNumber}</Typography>
                     </td>
+                    {/* SE COMENTA POR LA IMPOSIBILIDAD DE IMPLEMENTARLO POR EL BACK
+                    <td className="py-3 px-5 table-body-cell">
+                      <a href={"miembros/"+member.uuid}><EyeIcon width={20} /></a>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

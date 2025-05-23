@@ -132,7 +132,7 @@ export function DashboardNavbar() {
         </div>
         <div className="flex items-center">
           <Badge content={notifications.length}>
-            <Menu>
+            <Menu placement="bottom-end">
               <MenuHandler>
                 <IconButton variant="text"> {/* color="blue-gray" */}
                   <BellIcon className="h-5 w-5 text-dark dark:text-white" /> {/* text-blue-gray-500 ${fixedNavbar ? "text-dark dark:text-white" : "text-light-primary dark:text-dark-primary" } */}

@@ -10,15 +10,32 @@ import {
     IconButton,
 } from "@material-tailwind/react";
 import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
+import { getTeamImage } from "@/api";
 
 
 // Functions
 import { UpdateTeam } from "@/api";
 
-export function EditTeam( {uuid, teamName, teamDescription, handleEdit} ) {
+export function EditTeam({ uuid, teamName, teamDescription, handleEdit }) {
     const [newTeamName, setNewTeamName] = React.useState(teamName);
     const [newTeamDescription, setNewTeamDescription] = React.useState(teamDescription);
-    
+    const [teamImage, setTeamImage] = React.useState();
+    const [fetch, setFetch] = React.useState(false);
+
+    const fetchImage = async () => {
+        const res = await getTeamImage();
+        setTeamImage(`data:${res.fileType};base64,${res.fileData}`)
+
+    }
+
+    React.useEffect(() => {
+        if (!fetch) {
+            setFetch(true);
+            fetchImage();
+        }
+
+    }, [fetch])
+
     const handleSave = async () => {
         try {
             const updatedData = {
@@ -39,7 +56,7 @@ export function EditTeam( {uuid, teamName, teamDescription, handleEdit} ) {
             <CardHeader color="transparent" shadow={false} className="p-3 flex justify-between items-center rounded-lg">
                 <div className="flex items-center gap-2">
                     <img
-                        src="/img/scuderia.jpg"
+                        src={teamImage} //"/img/scuderia.jpg"
                         alt="Equipo"
                         className="w-20 h-20 object-cover rounded-full border-4 shadow-lg"
                     />
