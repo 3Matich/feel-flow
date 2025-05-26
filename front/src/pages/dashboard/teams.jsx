@@ -208,22 +208,7 @@ export function Teams() {
   );
 
   const handleClick = async (id) => {
-    const token = sessionStorage.getItem("token");
-    console.log(id)
-    try {
-      const equipoId = await GetIdEquipo(token);
-      console.log(equipoId)
-      if (equipoId) {
-        const response = await GetEquipobyID(token, equipoId);
-        if (response && response.status === 200) {
-          console.log("Equipo encontrado correctamente");
-        } else {
-          console.warn("Error al obtener equipo por ID");
-        }
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    navigate(`${id}`)
   };
 
   return (

@@ -8,14 +8,13 @@ import {
 } from "@material-tailwind/react";
 import { UserPlusIcon, EyeIcon } from "@heroicons/react/24/solid";
 import { GetTeam } from "@/api";
+import { GetEquipobyID } from "@/api";
 import { Navigate } from "react-router-dom";
-
 import { FeelFlowSpinner } from "@/components";
-
 import { EditTeam, ViewTeam, InviteMember } from "@/widgets";
 import { NotFoundPage } from ".";
-
 import { useLocation } from "react-router-dom";
+
 
 export function Team() {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +25,14 @@ export function Team() {
   // Estados para obtener la página y ejecutar los llamados al backend necesarios
   const { pathname } = useLocation();
   const segments = pathname.split("/").filter((el) => el !== "");
-  const page = segments[segments.length - 1];
+
+  let page = null;
+  let teamID = null;
+
+  if (segments.length >= 3 && segments[segments.length - 2] === "equipos") {
+    page = segments[segments.length - 2];
+    teamID = segments[segments.length - 1];
+  }
   const [hasFetchedRef, setHasFetchedRef] = useState(false);
 
 
@@ -42,7 +48,9 @@ export function Team() {
   const fetchTeam = async () => {
     try {
       setLoading(true); // 👈 importante para que aparezca el spinner si querés
-      const allTeams = await GetTeam();
+      const token = sessionStorage.getItem("token");
+      const allTeams = teamID === null ? await GetTeam() : [await GetEquipobyID(token, teamID)]; 
+      console.log(allTeams)
       if (allTeams.length > 0) {
         setTeamData(allTeams[0]);
         setLoading(false);
@@ -58,8 +66,7 @@ export function Team() {
     }
   };
 
-  if (page == "miembros" &&  !hasFetchedRef) {
-    console.log("Estas en la pag de miembros");
+  if (page == "miembros" || !hasFetchedRef) {
     setHasFetchedRef(true);
     fetchTeam();
   }

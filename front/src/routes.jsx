@@ -97,7 +97,7 @@ export const routes = [
         icon: <ServerStackIcon {...icon} />,
         name: "sign in",
         path: "equipos/*",
-        element: <NotFoundPage />,
+        element: <Team />,
       },
       // SE DESCARTA LA OPCION DE VISUALIZAR PERFILES, CADA USER SOLO PUEDE VER SU PERFIL
       /*
