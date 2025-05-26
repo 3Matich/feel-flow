@@ -7,16 +7,28 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import { Pencil } from "lucide-react";
-
+import { useLocation } from "react-router-dom";
 import { getTeamImage } from "@/api";
+import { getTeamImageById } from "@/api";
 
 
 export function ViewTeam({ teamName, teamDescription, handleEdit }) {
     const [teamImage, setTeamImage] =  React.useState();
     const [fetch, setFetch] = React.useState(false);
+    // Estados para obtener la página y ejecutar los llamados al backend necesarios
+      const { pathname } = useLocation();
+      const segments = pathname.split("/").filter((el) => el !== "");
+    
+      let page = null;
+      let teamID = null;
+    
+      if (segments.length >= 3 && segments[segments.length - 2] === "equipos") {
+        page = segments[segments.length - 2];
+        teamID = segments[segments.length - 1];
+    }
 
     const fetchImage = async() => {
-        const res = await getTeamImage();
+        const res = teamID === null ? await getTeamImage() : await getTeamImageById(teamID);
         setTeamImage(`data:${res.fileType};base64,${res.fileData}`)
 
     }

@@ -11,3 +11,4 @@ export * from "@/api/teams/invite-member";
 export * from "@/api/teams/updateTeam";
 export * from "@/api/services/session";
 export * from "@/api/images/team-image";
+export * from "@/api/teams/getImageTeamId";

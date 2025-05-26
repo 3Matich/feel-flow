@@ -28,6 +28,7 @@ import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
 import { getTeamImageById } from "@/services/getTeamImageById";
 import { GetEquipobyID } from "@/services/GetEquipoId";
 import { GetIdEquipo } from "@/services/GetEquipos";
+import { useLocation } from "react-router-dom";
 
 export function Teams() {
   const navigate = useNavigate();
@@ -53,43 +54,48 @@ export function Teams() {
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { pathname } = useLocation();
+  const segments = pathname.split("/").filter((el) => el !== "");
+  const page = segments[segments.length - 1];
+
+  const fetchTeams = async () => {
+    try {
+      // 1) Lista de equipos del backend
+      const backendTeams = await getAvailableTeams();
+
+      // 2) Para cada equipo, intento traer su logo
+      const teamsWithLogos = await Promise.all(
+        backendTeams.map(async (team) => {
+          let logoUrl = "";
+          try {
+            // NOTA: paso team.uuid, no team.id
+            const { fileType, fileData } = await getTeamImageById(team.uuid);
+            logoUrl = `data:${fileType};base64,${fileData}`;
+          } catch (err) {
+            console.warn(`No logo para team ${team.uuid}:`, err);
+          }
+          return {
+            id: team.uuid,          // uso uuid aquí también
+            name: team.nameTeam,
+            description: team.descriptionTeam,
+            leader: `${team.teamLeaderDTO.name} ${team.teamLeaderDTO.surname}`,
+            logo: logoUrl,
+          };
+        })
+      );
+
+
+      setTeams(teamsWithLogos);
+    } catch (err) {
+      console.error("❌ Error al obtener equipos o logos:", err);
+      setTeams([]);
+    }
+  };
 
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        // 1) Lista de equipos del backend
-        const backendTeams = await getAvailableTeams();
-
-        // 2) Para cada equipo, intento traer su logo
-        const teamsWithLogos = await Promise.all(
-          backendTeams.map(async (team) => {
-            let logoUrl = "";
-            try {
-              // NOTA: paso team.uuid, no team.id
-              const { fileType, fileData } = await getTeamImageById(team.uuid);
-              logoUrl = `data:${fileType};base64,${fileData}`;
-            } catch (err) {
-              console.warn(`No logo para team ${team.uuid}:`, err);
-            }
-            return {
-              id: team.uuid,          // uso uuid aquí también
-              name: team.nameTeam,
-              description: team.descriptionTeam,
-              leader: `${team.teamLeaderDTO.name} ${team.teamLeaderDTO.surname}`,
-              logo: logoUrl,
-            };
-          })
-        );
-
-
-        setTeams(teamsWithLogos);
-      } catch (err) {
-        console.error("❌ Error al obtener equipos o logos:", err);
-        setTeams([]);
-      }
-    };
-
-    fetchTeams();
+    if (page === "equipos") {
+        fetchTeams();
+    } 
   }, []);
 
   const handleOpen = () => setOpen(!open);
@@ -165,6 +171,7 @@ export function Teams() {
 
     try {
       const result = await createTeam(teamData);
+      fetchTeams();
       console.log("✅ Equipo creado:", result);
 
       setTeams((prev) => [
