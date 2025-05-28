@@ -44,9 +44,9 @@ export function Profile() {
   // Estados para obtener la página y ejecutar los llamados al backend necesarios
   const { pathname } = useLocation();
   const segments = pathname.split("/").filter((el) => el !== "");
-  console.log(segments);
+  // console.log(segments);
   const page = segments[segments.length - 1];
-  console.log(page);
+  // console.log(page);
   const [hasFetchedRef, setHasFetchedRef] = useState(false);
 
 

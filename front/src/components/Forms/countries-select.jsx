@@ -39,7 +39,7 @@ export function CountriesSelect({ userCountry, name, onChange }) {
         >
           <img
             src={flags.svg}
-            alt={countryName}
+            alt={name}
             className="h-5 w-5 rounded-full object-cover"
           />
           {countryName}

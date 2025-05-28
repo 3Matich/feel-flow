@@ -1,3 +1,4 @@
+// src/widgets/dialogs/EditProfileDialog.jsx
 import React, { useState } from "react";
 import {
   Button,
@@ -34,7 +35,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
     }
 
     // Elimina el error al cambiar el campo
-    if (errors[name]) {
+    if (errors?.[name]) {
       setErrors({ ...errors, [name]: null });
     }
   };
@@ -42,18 +43,19 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
   // Validar que los campos obligatorios (excepto email y country) tengan valor
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, surname, phoneNumber, description } = formData;
-    
     const updatedData = { ...formData };
-    const result = await updateLoggedUser(updatedData)
-    if (result) {
+    const result = await updateLoggedUser(updatedData);
+    if (result && !result.errors) {
       onCancel();
-    } else {
+    } else if (result?.errors) {
       const formattedErrors = result.errors.reduce((acc, curr) => {
         const key = Object.keys(curr)[0];
         acc[key] = curr[key];
+        return acc;
       }, {});
       setErrors(formattedErrors);
+    } else {
+      setErrors({ general: "Error desconocido del servidor." });
     }
   };
 
@@ -71,16 +73,16 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
           {/* Descripción */}
           <Textarea
             rows={3}
-            resize={true}
+            resize
             size="md"
             variant="standard"
             label="Sobre ti"
+            name="description"
             placeholder={formData.description}
             value={formData.description}
             onChange={handleChange}
-            name="description"
             className="text-light-text-secondary dark:text-dark-text-secondary"
-            // error={errors.description}
+            // error={errors?.description}
           />
           <hr />
           {/* Nombre y Apellido */}
@@ -96,7 +98,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 placeholder={formData.surname}
                 value={formData.surname}
                 onChange={handleChange}
-                // error={errors.surname}
+                // error={errors?.surname}
               />
             </div>
             <div className="col-span-2">
@@ -107,7 +109,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 placeholder={formData.name}
                 value={formData.name}
                 onChange={handleChange}
-                // error={errors.name}
+                // error={errors?.name}
               />
             </div>
           </div>
@@ -121,11 +123,11 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
               <InputPhoneFloatingLabel
                 content={formData.phoneNumber}
                 name="phoneNumber"
-                onChange={(value) => setFormData((prev) => ({ ...prev, phoneNumber: value }))}
-                // error={errors.phoneNumber}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, phoneNumber: value }))
+                }
+                // error={errors?.phoneNumber}
               />
-
-
             </div>
           </div>
           <hr />
@@ -141,7 +143,7 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 type="email"
                 placeholder={formData.username}
                 value={formData.username}
-                // error={errors.username}
+                // error={errors?.username}
                 disabled
               />
             </div>
@@ -149,7 +151,10 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
           <hr />
           {/* Nacionalidad */}
           <div className="grid grid-cols-5 gap-3 items-center">
-            <Typography variant="h6" className="w-32 text-light-text dark:text-dark-text">
+            <Typography
+              variant="h6"
+              className="w-32 text-light-text dark:text-dark-text"
+            >
               Pais de Residencia
             </Typography>
             <div className="col-span-4">
@@ -157,8 +162,9 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 userCountry={formData.country}
                 name="country"
                 onChange={handleChange}
+                closeOnSelect
                 className="text-light-text-secondary dark:text-dark-text-secondary"
-                // error={errors.country}
+                // error={errors?.country}
               />
             </div>
           </div>
@@ -169,7 +175,11 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
         <Button variant="text" className="button-cancel" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button variant="gradient" className="button-save" onClick={handleSubmit}>
+        <Button
+          variant="gradient"
+          className="button-save"
+          onClick={handleSubmit}
+        >
           Guardar Cambios
         </Button>
       </DialogFooter>
