@@ -7,7 +7,7 @@ export const TOPICS = [
   { name: "Disfrute", icon: "/icons/12_disfrutar.svg" },
   { name: "Ejercicio", icon: "/icons/12_ejercicio.svg" },
   { name: "Resiliencia", icon: "/icons/12_resilience.svg" },
-  { name: "Alegria", icon: "/icons/12_risas.svg" },
+  { name: "Alegría", icon: "/icons/12_risas.svg" },
   { name: "Mindfulness", icon: "/icons/12_meditar.svg" },
   { name: "Gratitud", icon: "/icons/12_agradecimiento.svg" },
   { name: "Servicial", icon: "/icons/12_servicio.svg" }

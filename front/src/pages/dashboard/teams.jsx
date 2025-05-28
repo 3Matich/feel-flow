@@ -94,8 +94,8 @@ export function Teams() {
 
   useEffect(() => {
     if (page === "equipos") {
-        fetchTeams();
-    } 
+      fetchTeams();
+    }
   }, []);
 
   const handleOpen = () => setOpen(!open);
@@ -255,46 +255,42 @@ export function Teams() {
           </Button>
         </CardHeader>
         <CardBody className="mb-1">
-          {filteredTeams.length === 0 ? (
-            <Typography className="text-center text-lg">
-              No hay equipos creados
-            </Typography>
-          ) : (
-            <>
-              <div className="relative w-full mb-3">
-                <label
-                  className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
-                    ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
-                    : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
-                    }`}
-                >
-                  Buscar equipo o Team Leader
-                </label>
+          <>
+            <div className="relative w-full mb-3">
+              <label
+                className={`absolute left-4 transition-all duration-300 px-1 pointer-events-none ${isFocused || searchQuery
+                  ? "text-xs top-0 transform -translate-y-3/2 text-blue-600"
+                  : "text-l top-1/2 transform -translate-y-1/2 text-gray-400"
+                  }`}
+              >
+                Buscar equipo o Team Leader
+              </label>
 
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  className="w-full border rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
-                />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                className="w-full border rounded-lg px-4 pt-4 pb-2 focus:border-blue-500 focus:outline-none text-base"
+              />
 
-                <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5" />
-              </div>
+              <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5" />
+            </div>
 
-              <table className="w-full min-w-full table-auto mt-5 rounded-md card">
-                <thead>
-                  <tr className="table-header">
-                    {["Equipo", "Team Leader"].map((el) => (
-                      <th key={el} className="border py-3 px-5 text-left table-header-cell">
-                        {el}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTeams.map(({ id, logo, name, leader }) => (
+            <table className="w-full min-w-full table-auto mt-5 rounded-md card">
+              <thead>
+                <tr className="table-header">
+                  {["Equipo", "Team Leader"].map((el) => (
+                    <th key={el} className="border py-3 px-5 text-left table-header-cell">
+                      {el}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTeams.length > 0 ? (
+                  filteredTeams.map(({ id, logo, name, leader }) => (
                     <tr
                       key={id}
                       className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-all"
@@ -305,30 +301,30 @@ export function Teams() {
                           onClick={() => handleClick(id)}
                         >
                           <Avatar src={logo} alt={name} size="sm" variant="rounded" />
-
-                          {/* Contenedor con el texto y tooltip */}
                           <div className="relative">
                             <Typography>{name}</Typography>
-
-                            {/* Tooltip más cercano al texto */}
                             <span className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                               Haz click si quieres ver el detalle del equipo
                             </span>
                           </div>
                         </div>
                       </td>
-
-
-
                       <td className="py-3 px-5 table-body-cell">
                         <Typography>{leader}</Typography>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
-          )}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="2" className="text-center py-5 text-gray-500">
+                      No se encontraron equipos o TL que coincidan con la búsqueda
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </>
+
         </CardBody>
       </Card>
 
