@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// src/widgets/Team.jsx
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -6,137 +7,168 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import { UserPlusIcon, EyeIcon } from "@heroicons/react/24/solid";
-import { GetTeam } from "@/api";
-import { GetEquipobyID } from "@/api";
-import { Navigate } from "react-router-dom";
+import { UserPlusIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { GetTeam, GetEquipobyID } from "@/api";
 import { FeelFlowSpinner } from "@/components";
-import { EditTeam, ViewTeam, InviteMember } from "@/widgets";
+import { ViewTeam, InviteMember } from "@/widgets";
 import { NotFoundPage } from ".";
 import { useLocation } from "react-router-dom";
-
+import EditTeamDialog from "@/widgets/dialogs/EditTeamDialog";
+import EditTeamImageDialog from "@/widgets/dialogs/EditTeamImageDialog";
+import { getTeamImageById } from "@/api/images/getTeamImageById";
 
 export function Team() {
-  const [isEditing, setIsEditing] = useState(false);
   const [teamData, setTeamData] = useState(null);
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [hasFetched, setHasFetched] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [editDataOpen, setEditDataOpen] = useState(false);
+  const [editImageOpen, setEditImageOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
 
-  // Estados para obtener la página y ejecutar los llamados al backend necesarios
   const { pathname } = useLocation();
-  const segments = pathname.split("/").filter((el) => el !== "");
-
-  let page = null;
-  let teamID = null;
-
-  if (segments.length >= 3 && segments[segments.length - 2] === "equipos") {
-    page = segments[segments.length - 2];
-    teamID = segments[segments.length - 1];
-  }
-  const [hasFetchedRef, setHasFetchedRef] = useState(false);
-
-
-  const handleOpenInvite = async () => {
-    setOpen(!open);
-  };
-
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-    setHasFetchedRef(false);
-  }
+  const seg = pathname.split("/").filter(Boolean);
+  const teamID =
+    seg.length >= 2 && seg[seg.length - 2] === "equipos"
+      ? seg[seg.length - 1]
+      : null;
 
   const fetchTeam = async () => {
     try {
-      setLoading(true); // 👈 importante para que aparezca el spinner si querés
+      setLoading(true);
       const token = sessionStorage.getItem("token");
-      const allTeams = teamID === null ? await GetTeam() : [await GetEquipobyID(token, teamID)]; 
-      console.log(allTeams)
-      if (allTeams.length > 0) {
-        setTeamData(allTeams[0]);
-        setLoading(false);
-      } else {
-        // console.warn("⚠️ No hay equipos disponibles");
-        setTeamData(null); // o un valor vacío
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("❌ Error al obtener equipos:", error);
+      const all = teamID
+        ? [await GetEquipobyID(token, teamID)]
+        : await GetTeam();
+      setTeamData(all[0] || null);
+    } catch (e) {
+      console.error(e);
+      setTeamData(null);
     } finally {
       setLoading(false);
     }
   };
 
-  if (page == "miembros" || !hasFetchedRef) {
-    setHasFetchedRef(true);
-    fetchTeam();
-  }
+  useEffect(() => {
+    if (!hasFetched) {
+      setHasFetched(true);
+      fetchTeam();
+    }
+  }, [hasFetched]);
 
-  if (loading) {
-    return <FeelFlowSpinner />;
-  }
+  useEffect(() => {
+    if (teamData) {
+      getTeamImageById(teamData.uuid)
+        .then((r) =>
+          setImageSrc(`data:${r.fileType};base64,${r.fileData}`)
+        )
+        .catch(() => setImageSrc("/img/avatar/0000.png"));
+    }
+  }, [teamData]);
 
-  if (!teamData && !loading) {
-    return <NotFoundPage />;
-  }
+  if (loading) return <FeelFlowSpinner />;
+  if (!teamData) return <NotFoundPage />;
 
-
-  const teamMembers = teamData.regularUsers || [];
+  const members = teamData.regularUsers || [];
 
   return (
     <>
-      {isEditing
-        ? (<EditTeam uuid={teamData.uuid} teamName={teamData.nameTeam} teamDescription={teamData.descriptionTeam} handleEdit={handleEdit} />)
-        : (<ViewTeam teamName={teamData.nameTeam} teamDescription={teamData.descriptionTeam} handleEdit={handleEdit} />)
-      }
+      {/*—— Encabezado único con imagen, datos y lápiz ——*/}
+      <Card color="transparent" className="mb-6 p-6 shadow-lg rounded-xl border">
+        <CardHeader
+          color="transparent"
+          shadow={false}
+          className="p-4 flex items-center justify-between rounded-lg"
+        >
+          <div className="flex items-center gap-4">
+            <img
+              src={imageSrc || "/img/avatar/0000.png"}
+              alt="Equipo"
+              className="w-24 h-24 object-cover rounded-full border-4 shadow-lg cursor-pointer"
+              onClick={() => setEditImageOpen(true)}
+            />
+            <div>
+              <Typography variant="h5">
+                {teamData.nameTeam}
+              </Typography>
+              <Typography variant="small" className="text-gray-600">
+                {teamData.descriptionTeam}
+              </Typography>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="text"
+              className="p-2"
+              onClick={() => setEditDataOpen(true)}
+            >
+              <PencilIcon className="h-5 w-5 text-pink-500" />
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
 
-      {/* Tabla de miembros */}
+      {/*—— Mantengo aquí EXACTAMENTE tu bloque original de miembros ——*/}
       <Card color="transparent" className="p-2 shadow-lg rounded-xl border card-header">
         <CardHeader variant="gradient" className="-mt-5 mb-6 p-6 flex justify-between items-center rounded-lg card">
-          <Typography variant="h6" className="font-medium">Miembros del equipo</Typography>
-          <Button onClick={handleOpenInvite} variant="filled" className="flex items-center gap-2 hover:shadow-lg button-custom">
-            <UserPlusIcon className="h-5 w-5" />
-            Invitar Miembro
+          <Typography variant="h6" className="font-medium">
+            Miembros del equipo
+          </Typography>
+          <Button
+            onClick={() => setInviteOpen((o) => !o)}
+            variant="filled"
+            className="flex items-center gap-2 hover:shadow-lg button-custom"
+          >
+            <UserPlusIcon className="h-5 w-5" /> Invitar Miembro
           </Button>
         </CardHeader>
         <CardBody className="px-4 pt-0 pb-4">
-          {teamMembers.length === 0 ? (
-            <Typography className="text-center">Este equipo aún no tiene miembros asignados.</Typography>
+          {members.length === 0 ? (
+            <Typography className="text-center">
+              Este equipo aún no tiene miembros asignados.
+            </Typography>
           ) : (
             <table className="w-full min-w-[640px] table-auto card">
               <thead>
                 <tr className="table-header">
-                  {"Usuario,Descripción,Empresa,Teléfono".split(",").map((el) => (
-                    <th key={el} className="border table-header-cell py-3 px-5 text-left">
+                  {["Usuario","Descripción","Empresa","Teléfono"].map(h => (
+                    <th key={h} className="border table-header-cell py-3 px-5 text-left">
                       <Typography variant="small" className="font-bold card-header">
-                        {el}
+                        {h}
                       </Typography>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {teamMembers.map((member) => (
-                  // let url = `/${member.uuid}`
-                  <tr key={member.uuid} className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-colors">
+                {members.map(m => (
+                  <tr
+                    key={m.uuid}
+                    className="table-body hover:dark:bg-blue-gray-900 hover:bg-blue-gray-50 transition-colors"
+                  >
                     <td className="py-3 px-5 table-body-cell">
                       <Typography>
-                        {member.name} {member.surname}
+                        {m.name} {m.surname}
                       </Typography>
-                      <Typography className="text-xs">{member.username}</Typography>
+                      <Typography className="text-xs">
+                        {m.username}
+                      </Typography>
                     </td>
                     <td className="py-3 px-5 table-body-cell">
-                      <Typography className="text-sm">{member.description}</Typography>
+                      <Typography className="text-sm">
+                        {m.description}
+                      </Typography>
                     </td>
                     <td className="py-3 px-5 table-body-cell">
-                      <Typography className="text-sm">{member.enterpriseInfoHomeDTO?.name || '-'}</Typography>
+                      <Typography className="text-sm">
+                        {m.enterpriseInfoHomeDTO?.name || "-"}
+                      </Typography>
                     </td>
                     <td className="py-3 px-5 table-body-cell">
-                      <Typography className="text-sm">{member.phoneNumber}</Typography>
+                      <Typography className="text-sm">
+                        {m.phoneNumber}
+                      </Typography>
                     </td>
-                    {/* SE COMENTA POR LA IMPOSIBILIDAD DE IMPLEMENTARLO POR EL BACK
-                    <td className="py-3 px-5 table-body-cell">
-                      <a href={"miembros/"+member.uuid}><EyeIcon width={20} /></a>
-                    </td> */}
                   </tr>
                 ))}
               </tbody>
@@ -145,12 +177,34 @@ export function Team() {
         </CardBody>
       </Card>
 
-      {/* Invitar miembro */}
+      {/*—— Invitar miembro y modales ——*/}
       <InviteMember
         uuid={teamData.uuid}
-        open={open}
-        handleOpen={handleOpenInvite}
+        open={inviteOpen}
+        handleOpen={() => setInviteOpen(o => !o)}
+      />
+
+      <EditTeamDialog
+        uuid={teamData.uuid}
+        teamName={teamData.nameTeam}
+        teamDescription={teamData.descriptionTeam}
+        open={editDataOpen}
+        onClose={() => {
+          setEditDataOpen(false);
+          setHasFetched(false);
+        }}
+      />
+
+      <EditTeamImageDialog
+        uuid={teamData.uuid}
+        open={editImageOpen}
+        onClose={() => {
+          setEditImageOpen(false);
+          setHasFetched(false);
+        }}
       />
     </>
   );
 }
+
+export default Team;

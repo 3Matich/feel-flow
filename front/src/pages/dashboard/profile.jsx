@@ -214,7 +214,7 @@ export function Profile() {
                     onClick={handleOpenAvatarDialog}
                     className="button-cancel rounded-lg px-6 py-2 shadow-md"
                   >
-                    <span>Cancel</span>
+                    <span>Cancelar</span>
                   </Button>
                   <Button
                     variant="text"

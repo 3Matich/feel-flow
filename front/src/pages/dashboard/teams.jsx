@@ -337,9 +337,9 @@ export function Teams() {
         handler={handleOpen}
         className={`card ${size === "xs" ? "max-w-xs" : ""}`}
       >
-        <DialogHeader className="flex items-center justify-between card-header">
+        <DialogHeader className="flex items-center justify-center card-header">
           <Typography variant="h4">Crear un nuevo Equipo</Typography>
-          <button
+          {/* <button
             onClick={() => {
               handleOpen();
               setNewTeam({
@@ -356,7 +356,7 @@ export function Teams() {
             className="hover:text-gray-500 focus:outline-none"
           >
             ✕
-          </button>
+          </button> */}
         </DialogHeader>
         <DialogBody className="card-body">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
