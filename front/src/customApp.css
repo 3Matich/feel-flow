@@ -36,11 +36,13 @@
     }
 
     .button-save {
-        @apply text-success-light dark:text-success-light text-sm font-medium bg-light-button-success dark:bg-dark-button-success rounded-full !important
+        @apply text-white bg-[#113A79] dark:bg-[#010D26] rounded-full text-sm font-medium !important;
+        @apply hover:bg-[#0E2E65] dark:hover:bg-[#000B1E] hover:shadow-lg transition-all duration-300;
     }
 
     .button-cancel {
-        @apply text-alert-light dark:text-alert-light rounded-full text-sm font-medium !important
+        @apply text-white bg-[#F25D50] dark:bg-[#BF5866] rounded-full text-sm font-medium !important;
+        @apply hover:bg-[#D1483F] dark:hover:bg-[#9F4652] hover:shadow-lg transition-all duration-300;
     }
 
     .button-custom {
@@ -54,7 +56,12 @@
 
 @layer base {
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         @apply text-light-text dark:text-dark-text font-semibold;
     }
 
@@ -63,6 +70,7 @@
     }
 
     input {
-        @apply border text-light-text-secondary dark:text-dark-text-secondary /*dark:!bg-blue-gray-800 dark:text-dark-text-secondary */
+        @apply border text-light-text-secondary dark:text-dark-text-secondary
+        /*dark:!bg-blue-gray-800 dark:text-dark-text-secondary */
     }
 }

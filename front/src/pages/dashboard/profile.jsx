@@ -22,14 +22,12 @@ import { ProfileInfoCard } from "@/widgets/cards";
 import { EditProfileDialog } from "@/widgets/dialogs";
 import { useDragAndDrop } from "@/hooks";
 import { platformSettingsData } from "@/data";
-
 import { getUser } from "@/api/users/getUser";
 import { getUserImage } from "@/services/getUserImage"; // GET service
 import { uploadUserImage } from "@/services/uploadUserImage"; // POST service
-
 import { FeelFlowSpinner } from "@/components";
-
 import { useLocation } from "react-router-dom";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export function Profile() {
   const [profile, setProfile] = useState(null);
@@ -52,7 +50,7 @@ export function Profile() {
     const { authUserID } = getUserData();
     try {
       const data = await getUser(authUserID);
-            if (data && typeof data === "object") {
+      if (data && typeof data === "object") {
         setProfile(prev => ({
           ...prev, ...data
         }));
@@ -124,8 +122,15 @@ export function Profile() {
                 animate={{ mount: { scale: 1, y: 0 }, unmount: { scale: 0.9, y: -100 } }}
                 className="card"
               >
-                <DialogHeader className="card-header">
-                  Seleccione un avatar de usuario
+                <DialogHeader className="card-header relative">
+                  <span>Seleccione un avatar de usuario</span>
+                  <button
+                    onClick={handleOpenAvatarDialog}
+                    className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                    aria-label="Cerrar diálogo"
+                  >
+                    <XMarkIcon className="h-5 w-5 text-gray-700" />
+                  </button>
                 </DialogHeader>
                 <hr className="my-8 border-blue-gray-500 dark:border-white" />
                 <DialogBody>
@@ -238,9 +243,9 @@ export function Profile() {
                   >
                     <span>Guardar</span>
                   </Button>
-                  
                 </DialogFooter>
               </Dialog>
+
               <div>
                 <Typography variant="h5" className="mb-1">
                   {profile.name} {profile.surname}

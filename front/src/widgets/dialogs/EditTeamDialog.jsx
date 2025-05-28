@@ -8,6 +8,7 @@ import {
   Textarea,
   Button,
 } from "@material-tailwind/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { UpdateTeam } from "@/api";
 
 export function EditTeamDialog({ uuid, teamName, teamDescription, open, onClose }) {
@@ -16,8 +17,8 @@ export function EditTeamDialog({ uuid, teamName, teamDescription, open, onClose 
 
   useEffect(() => {
     if (open) {
-      setName(teamName||"");
-      setDesc(teamDescription||"");
+      setName(teamName || "");
+      setDesc(teamDescription || "");
     }
   }, [open, teamName, teamDescription]);
 
@@ -32,7 +33,15 @@ export function EditTeamDialog({ uuid, teamName, teamDescription, open, onClose 
 
   return (
     <Dialog open={open} handler={onClose}>
-      <DialogHeader className="relative flex justify-center">Editar datos del equipo</DialogHeader>
+      <DialogHeader className="relative flex justify-center items-center">
+        Editar datos del equipo
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+        >
+          <XMarkIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+        </button>
+      </DialogHeader>
       <DialogBody className="space-y-4">
         <Input
           label="Nombre"
@@ -49,8 +58,12 @@ export function EditTeamDialog({ uuid, teamName, teamDescription, open, onClose 
         />
       </DialogBody>
       <DialogFooter className="justify-center space-x-4">
-        <Button variant="text" onClick={onClose}>Cancelar</Button>
-        <Button variant="gradient" onClick={handleSave}>Guardar</Button>
+        <Button className="button-cancel rounded-lg px-6 py-2 shadow-md" onClick={onClose}>
+          Cancelar
+        </Button>
+        <Button className="button-save rounded-lg px-6 py-2 shadow-md" onClick={handleSave}>
+          Guardar
+        </Button>
       </DialogFooter>
     </Dialog>
   );

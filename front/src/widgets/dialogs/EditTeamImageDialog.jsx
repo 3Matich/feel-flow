@@ -10,6 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { useDragAndDrop } from "@/hooks";
 import { uploadTeamImage } from "@/api/images/uploadTeamImage";
+import { XMarkIcon } from "@heroicons/react/24/solid"; // Asegúrate de importar el ícono
 
 export function EditTeamImageDialog({ uuid, open, onClose }) {
   const { handleDragOver, handleDrop: hookDrop, handleImageChange, handleRemoveImage, logoPreview } =
@@ -55,7 +56,16 @@ export function EditTeamImageDialog({ uuid, open, onClose }) {
       animate={{ mount: { scale: 1, y: 0 }, unmount: { scale: 0.9, y: -100 } }}
       className="card"
     >
-      <DialogHeader className="relative flex justify-center">Editar imagen del equipo</DialogHeader>
+      <DialogHeader className="relative flex justify-center">
+        Editar imagen del equipo
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          aria-label="Cerrar diálogo"
+        >
+          <XMarkIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+        </button>
+      </DialogHeader>
 
       <DialogBody>
         {/* Avatar preview clickeable */}
@@ -113,10 +123,10 @@ export function EditTeamImageDialog({ uuid, open, onClose }) {
       </DialogBody>
 
       <DialogFooter className="justify-center space-x-4">
-        <Button variant="text" onClick={onClose} className="rounded-lg px-6 py-2">
+        <Button className="button-cancel rounded-lg px-6 py-2 shadow-md">
           Cancelar
         </Button>
-        <Button variant="gradient" onClick={handleSave} className="rounded-lg px-6 py-2">
+        <Button className="button-save rounded-lg px-6 py-2 shadow-md" onClick={handleSave} >
           Guardar
         </Button>
       </DialogFooter>

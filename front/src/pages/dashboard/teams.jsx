@@ -29,6 +29,7 @@ import { getTeamImageById } from "@/services/getTeamImageById";
 import { GetEquipobyID } from "@/services/GetEquipoId";
 import { GetIdEquipo } from "@/services/GetEquipos";
 import { useLocation } from "react-router-dom";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export function Teams() {
   const navigate = useNavigate();
@@ -335,7 +336,7 @@ export function Teams() {
       >
         <DialogHeader className="flex items-center justify-center card-header">
           <Typography variant="h4">Crear un nuevo Equipo</Typography>
-          {/* <button
+          <button
             onClick={() => {
               handleOpen();
               setNewTeam({
@@ -349,10 +350,14 @@ export function Teams() {
                 logo: "",
               });
             }}
-            className="hover:text-gray-500 focus:outline-none"
+            className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            aria-label="Cerrar diálogo"
           >
-            ✕
-          </button> */}
+            <XMarkIcon
+              className="h-5 w-5 text-gray-700 dark:text-gray-400 hover:dark:text-white transition-colors duration-200"
+            />
+
+          </button>
         </DialogHeader>
         <DialogBody className="card-body">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -400,6 +405,7 @@ export function Teams() {
               <Input
                 label="Email del Líder"
                 name="leaderUsername"
+                type="email"
                 value={newTeam.leaderUsername}
                 onChange={handleChange}
                 error={errors.leaderUsername}
@@ -423,6 +429,7 @@ export function Teams() {
                 type="button"
                 className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />
@@ -448,6 +455,7 @@ export function Teams() {
                 type="button"
                 className="absolute right-2 top-3 text-gray-600 hover:text-gray-900 focus:outline-none"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={showConfirmPassword ? "Ocultar confirmar contraseña" : "Mostrar confirmar contraseña"}
               >
                 {showConfirmPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />
@@ -467,17 +475,15 @@ export function Teams() {
                 onChange={handleChange}
                 error={errors.description}
                 className="w-full"
-                onFocus={() => setIsFocused(true)} // Cuando el campo recibe foco
-                onBlur={() => setIsFocused(false)} // Cuando el campo pierde foco
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
               />
               {!isFocused && (
-                <div className="absolute top-2 right-3 text-xs">
+                <div className="absolute top-2 right-3 text-xs text-gray-400 select-none">
                   (Opcional)
                 </div>
               )}
             </div>
-
-
 
             {/* Campo Logo */}
             <div className="mb-1 col-span-2 flex flex-col items-center">
@@ -487,7 +493,15 @@ export function Teams() {
               <div
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                className="relative flex items-center justify-center border-2 border-dashed p-4 rounded-md w-72 h-40 mx-auto"
+                className="relative flex items-center justify-center border-2 border-dashed p-4 rounded-md w-72 h-40 mx-auto cursor-pointer"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    document.getElementById('logo-input').click();
+                  }
+                }}
+                aria-label="Área para subir logo del equipo"
+                role="button"
               >
                 {logoPreview ? (
                   <div className="relative w-32 h-32 mx-auto">
@@ -498,6 +512,7 @@ export function Teams() {
                         handleRemoveLogo();
                       }}
                       className="absolute -top-2 -right-0 text-gray-700 hover:text-black bg-gray p-1 text-lg font-bold transition-opacity opacity-70 hover:opacity-100 z-10"
+                      aria-label="Eliminar logo"
                     >
                       ✕
                     </button>
@@ -550,6 +565,7 @@ export function Teams() {
           </Button>
         </DialogFooter>
       </Dialog>
+
     </>
   );
 }

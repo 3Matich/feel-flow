@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
 import { updateLoggedUser } from "@/api/users";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export function EditProfileDialog({ data, onSave, onCancel, open }) {
   const [errors, setErrors] = useState();
@@ -61,12 +62,19 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
 
   return (
     <Dialog open={open} handler={onCancel} className="card">
-      <DialogHeader>
+      <DialogHeader className="flex items-center justify-between">
         <div>
           <Typography variant="h5" className="mb-1">
             {formData.name} {formData.surname}
           </Typography>
         </div>
+        <button
+          onClick={onCancel}
+          className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          aria-label="Cerrar diálogo"
+        >
+          <XMarkIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+        </button>
       </DialogHeader>
       <DialogBody>
         <div className="flex flex-col gap-4">
