@@ -179,7 +179,7 @@ export function ChartsSection() {
       {/* Tipos de Kudos por Miembro - Bubble Chart */}
       <Card className="card">
         <CardBody>
-          <Typography variant="h6" className="mb-4">Tipos de Kudos por Miembro</Typography>
+          <Typography variant="h6" className="mb-4">Cantidad de Kudos por Miembro</Typography>
           <Chart
             options={kudosOptions}
             series={kudosSeries}

@@ -14,7 +14,6 @@ export async function GeneralSummary() {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log(data);
             return data; 
         } else {
             return [];
