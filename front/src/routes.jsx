@@ -130,7 +130,7 @@ export const routes = [
     subpages: [],
   },
   {
-    title: "Personal pages",
+    title: "Paginas Personales",
     layout: "dashboard",
     pages: [
       {
