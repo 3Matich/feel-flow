@@ -131,7 +131,7 @@ export function Team() {
             <table className="w-full min-w-[640px] table-auto card">
               <thead>
                 <tr className="table-header">
-                  {["Usuario","Descripción","Empresa","Teléfono"].map(h => (
+                  {["Usuario","Descripción","Teléfono"].map(h => (
                     <th key={h} className="border table-header-cell py-3 px-5 text-left">
                       <Typography variant="small" className="font-bold card-header">
                         {h}
@@ -157,11 +157,6 @@ export function Team() {
                     <td className="py-3 px-5 table-body-cell">
                       <Typography className="text-sm">
                         {m.description}
-                      </Typography>
-                    </td>
-                    <td className="py-3 px-5 table-body-cell">
-                      <Typography className="text-sm">
-                        {m.enterpriseInfoHomeDTO?.name || "-"}
                       </Typography>
                     </td>
                     <td className="py-3 px-5 table-body-cell">
