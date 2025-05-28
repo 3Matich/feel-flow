@@ -171,16 +171,20 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
           <hr />
         </div>
       </DialogBody>
-      <DialogFooter>
-        <Button variant="text" className="button-cancel" onClick={onCancel}>
+      <DialogFooter className="justify-center space-x-4">
+        <Button
+          variant="text"
+          className="button-cancel rounded-lg px-6 py-2 shadow-md"
+          onClick={onCancel}
+        >
           Cancelar
         </Button>
         <Button
-          variant="gradient"
-          className="button-save"
+          variant="text"
+          className="button-save rounded-lg px-6 py-2 shadow-md"
           onClick={handleSubmit}
         >
-          Guardar Cambios
+          Guardar
         </Button>
       </DialogFooter>
     </Dialog>
