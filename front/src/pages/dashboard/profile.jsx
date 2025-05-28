@@ -1,5 +1,4 @@
 // src/widgets/profile/ProfileNew.jsx
-
 import React, { useState } from "react";
 import {
   Card,
@@ -25,8 +24,8 @@ import { useDragAndDrop } from "@/hooks";
 import { platformSettingsData } from "@/data";
 
 import { getUser } from "@/api/users/getUser";
-import { getUserImage } from "@/services/getUserImage"; // ← service GET
-import { uploadUserImage } from "@/services/uploadUserImage"; // ← service POST
+import { getUserImage } from "@/services/getUserImage"; // GET service
+import { uploadUserImage } from "@/services/uploadUserImage"; // POST service
 
 import { FeelFlowSpinner } from "@/components";
 
@@ -35,6 +34,7 @@ import { useLocation } from "react-router-dom";
 export function Profile() {
   const [profile, setProfile] = useState(null);
   const [userImageSrc, setUserImageSrc] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState("0000.png");
@@ -44,18 +44,15 @@ export function Profile() {
   // Estados para obtener la página y ejecutar los llamados al backend necesarios
   const { pathname } = useLocation();
   const segments = pathname.split("/").filter((el) => el !== "");
-  // console.log(segments);
   const page = segments[segments.length - 1];
-  // console.log(page);
   const [hasFetchedRef, setHasFetchedRef] = useState(false);
-
 
   // Obtener datos del usuario desde la API
   const fetchProfile = async () => {
     const { authUserID } = getUserData();
     try {
       const data = await getUser(authUserID);
-      if (data && typeof data === "object") {
+            if (data && typeof data === "object") {
         setProfile(prev => ({
           ...prev, ...data
         }));
@@ -65,7 +62,7 @@ export function Profile() {
     } catch (error) {
       console.error("Error al cargar el perfil:", error.message);
     }
-  }
+  };
 
   async function fetchAvatar() {
     try {
@@ -82,20 +79,22 @@ export function Profile() {
     setHasFetchedRef(false);
   };
 
-  if (page == "perfil" && !hasFetchedRef) {
-    setHasFetchedRef(true); // impide que ejecute 2 veces
-    fetchProfile(); // Carga los datos del perfil
-    fetchAvatar(); // Carga el avatar
+  if (page === "perfil" && !hasFetchedRef) {
+    setHasFetchedRef(true);
+    fetchProfile();
+    fetchAvatar();
   }
 
   const handleOpenAvatarDialog = () => setOpen(!open);
 
-  const handleSwitchChange = changeKey => {
-    setSettings(prev =>
-      prev.map(category => ({
+  const handleSwitchChange = (changeKey) => {
+    setSettings((prev) =>
+      prev.map((category) => ({
         ...category,
-        options: category.options.map(option =>
-          option.change === changeKey ? { ...option, checked: !option.checked } : option
+        options: category.options.map((option) =>
+          option.change === changeKey
+            ? { ...option, checked: !option.checked }
+            : option
         ),
       }))
     );
@@ -111,7 +110,7 @@ export function Profile() {
           <div className="mb-10 flex items-center justify-between flex-wrap gap-6">
             <div className="flex items-center gap-6">
               <Avatar
-                /* 1️⃣ Prioridad: userImageSrc (backend) → logoPreview → ícono elegido */
+                /* Prioridad: userImageSrc → logoPreview → ícono */
                 src={userImageSrc || logoPreview || `/img/avatar/${selectedAvatar}`}
                 alt="avatar"
                 size="xl"
@@ -122,13 +121,12 @@ export function Profile() {
               <Dialog
                 open={open}
                 handler={handleOpenAvatarDialog}
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0.9, y: -100 },
-                }}
+                animate={{ mount: { scale: 1, y: 0 }, unmount: { scale: 0.9, y: -100 } }}
                 className="card"
               >
-                <DialogHeader className="card-header">Seleccione un avatar de usuario</DialogHeader>
+                <DialogHeader className="card-header">
+                  Seleccione un avatar de usuario
+                </DialogHeader>
                 <hr className="my-8 border-blue-gray-500 dark:border-white" />
                 <DialogBody>
                   <div className="flex flex-wrap justify-center">
@@ -146,7 +144,7 @@ export function Profile() {
                         key={index}
                         onClick={() => {
                           setSelectedAvatar(avatar);
-                          setUserImageSrc(null); // ← limpiamos para que se vea el ícono
+                          setUserImageSrc(null);
                           handleOpenAvatarDialog();
                         }}
                         className="m-2 cursor-pointer"
@@ -161,9 +159,11 @@ export function Profile() {
                   </div>
                 </DialogBody>
                 <hr className="my-8 border-blue-gray-500 dark:border-white" />
-                <DialogHeader className="card-header">O bien, suba una foto</DialogHeader>
+                <DialogHeader className="card-header">
+                  O bien, suba una foto
+                </DialogHeader>
                 <DialogBody>
-                  <div className="flex flex-warp justify-center">
+                  <div className="flex flex-wrap justify-center">
                     <div
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
@@ -177,9 +177,10 @@ export function Profile() {
                             className="object-cover w-full h-full rounded-md"
                           />
                           <button
-                            onClick={e => {
+                            onClick={(e) => {
                               e.stopPropagation();
                               handleRemoveImage();
+                              setSelectedFile(null);
                             }}
                             className="absolute -top-2 -right-0 text-gray-700 hover:text-black bg-gray p-1 text-lg font-bold transition-opacity opacity-70 hover:opacity-100 z-10"
                           >
@@ -199,42 +200,45 @@ export function Profile() {
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={handleImageChange}
+                        onChange={(e) => {
+                          handleImageChange(e);
+                          setSelectedFile(e.target.files[0]);
+                        }}
                       />
                     </div>
                   </div>
                 </DialogBody>
-                <DialogFooter>
+                <DialogFooter className="justify-center space-x-4">
                   <Button
-                    variant="filled"
+                    variant="text"
+                    onClick={handleOpenAvatarDialog}
+                    className="button-cancel rounded-lg px-6 py-2 shadow-md"
+                  >
+                    <span>Cancel</span>
+                  </Button>
+                  <Button
+                    variant="text"
                     onClick={async () => {
-                      if (!logoPreview) {
+                      if (!selectedFile) {
                         alert("No se ha seleccionado una imagen");
                         return;
                       }
-                      if (!logoPreview.startsWith("data:image/")) {
-                        alert("El archivo seleccionado no es una imagen válida.");
-                        return;
-                      }
                       try {
-                        // extraemos solo la parte base64
-                        const base64 = logoPreview.split(",")[1];
-                        await uploadUserImage(base64);
-                        setUserImageSrc(logoPreview); // actualizamos vista con la nueva
-                        // const { name, surname, ... } = profile; // ejemplo si necesitas actualizar algo más
+                        await uploadUserImage(selectedFile);
+                        // Reconstruir preview si lo deseas
+                        setUserImageSrc(logoPreview);
                         alert("Imagen subida con éxito");
                         handleOpenAvatarDialog();
                       } catch (err) {
+                        console.error(err);
                         alert("Error al subir la imagen");
                       }
                     }}
-                    className="mr-1 button-save"
+                    className="button-save rounded-lg px-6 py-2 shadow-md"
                   >
                     <span>Guardar</span>
                   </Button>
-                  <Button variant="filled" onClick={handleOpenAvatarDialog} className="mr-1 button-cancel">
-                    <span>Cancel</span>
-                  </Button>
+                  
                 </DialogFooter>
               </Dialog>
               <div>
