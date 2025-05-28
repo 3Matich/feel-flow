@@ -63,7 +63,9 @@ export function EditTeamImageDialog({ uuid, open, onClose }) {
           className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           aria-label="Cerrar diálogo"
         >
-          <XMarkIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+          <XMarkIcon
+            className="h-5 w-5 text-gray-700 dark:text-gray-400 hover:dark:text-white transition-colors duration-200"
+          />
         </button>
       </DialogHeader>
 
