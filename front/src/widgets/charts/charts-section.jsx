@@ -123,7 +123,7 @@ export function ChartsSection() {
         x: index,
         y: item.cantBadges,
         z: item.cantBadges,
-        label: item.username,
+        label: item.name, // ####################### Se cambia username por name #######################
         fillColor: item.highlight ? "#4CAF50" : "#F5A623",
         borderColor: item.highlight ? "#000000" : "#FFFFFF",
         strokeWidth: item.highlight ? 3 : 1,

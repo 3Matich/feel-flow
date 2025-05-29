@@ -7,17 +7,17 @@ export const Recommendations = () => {
     const [filteredRecommendations, setFilteredRecommendations] = React.useState([]);
     const [filterText, setFilterText] = React.useState("");
 
-    const handleGenerateRecommendations = async () => {
-        const response = await CreateRecommendations();
-        if (response === 200) {
-            const data = await GetRecommendations();
-            console.log(data);
-            setRecommendations(data);
-            setFilteredRecommendations(data); // reinicia el filtro
-        } else {
-            setRecommendations([]);
-        }
-    };
+    // const handleGenerateRecommendations = async () => {
+    //     const response = await CreateRecommendations();
+    //     if (response === 200) {
+    //         const data = await GetRecommendations();
+    //         console.log(data);
+    //         setRecommendations(data);
+    //         setFilteredRecommendations(data); // reinicia el filtro
+    //     } else {
+    //         setRecommendations([]);
+    //     }
+    // };
 
     React.useEffect(() => {
         const filtered = recommendations.filter((rec) => {
@@ -52,12 +52,12 @@ export const Recommendations = () => {
             </div>
 
             <div className="flex items-center gap-4 mb-6">
-                <button
+                {/* <button
                     onClick={handleGenerateRecommendations}
                     className="button-custom px-4 py-2 rounded hover:bg-blue-700"
                 >
                     Obtener recomendaciones
-                </button>
+                </button> */}
 
                 <input
                     type="text"
