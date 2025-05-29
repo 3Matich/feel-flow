@@ -9,7 +9,9 @@ import {
     CompletionChart,
     ParticipationChart,
     StatusChart,
+    Recommendations
 } from "@/widgets"
+
 
 export function Dashboard() {
     const modules = [
@@ -26,12 +28,13 @@ export function Dashboard() {
             </div>
             <div className="grid grid-cols-3 gap-5 p-4">
                 <StatusChart />
-
+                {/* 
                 <ActivityFeed />
-
                 <CompletionChart />
-                <ParticipationChart />
+                <ParticipationChart /> 
+                */}
             </div>
+            <Recommendations />
         </>
     );
 };

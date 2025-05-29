@@ -19,7 +19,7 @@ export async function GeneralSummary() {
             return [];
         }
     } catch (error) {
-        console.error("Error en la solicitud GetKudosSummary:", error);
+        console.error(error);
         return [];
     }
 }

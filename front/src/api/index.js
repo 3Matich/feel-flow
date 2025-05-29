@@ -5,6 +5,7 @@ export * from "@/api/modules/GetNikoNikoSummary";
 export * from "@/api/modules/GetKudosSummary";
 export * from "@/api/modules/kudos-records";
 export * from "@/api/modules/niko-niko-records";
+export * from "@/api/modules/Recommendations";
 export * from "@/api/teams/getTeamId";
 export * from "@/api/teams/getTeams";
 export * from "@/api/teams/invite-member";
