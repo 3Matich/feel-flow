@@ -103,10 +103,13 @@ export function NikoNikoTable({ nikoDataByMember, selectedMonth }) {
       <table className="w-full text-sm table-auto border-separate border-spacing-0">
         <thead>
           <tr className="table-header">
-            <th className="px-2 py-3 table-header-cell text-center w-32">Miembro</th>
-            <th className="px-2 py-3 table-header-cell text-center w-20">Jornada</th>
+            <th className="px-2 py-3 table-header-cell text-center w-24 whitespace-nowrap">Miembro</th>
+            <th className="px-2 py-3 table-header-cell text-center w-16 whitespace-nowrap">Jornada</th>
             {WEEKDAYS_LABELS.map((label, idx) => (
-              <th key={idx} className="px-2 py-2 text-center table-header-cell w-20">
+              <th
+                key={idx}
+                className="px-2 py-2 text-center table-header-cell w-auto"
+              >
                 {label}
                 <br />
                 {currentWeek[idx]?.number ?? ""}
@@ -117,10 +120,10 @@ export function NikoNikoTable({ nikoDataByMember, selectedMonth }) {
         <tbody>
           {members.map((member) => (
             <tr key={member} className="border-b table-body">
-              <td className="px-2 py-2 table-body-cell text-center align-middle">
+              <td className="px-2 py-2 table-body-cell text-center align-middle w-24 whitespace-nowrap">
                 {member.split(" ")[0].toUpperCase()}
               </td>
-              <td className="px-2 py-2 text-xs table-body-cell text-center align-middle">
+              <td className="px-2 py-2 text-xs table-body-cell text-center align-middle w-16 whitespace-nowrap">
                 <div className="flex flex-col items-center gap-1 leading-tight">
                   <span className="text-[10px]">Comienzo</span>
                   <span className="text-[10px]">Fin</span>
@@ -129,7 +132,7 @@ export function NikoNikoTable({ nikoDataByMember, selectedMonth }) {
               {currentWeek.map((day, idx) => {
                 const dayData = getDayData(member, day?.number);
                 return (
-                  <td key={idx} className="px-2 py-1 text-center align-middle">
+                  <td key={idx} className="px-2 py-1 text-center align-middle w-auto">
                     {dayData ? (
                       <div className="flex flex-col items-center gap-1">
                         {getFaceWithColor(dayData.start)}
@@ -164,6 +167,7 @@ export function NikoNikoTable({ nikoDataByMember, selectedMonth }) {
         </button>
       </div>
     </div>
+
   );
 }
 
