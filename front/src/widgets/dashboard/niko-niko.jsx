@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NikoNiko } from "../modules"
 import { NikoNikoTable, FeelFlowSpinner, TeamSelector } from "@/components";
 import { GetNikoNikoSummary } from "@/api";
@@ -9,18 +9,37 @@ export const SummaryNikoNiko = ({ isActive, Teams }) => {
     const [nikoDataByMember, setNikoDataByMember] = useState({});
     const [fetchData, setFetchData] = useState(false);
 
-    // Selector
-    const [selectedTeam, setSelectedTeam] = useState();       // objeto { label, value } o null
-    const [selectedMonth, setSelectedMonth] = useState(null);     // número 1–12 o null
-    const months = [
+
+    const [selectedTeam, setSelectedTeam] = useState(null); 
+    const [selectedMonth, setSelectedMonth] = useState(null);
+
+    // Obtener mes actual para limitar meses disponibles
+    const currentMonth = new Date().getMonth() + 1;
+
+    // Meses hasta el mes actual
+    const allMonths = [
         "Enero", "Febrero", "Marzo", "Abril",
         "Mayo", "Junio", "Julio", "Agosto",
         "Septiembre", "Octubre", "Noviembre", "Diciembre",
     ];
 
+    // Limitar meses disponibles al mes actual
+    const months = allMonths.slice(0, currentMonth);
+
     const fetchNiko = async () => {
+        if (!selectedTeam || !selectedMonth) {
+            setLoading(false);
+            return;
+        }
         setLoading(true);
         try {
+            if (
+                typeof selectedMonth !== "number" ||
+                selectedMonth < 1 ||
+                selectedMonth > currentMonth
+            ) {
+                throw new Error("Mes seleccionado inválido");
+            }
             const data = await GetNikoNikoSummary(
                 selectedTeam.value,
                 selectedMonth
@@ -39,29 +58,40 @@ export const SummaryNikoNiko = ({ isActive, Teams }) => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
-    if (isActive == "nikoNiko" && !fetchData && selectedTeam != null) {
-        setFetchData(true);
-        fetchNiko();
-    } 
+    useEffect(() => {
+        if (isActive === "nikoNiko" && selectedTeam && selectedMonth) {
+            fetchNiko();
+        }
+    }, [isActive, selectedTeam, selectedMonth]);
 
     const ChangeTeam = (e) => {
-        console.log(e)
         setSelectedTeam(e);
-        setLoading(true);
-        fetchNiko();
-    } 
+        setError(null);
+        setSelectedMonth(null);
+    };
 
     const ChangeMonth = (e) => {
-        setSelectedMonth(e);
-        setLoading(true);
-        fetchNiko();
-    }
+        let monthNumber = null;
+        if (typeof e === "number") {
+            monthNumber = e;
+        } else if (typeof e === "string") {
+            const parsed = parseInt(e);
+            if (!isNaN(parsed)) {
+                monthNumber = parsed;
+            }
+        }
+        if (monthNumber && monthNumber >= 1 && monthNumber <= currentMonth) {
+            setSelectedMonth(monthNumber);
+            setError(null);
+        } else {
+            setError("Mes seleccionado inválido");
+        }
+    };
 
     return (
         <div className="rounded-lg shadow-lg card">
-            {/* Selector global de equipo + mes */}
             <div className="mb-8 flex justify-center">
                 <TeamSelector
                     teams={Teams}
@@ -73,12 +103,14 @@ export const SummaryNikoNiko = ({ isActive, Teams }) => {
                 />
             </div>
 
-            {loading && selectedTeam == null && <p className="text-center">Seleccione un equipo</p>}
-            {loading && selectedTeam != null && <FeelFlowSpinner />}
-            {error && <p className="text-center">{error}</p>}
-            {!loading && <NikoNikoTable nikoDataByMember={nikoDataByMember} />}
+            {loading && !selectedTeam && <p className="text-center">Seleccione un equipo</p>}
+            {loading && selectedTeam && <FeelFlowSpinner />}
+            {error && <p className="text-center text-red-600">{error}</p>}
+            {!loading && !error && selectedTeam && selectedMonth && (
+                <NikoNikoTable nikoDataByMember={nikoDataByMember} selectedMonth={selectedMonth} />
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default NikoNiko;
+export default SummaryNikoNiko;
