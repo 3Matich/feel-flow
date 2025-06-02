@@ -22,7 +22,7 @@ export function StatusChart(view) {
       ]);
 
       // console.log("🚀 Datos de TWELVE_STEPS:", ts);
-      // console.log("🚀 Datos de NIKO_NIKO:", nn);
+      // console.log("🚀 Datos de NIKO_NIKO:", nn[nn.length - 1]);
       // console.log("🚀 Datos de KUDOS:", kd);
 
       const buildModule = (name, data) => {
@@ -30,7 +30,7 @@ export function StatusChart(view) {
           console.warn(`⚠️ No se encontró información para el módulo: ${name}`);
           return {
             name,
-            status: "Sin datos",
+            status: "Inactivo",
             color: "bg-gray-400",
           };
         }
@@ -49,7 +49,7 @@ export function StatusChart(view) {
 
       setModules([
         buildModule("12 Pasos", ts),
-        buildModule("Niko Niko", nn),
+        buildModule("Niko Niko", [...nn].reverse()),
         buildModule("Kudos", kd),
       ]);
       setLoading(false);
