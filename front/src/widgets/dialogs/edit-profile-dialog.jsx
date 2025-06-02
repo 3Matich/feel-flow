@@ -1,4 +1,3 @@
-// src/widgets/dialogs/EditProfileDialog.jsx
 import React, { useState } from "react";
 import {
   Button,
@@ -11,7 +10,8 @@ import {
   Textarea,
 } from "@material-tailwind/react";
 import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
-import { updateLoggedUser } from "@/api/users";
+import { updateLoggedUser } from "@/api";
+
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export function EditProfileDialog({ data, onSave, onCancel, open }) {

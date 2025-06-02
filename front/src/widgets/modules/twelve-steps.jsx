@@ -8,8 +8,10 @@ import {
   Option,
 } from "@material-tailwind/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
-import { createTwelveStepsModule } from "@/services/modulos/createTwelveStepsModule";
+import { 
+  GetTeam,
+  createTwelveStepsModule,
+} from "@/api";
 
 export function TwelveSteps() {
   const [teams, setTeams] = useState([]);
@@ -60,7 +62,7 @@ export function TwelveSteps() {
   // Obtener equipos al montar
   useEffect(() => {
     const fetchTeams = async () => {
-      const data = await getAvailableTeams();
+      const data = await GetTeam();
       setTeams(data);
     };
     fetchTeams();

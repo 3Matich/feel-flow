@@ -1,4 +1,4 @@
-import { saveAuthData } from "@/services/session";
+import { saveAuthData } from "../services/session";
 import { host } from "@/configs";
 
 export async function validateLogin(user, pw) {

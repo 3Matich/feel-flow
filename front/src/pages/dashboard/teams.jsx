@@ -23,11 +23,12 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
-import { createTeam } from "@/services/equipos/createTeam";
-import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
-import { getTeamImageById } from "@/services/getTeamImageById";
-import { GetEquipobyID } from "@/services/GetEquipoId";
-import { GetIdEquipo } from "@/services/GetEquipos";
+
+import { 
+  getTeamImageById,
+  createTeam,
+  GetTeam,
+} from "@/api";
 import { useLocation } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -62,7 +63,7 @@ export function Teams() {
   const fetchTeams = async () => {
     try {
       // 1) Lista de equipos del backend
-      const backendTeams = await getAvailableTeams();
+      const backendTeams = await GetTeam();
 
       // 2) Para cada equipo, intento traer su logo
       const teamsWithLogos = await Promise.all(

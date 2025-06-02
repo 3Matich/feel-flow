@@ -1,6 +1,6 @@
 // hooks/useStompNotifications.js
 import { useEffect, useState } from 'react';
-import { StompService } from '@/services/StompService';
+import { StompService } from '@/api/services/StompService';
 
 export function useStompNotifications(teamUUID) {
   const [notifications, setNotifications] = useState([]);

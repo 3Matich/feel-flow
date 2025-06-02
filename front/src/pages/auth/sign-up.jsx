@@ -12,10 +12,11 @@ import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // Importar los íconos
-import { bool } from "prop-types";
-import { invariant } from "framer-motion";
-import { JoinToTeam } from "@/api/users/join-to-team";
-import { SignUpAdmin } from "@/api/auth/sing-up";
+
+import { 
+  JoinToTeam,
+  SignUpAdmin, 
+} from "@/api";
 import { DialogSuccess, DialogErrorInvite } from "@/components/Forms";
 
 export function SignUp() {

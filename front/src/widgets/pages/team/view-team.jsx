@@ -8,9 +8,10 @@ import {
 } from "@material-tailwind/react";
 import { Pencil } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { getTeamImage } from "@/api";
-import { getTeamImageById } from "@/api";
-
+import { 
+    getTeamImage, 
+    getTeamImageById
+} from "@/api";
 
 export function ViewTeam({ teamName, teamDescription, handleEdit }) {
     const [teamImage, setTeamImage] =  React.useState();

@@ -1,6 +1,7 @@
-// services/GetNotifications.js
+import { host } from "@/configs";
+
 export async function GetNotifications(token, { from, to, max } = {}) {
-    let endpoint = `http://localhost:8080/api/v1/notifications/notifications`;
+    let endpoint = `${host}/api/v1/notifications/notifications`;
     
     const params = new URLSearchParams();
     if (from) params.append("from", from);

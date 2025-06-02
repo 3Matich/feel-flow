@@ -8,14 +8,17 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { UserPlusIcon, PencilIcon } from "@heroicons/react/24/solid";
-import { GetTeam, GetEquipobyID } from "@/api";
+import { 
+  GetTeam, 
+  GetEquipobyID, 
+  getTeamImageById 
+} from "@/api";
 import { FeelFlowSpinner } from "@/components";
 import { ViewTeam, InviteMember } from "@/widgets";
 import { NotFoundPage } from ".";
 import { useLocation } from "react-router-dom";
 import EditTeamDialog from "@/widgets/dialogs/EditTeamDialog";
 import EditTeamImageDialog from "@/widgets/dialogs/EditTeamImageDialog";
-import { getTeamImageById } from "@/api/images/getTeamImageById";
 
 export function Team() {
   const [teamData, setTeamData] = useState(null);

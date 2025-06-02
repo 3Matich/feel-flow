@@ -25,15 +25,17 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 
-import { getUserData } from "@/services/session";
 import { ProfileInfoCard } from "@/widgets/cards";
 import { EditProfileDialog } from "@/widgets/dialogs";
 import { useDragAndDrop } from "@/hooks";
 import { platformSettingsData } from "@/data";
 
-import { getUser } from "@/api/users/getUser";
-import { getUserImage } from "@/services/getUserImage"; // ← service GET
-import { uploadUserImage } from "@/services/uploadUserImage"; // ← service POST
+import { 
+  getUser,
+  uploadUserImage, // ← service POST,
+  getUserImage,
+} from "@/api";
+
 
 import { FeelFlowSpinner } from "@/components";
 

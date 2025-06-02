@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
-import { clearAuthData } from "./services/session";
+import { clearAuthData } from "./api";
 
 import "../src/app.css";
 import "../src/customApp.css";

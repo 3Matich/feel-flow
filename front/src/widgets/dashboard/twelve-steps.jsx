@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import HappinessChart from "@/components/HappinessChart"
 import { FeelFlowSpinner } from "@/components";
 
-import { GetModulesAndUsers } from "@/api";
-import { GetTwelveStepsSummary } from "@/services/GetTwelveStepsSummary";
+import { GetModulesAndUsers, GetTwelveStepsSummary } from "@/api";
 
 export const TwelveStepsSummary = ({ isActive }) => {
     const [loading, setLoading] = useState(true);

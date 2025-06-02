@@ -23,7 +23,7 @@ import {
   useMaterialTailwindController,
   setOpenConfigurator,
 } from "@/context";
-import { GetNotifications } from "@/services/GetNotifications";
+import { GetNotifications } from "@/api/dashboard/GetNotifications";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 

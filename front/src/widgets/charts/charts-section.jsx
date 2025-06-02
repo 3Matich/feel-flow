@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Typography, Card, CardBody } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 
-import { getAuthData } from "@/api";
-import { getTwelveStepsSummary } from "../../services/Dashboard/TwelveStepsSummary";
-import { getKudosDashboardData } from "../../services/Dashboard/KudosDashboard";
-import { getNikoNikoTendencias } from "../../services/Dashboard/NikoNikoDashboard";
+import { 
+  getAuthData,
+  getTwelveStepsSummary,
+  getKudosDashboardData,
+  getNikoNikoTendencias,
+} from "@/api";
 
 export function ChartsSection() {
   const [felicidadSeries, setFelicidadSeries] = useState([]);

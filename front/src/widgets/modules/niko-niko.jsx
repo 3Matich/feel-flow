@@ -13,8 +13,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useMaterialTailwindController } from "@/context";
-import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
-import { createNikoNikoModule } from "@/services/modulos/createNikoNikoModule";
+import { 
+  GetTeam,
+  createNikoNikoModule 
+} from "@/api";
 
 import dayjs from "dayjs";
 
@@ -32,7 +34,7 @@ export function NikoNiko() {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const data = await getAvailableTeams();
+        const data = await GetTeam();
         setTeams(data);
         // No seleccionar automáticamente un equipo
       } catch (err) {

@@ -9,7 +9,7 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import { useDragAndDrop } from "@/hooks";
-import { uploadTeamImage } from "@/api/images/uploadTeamImage";
+import { uploadTeamImage } from "@/api";
 import { XMarkIcon } from "@heroicons/react/24/solid"; // Asegúrate de importar el ícono
 
 export function EditTeamImageDialog({ uuid, open, onClose }) {

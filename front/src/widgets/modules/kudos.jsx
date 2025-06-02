@@ -8,8 +8,11 @@ import {
   Option,
 } from "@material-tailwind/react";
 
-import { getAvailableTeams } from "@/services/modulos/getAvailableTeams";
-import { createKudosModule } from "@/services/modulos/createKudosModule";
+import { 
+  GetTeam,
+  createKudosModule,
+} from "@/api";
+
 import { useMaterialTailwindController } from "@/context";
 
 export function Kudos() {
@@ -22,7 +25,7 @@ export function Kudos() {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const availableTeams = await getAvailableTeams();
+        const availableTeams = await GetTeam();
         setTeams(availableTeams);
       } catch (err) {
         console.error("❌ Error al obtener equipos:", err);

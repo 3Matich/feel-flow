@@ -1,25 +1,10 @@
 import {
-    Card,
-    CardBody,
-    Tooltip,
-} from "@material-tailwind/react";
-
-import {
-    ActivityFeed,
-    CompletionChart,
-    ParticipationChart,
     StatusChart,
     Recommendations
 } from "@/widgets"
 
 
 export function Dashboard() {
-    const modules = [
-        { name: "12 Pasos de la Felicidad", status: "Activo", color: "bg-green-500" },
-        { name: "Niko Niko", status: "No Iniciado", color: "bg-gray-500" },
-        { name: "Kudos", status: "Finalizado", color: "bg-blue-500" },
-    ];
-
     return (
         <>
             <div className="text-center">

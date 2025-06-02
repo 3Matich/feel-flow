@@ -17,14 +17,16 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 
-import { getUserData } from "@/services/session";
+import { getUserData } from "@/api";
 import { ProfileInfoCard } from "@/widgets/cards";
 import { EditProfileDialog } from "@/widgets/dialogs";
 import { useDragAndDrop } from "@/hooks";
 import { platformSettingsData } from "@/data";
-import { getUser } from "@/api/users/getUser";
-import { getUserImage } from "@/services/getUserImage"; // GET service
-import { uploadUserImage } from "@/services/uploadUserImage"; // POST service
+import { 
+  getUser,
+  uploadUserImage,
+  getUserImage,
+} from "@/api";
 import { FeelFlowSpinner } from "@/components";
 import { useLocation } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";

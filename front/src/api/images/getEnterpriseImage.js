@@ -1,10 +1,10 @@
-import { getAuthData } from "@/services/session";
 import { host } from "@/configs";
+import { getAuthData } from "@/api";
 
-export async function getTeamImageById(teamId) {
+export async function getEnterpriseImage() {
   const { token } = getAuthData();
   const res = await fetch(
-    `${host}/api/v1/images/team/${teamId}`,
+    `${host}/api/v1/images/enterprise/current_enterprise`,
     {
       method: "GET",
       headers: {
@@ -13,11 +13,14 @@ export async function getTeamImageById(teamId) {
       },
     }
   );
+
   if (res.status === 403) {
     throw new Error("Forbidden: revisa permisos o token vencido");
   }
   if (!res.ok) {
-    throw new Error("No se pudo cargar la imagen del equipo");
+    throw new Error("No se pudo cargar la imagen de la enterprise");
   }
-  return res.json(); // { fileType, fileData }
+
+  // { id, name, fileType, fileData }
+  return res.json();
 }

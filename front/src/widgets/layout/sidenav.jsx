@@ -11,9 +11,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
-import { getEnterpriseImage } from "@/services/getEnterpriseImage";
-import { getUser } from "@/api/users/getUser";
-import { getAuthData } from "@/services/session";
+import { getUser, getAuthData, getEnterpriseImage } from "@/api";
 
 function decodeJwt(token) {
   try {

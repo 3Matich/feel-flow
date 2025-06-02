@@ -5,7 +5,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 
-import { getModuleStatus } from "@/services/modulos/getModuleStatus";
+import { getModuleStatus } from "@/api";
 import { FeelFlowSpinner } from "@/components";
 
 export function StatusChart(view) {

@@ -1,4 +1,4 @@
-import { getUser } from "../users/getUser";
+import { getUser } from "@/api";
 
 const saveUserData = (token) => {
     const payload = token.split('.')[1];

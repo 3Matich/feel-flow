@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import KudosChart from "@/components/KudosChart";
 import { FeelFlowSpinner } from "@/components";
 
-import { GetModulesAndUsers } from "@/api";
-import { GetKudosSummary } from "@/api/modules/GetKudosSummary";
+import { 
+    GetModulesAndUsers,
+    GetKudosSummary,
+} from "@/api";
 
 export const KudosSummary = ({ isActive, Teams }) => {
     const [loading, setLoading] = useState(true);
