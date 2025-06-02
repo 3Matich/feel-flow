@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <clipPath id="clip0_0_1">
+   <rect fill="none" height="237" id="svg_1" transform="translate(282 222)" width="237"/>
+  </clipPath>
+  <symbol height="800" id="svg_28" width="800" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+   <defs>
+    <clipPath id="svg_26">
+     <rect fill="none" height="237" id="svg_27" transform="translate(282 222)" width="237"/>
+    </clipPath>
+    <symbol height="800" id="svg_17" viewBox="0 0 800 800" width="800" xmlns="http://www.w3.org/2000/svg">
+     <rect fill="none" height="800" id="svg_25" width="800"/>
+     <path d="m399.88,557.77c120.34,0 217.89,-97.55 217.89,-217.89c0,-120.33 -97.55,-217.88 -217.89,-217.88c-120.33,0 -217.88,97.55 -217.88,217.88c0,120.34 97.55,217.89 217.88,217.89z" fill="#FFB54E" id="svg_24" stroke="black" stroke-width="1.56"/>
+     <path d="m400.37,533.12c102.54,0 185.67,-83.13 185.67,-185.68c0,-102.55 -83.13,-185.68 -185.67,-185.68c-102.55,0 -185.68,83.13 -185.68,185.68c0,102.55 83.13,185.68 185.68,185.68z" fill="#FF9A1B" id="svg_23" stroke="black" stroke-width="1.56"/>
+     <path d="m400,509.37c89.43,0 161.93,-72.5 161.93,-161.93c0,-89.43 -72.5,-161.93 -161.93,-161.93c-89.43,0 -161.93,72.5 -161.93,161.93c0,89.43 72.5,161.93 161.93,161.93z" fill="#FFCE8B" id="svg_22" stroke="black" stroke-width="1.56"/>
+     <g clip-path="url(#svg_18)" id="svg_20">
+      <path d="m502,318.63l-20,0l0,-9.88l20,0l0,9.88zm-210,0l20,0l0,-9.88l-20,0l0,9.88zm176.46,-48.79l14.15,-13.96l-7.07,-6.98l-14.15,13.97l7.07,6.97zm-157.06,-13.95l14.15,13.97l7.07,-6.98l-14.15,-13.97l-7.07,6.98zm90.6,-6.39l0,-19.75l-10,0l0,19.75l10,0zm0,148.13l0,19.75l90,0l0,9.87l-190,0l0,-9.87l90,0l0,-19.75l-81.56,0c-2.24,-0.01 -4.38,-0.89 -5.96,-2.45c-1.59,-1.56 -2.48,-3.68 -2.48,-5.89c0.03,-21.35 8.63,-41.82 23.92,-56.92c15.29,-15.1 36.02,-23.59 57.64,-23.62l8.44,0l0,-9.87l-20,0l0,-9.88l50,0l0,9.88l-20,0l0,9.87l8.44,0c21.62,0.03 42.35,8.52 57.64,23.62c15.29,15.1 23.89,35.57 23.92,56.92c0,2.21 -0.89,4.33 -2.48,5.89c-1.58,1.56 -3.72,2.44 -5.96,2.45l-81.56,0zm79.98,-9.88c-0.43,-18.46 -8.15,-36.03 -21.52,-48.95c-13.37,-12.91 -31.32,-20.15 -50.02,-20.17l-26.88,0c-18.7,0.02 -36.65,7.26 -50.02,20.17c-13.37,12.92 -21.09,30.49 -21.52,48.95l169.96,0z" fill="black" id="svg_21"/>
+     </g>
+     <defs>
+      <clipPath id="svg_18">
+       <rect fill="white" height="237" id="svg_19" transform="translate(272 210)" width="240"/>
+      </clipPath>
+     </defs>
+    </symbol>
+   </defs>
+   <g class="layer">
+    <title>Layer 1</title>
+    <use id="svg_14" transform="matrix(0.333333 0 0 0.333333 0 0)" x="0" xlink:href="#svg_17" y="0"/>
+   </g>
+  </symbol>
+ </defs>
+ <g class="layer">
+  <title>Layer 1</title>
+  <use id="svg_29" transform="matrix(2.98024 0 0 2.97694 3.07903 3.0191)" x="0" xlink:href="#svg_28" y="0"/>
+ </g>
+</svg>
