@@ -48,7 +48,14 @@ export function StatusChart(view) {
       };
 
       setModules([
-        buildModule("12 Pasos", [...ts].reverse()),
+        buildModule(
+          "12 Pasos",
+          [...ts].sort((a, b) => {
+            const aState = a.moduleDto?.moduleState === "ACTIVE" ? 1 : 0;
+            const bState = b.moduleDto?.moduleState === "ACTIVE" ? 1 : 0;
+            return bState - aState;
+          })
+        ),
         buildModule("Niko Niko", [...nn].reverse()),
         buildModule("Kudos", kd),
       ]);
