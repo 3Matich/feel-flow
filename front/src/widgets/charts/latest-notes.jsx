@@ -48,7 +48,7 @@ export const LatestNotes = () => {
                     </div>
                 ) : (
 
-                    notifications.map(({ regularUser, message, img }, key) => {
+                    notifications.map(({ regularUser, message, imagesDto }, key) => {
                         const imgSrc = imagesDto?.fileData
                             ? `data:${imagesDto.fileType};base64,${imagesDto.fileData}`
                             : "/public/avatar/0000.png"; // O una imagen por defecto si no hay
