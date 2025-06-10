@@ -487,6 +487,7 @@ export function Teams() {
             </div>
 
             {/* Campo Logo */}
+            {/* 
             <div className="mb-1 col-span-2 flex flex-col items-center">
               <Typography variant="large" className="mb-2">
                 Logo del Equipo
@@ -535,6 +536,7 @@ export function Teams() {
                 />
               </div>
             </div>
+            */}
           </div>
         </DialogBody>
         <DialogFooter className="flex justify-center gap-2">

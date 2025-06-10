@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
-import { getUser, getAuthData, getEnterpriseImage } from "@/api";
+import { getUser, getUserData, getAuthData, getEnterpriseImage } from "@/api";
 
 function decodeJwt(token) {
   try {
@@ -25,7 +25,7 @@ function decodeJwt(token) {
 export function Sidenav({ brandImg, brandName, routes, onLogout }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType, openSidenav } = controller;
-
+  const { authority } = getUserData();
   const [enterpriseLogo, setEnterpriseLogo] = useState(brandImg);
   const [enterpriseName, setEnterpriseName] = useState(brandName);
 
@@ -113,37 +113,37 @@ export function Sidenav({ brandImg, brandName, routes, onLogout }) {
                   </Typography>
                 </li>
               )}
-              {pages.map(({ icon, name, path }) => (
-                <li key={name}>
-                  <NavLink to={`/${layout}${path}`}>
-                    {({ isActive }) => (
-                      <Button
-                        variant={isActive ? "gradient" : "text"}
-                        color={
-                          isActive
-                            ? "pink"
-                            : sidenavType === "dark"
-                            ? "white"
-                            : "blue-gray"
-                        }
-                        className={`flex items-center gap-4 px-4 capitalize ${
-                          isActive ? "sidenav-text" : ""
-                        } text-light-text dark:text-dark-text`}
-                        fullWidth
-                      >
-                        {icon}
-                        <Typography
-                          className={`font-medium capitalize text-sm ${
-                            isActive ? "sidenav-text" : ""
-                          }`}
+              {pages
+                .filter(({ pageAuthority }) => pageAuthority.includes(authority))
+                .map(({ icon, name, path }) => (
+                  <li key={name}>
+                    <NavLink to={`/${layout}${path}`}>
+                      {({ isActive }) => (
+                        <Button
+                          variant={isActive ? "gradient" : "text"}
+                          color={
+                            isActive
+                              ? "pink"
+                              : sidenavType === "dark"
+                                ? "white"
+                                : "blue-gray"
+                          }
+                          className={`flex items-center gap-4 px-4 capitalize ${isActive ? "sidenav-text" : ""
+                            } text-light-text dark:text-dark-text`}
+                          fullWidth
                         >
-                          {name}
-                        </Typography>
-                      </Button>
-                    )}
-                  </NavLink>
-                </li>
-              ))}
+                          {icon}
+                          <Typography
+                            className={`font-medium capitalize text-sm ${isActive ? "sidenav-text" : ""
+                              }`}
+                          >
+                            {name}
+                          </Typography>
+                        </Button>
+                      )}
+                    </NavLink>
+                  </li>
+                ))}
             </ul>
           ))}
       </div>

@@ -115,8 +115,9 @@ export function ChartsSection() {
       const data = await getTwelveStepsSummary(token);
       const categories = data.map(item => item.categoryName);
       const values = data.map(item => item.average);
-      setFelicidadOptions(prev => ({ ...prev, xaxis: { categories } }));
-      setFelicidadSeries([{ name: "Felicidad", data: values }]);
+      setFelicidadOptions(prev => ({
+        ...prev, xaxis: { categories }, yaxis: { show: false, stepSize: 20, forceNiceScale: true, min: 10, max: 100 } }));
+      setFelicidadSeries([{  name: "Felicidad", data: values }]);
     }
 
     async function fetchKudos() {
