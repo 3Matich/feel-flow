@@ -109,7 +109,7 @@ export function DashboardNavbar() {
               {/* MenuList responsive y scrollable */}
               <MenuList
                 className={`
-                  border-0 bg-light-secondary dark:bg-dark-secondary
+                  border-0 bg-light-primary dark:bg-dark-primary
                   w-full max-w-xs sm:max-w-sm md:max-w-md
                   overflow-y-auto max-h-80
                 `}
@@ -118,7 +118,7 @@ export function DashboardNavbar() {
                   notifications.map((notif, index) => (
                     <MenuItem
                       key={notif.id || index}
-                      className="flex items-start gap-3 hover:!bg-pink-800 cursor-pointer"
+                      className="flex items-start gap-3 hover:!bg-pink-100 dark:hover:!bg-pink-800 cursor-pointer"
                       onClick={() => handleMarkAsRead(index)}
                     >
                       <div className="flex-1">
