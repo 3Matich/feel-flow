@@ -94,7 +94,9 @@ export async function GetNotificationsKudos() {
     }
 }
 
-export async function getKudosDashboardData(token) {
+export async function getKudosDashboardData(tkn) {
+    const { token } = getAuthData();
+
     try {
         const response = await fetch(`${host}/api/v1/dashboard/kudos_dashboard`, {
             method: "GET",

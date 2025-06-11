@@ -112,12 +112,29 @@ export function ChartsSection() {
     const { token } = getAuthData();
 
     async function fetchFelicidad() {
-      const data = await getTwelveStepsSummary(token);
-      const categories = data.map(item => item.categoryName);
-      const values = data.map(item => item.average);
+      const data = await getTwelveStepsSummary();
+      // Parche: transformar average -> |average - 100|
+      const transformedData = data.map(item => ({
+        ...item,
+        average: Math.abs(item.average - 100),
+      }));
+
+      const categories = transformedData.map(item => item.categoryName);
+      const values = transformedData.map(item => item.average);
+
       setFelicidadOptions(prev => ({
-        ...prev, xaxis: { categories }, yaxis: { show: false, stepSize: 20, forceNiceScale: true, min: 10, max: 100 } }));
-      setFelicidadSeries([{  name: "Felicidad", data: values }]);
+        ...prev,
+        xaxis: { categories },
+        yaxis: {
+          show: false,
+          stepSize: 20,
+          forceNiceScale: true,
+          min: 10,
+          max: 100,
+        }
+      }));
+
+      setFelicidadSeries([{ name: "Felicidad", data: values }]);
     }
 
     async function fetchKudos() {

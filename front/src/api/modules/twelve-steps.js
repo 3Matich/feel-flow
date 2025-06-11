@@ -41,7 +41,7 @@ export async function createTwelveStepsModule({ idTeam, dateAndTimeToPublish, da
     }
 };
 
-export async function getTwelveStepsSummary(tkn) {
+export async function getTwelveStepsSummary() {
     const { token } = getAuthData();
     try {
         const response = await fetch(`${host}/api/v1/dashboard/twelve_steps_avg`, {
