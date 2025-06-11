@@ -159,9 +159,10 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
                 onChange={(value) =>
                   setFormData((prev) => ({ ...prev, phoneNumber: value }))
                 }
-                // error={errors?.phoneNumber}
+                // error={"Ingrese el prefijo con el + incluido"}
               />
             </div>
+            {!countryPhonePrefixes[formData.country] && <p className="text-sm col-span-5 text-yellow-900 text center">Ingrese el prefijo con el + incluido, o seleccione otro Pais</p>}
           </div>
           <hr />
           {/* Correo Electrónico (deshabilitado) */}

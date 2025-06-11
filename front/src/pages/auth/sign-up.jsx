@@ -396,6 +396,7 @@ export function SignUp() {
               }
             />
           </div>
+          {!countryPhonePrefixes[formData.country] && <p className="text-sm text-yellow-900 text center">Ingrese el prefijo con el + incluido, o seleccione otro Pais</p>}
 
           {/* Empresa (si no es invitación) */}
           {!hasInviteToken && (
