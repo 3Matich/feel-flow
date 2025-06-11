@@ -16,6 +16,17 @@ import { JoinToTeam, SignUpAdmin } from "@/api";
 import { DialogSuccess, DialogErrorInvite } from "@/components/Forms";
 import { CountriesSelect, InputPhoneFloatingLabel } from "@/components/Forms";
 
+const countryPhonePrefixes = {
+  "Argentina": "+54",
+  "United States": "+1",
+  "Brazil": "+55",
+  "Chile": "+56",
+  "Colombia": "+57",
+  "Mexico": "+52",
+  "Spain": "+34",
+  // Agregá más según tus necesidades
+};
+
 export function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -139,7 +150,11 @@ export function SignUp() {
       setOpenSnackbar(true);
       return;
     }
-
+    
+    const country = formData.country; // ejemplo: "Argentina"
+    const phone = formData.phoneNumber;
+    const prefix = countryPhonePrefixes[country] || "";
+    const fullPhoneNumber = `${prefix}${phone}`; // ejemplo: +541112345678
 
     if (hasInviteToken) {
       // Unirse por invitación
@@ -151,7 +166,7 @@ export function SignUp() {
           password: formData.password,
           country: formData.country,
           description: formData.description,
-          phoneNumber: formData.phoneNumber || "+5490000000000",
+          phoneNumber: fullPhoneNumber,
         };
         const code = await JoinToTeam(inviteToken, memberData);
         if (code === 200) {
@@ -168,6 +183,7 @@ export function SignUp() {
     } else {
       // Registro de admin
       try {
+        
         const adminData = {
           name: formData.firstName,
           surname: formData.lastName,
@@ -176,7 +192,7 @@ export function SignUp() {
           enterpriseDTO: { name: formData.company },
           country: formData.country,
           description: formData.description,
-          phoneNumber: formData.phoneNumber,
+          phoneNumber: fullPhoneNumber,
         };
         const code = await SignUpAdmin(adminData);
         if (code === 201) {
@@ -367,7 +383,10 @@ export function SignUp() {
           </div>
 
           {/* Teléfono */}
-          <div>
+          <div className="flex gap-2 items-center">
+            <div className="min-w-[50px] px-2 py-1 border rounded text-center bg-gray-50">
+              {countryPhonePrefixes[formData.country] || "+__"}
+            </div>
             <InputPhoneFloatingLabel
               content={formData.phoneNumber}
               label="Número de Contacto"
