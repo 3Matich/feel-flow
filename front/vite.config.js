@@ -1,13 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  // Agregamos la definición de global para que apunte a window
   define: {
-    global: 'window'
+    global: 'window',
   },
   resolve: {
-    alias: [{ find: "@", replacement: "/src" }],
+    alias: [
+      { find: "@", replacement: "/src" },
+      { find: "./window-config.mjs", replacement: path.resolve(__dirname, "src/dummy-config.js") },
+    ],
   },
 });
