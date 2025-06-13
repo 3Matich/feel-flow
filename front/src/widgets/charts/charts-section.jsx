@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Card, CardBody } from "@material-tailwind/react";
 import Chart from "react-apexcharts";
 
-import { 
+import {
   getAuthData,
   getTwelveStepsSummary,
   getKudosDashboardData,
@@ -19,50 +19,72 @@ export function ChartsSection() {
 
   const [kudosSeries, setKudosSeries] = useState([]);
   const [kudosOptions, setKudosOptions] = useState({
-    chart: { type: "bubble", background: "#f3f3f3" },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val, { dataPointIndex, w }) {
-        return w.config.series[0].data[dataPointIndex].label;
+    chart: {
+      type: "bubble",
+      background: "#f3f3f3",
+      zoom: {
+        enabled: false,  // ❌ sin zoom
       },
-      style: {
-        colors: ["#000000"],
-        fontSize: "12px",
-        fontWeight: "bold",
+      toolbar: {
+        show: true, // ✅ Mostrar toolbar
+        tools: {
+          download: true,  // ✅ Activar botón de descarga
+          selection: false,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false,
+        },
+        },
+        animations: { enabled: false }, // opcional: sin animaciones para rendimiento
       },
-    },
-    xaxis: {
-      labels: { show: false },
-      axisBorder: { show: false },
-      min: -1,
-      max: 5, // 👈 Zoom-out más sutil
-    },
-    yaxis: {
-      labels: { show: false },
-      axisBorder: { show: false },
-      min: 0,
-      max: 5, // 👈 También más compacto
-    },
-    grid: {
-      padding: { left: -20, right: -20 },
-    },
-    tooltip: {
-      enabled: true,
-      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-        const label = w.config.series[seriesIndex].data[dataPointIndex].label;
-        const kudos = w.config.series[seriesIndex].data[dataPointIndex].z;
-        return `<div style="padding: 5px; font-size: 12px; font-weight: bold; color: black;">
-                  ${label}<br/>Kudos: ${kudos}
-                </div>`;
+      dataLabels: {
+        enabled: true,
+        formatter: function (val, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex].label;
+        },
+        style: {
+          colors: ["#000000"],
+          fontSize: "12px",
+          fontWeight: "bold",
+        },
       },
-    },
-    plotOptions: {
-      bubble: {
-        zScaling: true,
-        minBubbleRadius: 5,
+      xaxis: {
+        labels: { show: false },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        min: 0,   
+        max: 5,  // cantidad de miembros
       },
-    },
-  });
+      yaxis: {
+        labels: { show: false },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        min: 0,   
+        max: 10,
+      },
+      grid: {
+        padding: { left: 10, right: 10, top: 10, bottom: 10 },
+      },
+      tooltip: {
+        enabled: true,
+        custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+          const label = w.config.series[seriesIndex].data[dataPointIndex].label;
+          const kudos = w.config.series[seriesIndex].data[dataPointIndex].z;
+          return `<div style="padding: 5px; font-size: 12px; font-weight: bold; color: black;">
+                ${label}<br/>Kudos: ${kudos}
+              </div>`;
+        },
+      },
+      plotOptions: {
+        bubble: {
+          zScaling: true,
+          minBubbleRadius: 5,
+        },
+      },
+    });
+
 
   const [tendenciaSeries, setTendenciaSeries] = useState([]);
   const [tendenciaOptions, setTendenciaOptions] = useState({
@@ -112,10 +134,28 @@ export function ChartsSection() {
     const { token } = getAuthData();
 
     async function fetchFelicidad() {
-      const data = await getTwelveStepsSummary(token);
-      const categories = data.map(item => item.categoryName);
-      const values = data.map(item => item.average);
-      setFelicidadOptions(prev => ({ ...prev, xaxis: { categories } }));
+      const data = await getTwelveStepsSummary();
+      // Parche: transformar average -> |average - 100|
+      const transformedData = data.map(item => ({
+        ...item,
+        average: Math.abs(item.average - 100),
+      }));
+
+      const categories = transformedData.map(item => item.categoryName);
+      const values = transformedData.map(item => item.average);
+
+      setFelicidadOptions(prev => ({
+        ...prev,
+        xaxis: { categories },
+        yaxis: {
+          show: false,
+          stepSize: 20,
+          forceNiceScale: true,
+          min: 10,
+          max: 100,
+        }
+      }));
+
       setFelicidadSeries([{ name: "Felicidad", data: values }]);
     }
 

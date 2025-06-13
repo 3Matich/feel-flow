@@ -14,6 +14,18 @@ import { updateLoggedUser } from "@/api";
 
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
+const countryPhonePrefixes = {
+  "Argentina": "+54",
+  "United States": "+1",
+  "Brazil": "+55",
+  "Chile": "+56",
+  "Colombia": "+57",
+  "Mexico": "+52",
+  "Spain": "+34",
+  // Agregá más según tus necesidades
+};
+
+
 export function EditProfileDialog({ data, onSave, onCancel, open }) {
   const [errors, setErrors] = useState();
   const [formData, setFormData] = useState({
@@ -44,7 +56,17 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
   // Validar que los campos obligatorios (excepto email y country) tengan valor
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedData = { ...formData };
+    // const updatedData = { ...formData };
+    const country = formData.country; // ejemplo: "Argentina"
+    const phone = formData.phoneNumber;
+    const prefix = countryPhonePrefixes[country] || "";
+    const fullPhoneNumber = `${prefix}${phone}`; // ejemplo: +541112345678
+
+    const updatedData = {
+      ...formData,
+      phoneNumber: fullPhoneNumber,
+    };
+
     const result = await updateLoggedUser(updatedData);
     if (result && !result.errors) {
       onCancel();
@@ -127,16 +149,20 @@ export function EditProfileDialog({ data, onSave, onCancel, open }) {
             <Typography variant="h6" className="w-32">
               Telefono
             </Typography>
-            <div className="col-span-4">
+            <div className="flex gap-2 items-center col-span-4">
+              <div className="min-w-[50px] px-2 py-1 border rounded text-center bg-gray-50">
+                {countryPhonePrefixes[formData.country] || "+__"}
+              </div>
               <InputPhoneFloatingLabel
                 content={formData.phoneNumber}
                 name="phoneNumber"
                 onChange={(value) =>
                   setFormData((prev) => ({ ...prev, phoneNumber: value }))
                 }
-                // error={errors?.phoneNumber}
+                // error={"Ingrese el prefijo con el + incluido"}
               />
             </div>
+            {!countryPhonePrefixes[formData.country] && <p className="text-sm col-span-5 text-yellow-900 text center">Ingrese el prefijo con el + incluido, o seleccione otro Pais</p>}
           </div>
           <hr />
           {/* Correo Electrónico (deshabilitado) */}

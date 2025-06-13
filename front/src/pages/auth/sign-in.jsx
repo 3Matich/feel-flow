@@ -206,11 +206,6 @@ export function SignIn({ onLogin }) {
           </Typography>
         </form>
       </div>
-
-      <div className="absolute bottom-0 h-16">
-        <Button onClick={() => login("admin1@gmail.com", "RiverPlatecapo@123")}>Login with admin</Button>
-        <Button onClick={() => login("tlteam1@gmail.com", "RiverPlatecapo@123")}>Login with TL</Button>
-      </div>
     </section>
   );
 }

@@ -1,42 +1,37 @@
 import React, { useEffect, useState } from "react";
 import {
   Card,
-  Input,
   Button,
   Typography,
   Select,
   Option,
 } from "@material-tailwind/react";
 
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { useMaterialTailwindController } from "@/context";
-import { 
-  GetTeam,
-  createNikoNikoModule 
-} from "@/api";
+import { GetTeam, createNikoNikoModule } from "@/api";
 
 import dayjs from "dayjs";
 
 export function NikoNiko() {
   const [teams, setTeams] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState(""); // Inicializa como vacío
+  const [selectedTeam, setSelectedTeam] = useState("");
   const [publishDate, setPublishDate] = useState(null);
   const [closeDate, setCloseDate] = useState(null);
   const [startResponseTime, setStartResponseTime] = useState(null);
   const [endResponseTime, setEndResponseTime] = useState(null);
 
   const [controller] = useMaterialTailwindController();
-  const { sidenavColor } = controller;
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
         const data = await GetTeam();
         setTeams(data);
-        // No seleccionar automáticamente un equipo
       } catch (err) {
         console.error("Error cargando equipos:", err);
       }
@@ -115,45 +110,38 @@ export function NikoNiko() {
               Fecha de habilitación del módulo
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+              <DatePicker
                 label="Inicio"
                 value={publishDate}
                 onChange={(val) => setPublishDate(val)}
               />
-            </LocalizationProvider>
+           
 
             <Typography variant="h6" color="blue-gray">
               Fecha de Fin del módulo
             </Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+              <DatePicker
                 label="Fin"
                 value={closeDate}
                 onChange={(val) => setCloseDate(val)}
               />
-            </LocalizationProvider>
 
             <Typography variant="h6" color="blue-gray">
               Hora para responder (inicio del día)
             </Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+              <TimePicker
                 label="Hora inicio"
                 value={startResponseTime}
                 onChange={(val) => setStartResponseTime(val)}
-                views={["hours", "minutes"]}
               />
-            </LocalizationProvider>
 
             <Typography variant="h6" color="blue-gray">
               Hora para responder (fin del día)
             </Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
+              <TimePicker
                 label="Hora fin"
                 value={endResponseTime}
                 onChange={(val) => setEndResponseTime(val)}
-                views={["hours", "minutes"]}
               />
             </LocalizationProvider>
           </div>

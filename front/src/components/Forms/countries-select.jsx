@@ -18,7 +18,7 @@ export function CountriesSelect({ userCountry, name, onChange }) {
   return (
     <Select
       size="lg"
-      label="Select Country"
+      label="Nacionalidad"
       name={name}
       value={userCountry}
       onChange={(value) => onChange({ target: { name, value } })}

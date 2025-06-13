@@ -40,6 +40,7 @@ export const routes = [
         name: "General",
         path: "/general",
         element: <Home />,
+        pageAuthority: ["ADMIN", "TEAM_LEADER"],
       },
       /*
       {
@@ -78,18 +79,21 @@ export const routes = [
         name: "modulos",
         path: "/modulos",
         element: <Modules />,
+        pageAuthority: ["ADMIN", "TEAM_LEADER"],
       },
       {
         icon: <UserGroupIcon {...icon} />,
         name: "Miembros",
         path: "/miembros",
         element: <Team />,
+        pageAuthority: ["TEAM_LEADER"],
       },
       {
         icon: <UserPlusIcon {...icon} />,
         name: "Equipos",
         path: "/equipos",
         element: <Teams />,
+        pageAuthority: ["ADMIN"],
       },
     ],
     subpages: [
@@ -98,6 +102,7 @@ export const routes = [
         name: "sign in",
         path: "equipos/*",
         element: <Team />,
+        pageAuthority: ["ADMIN"],
       },
       // SE DESCARTA LA OPCION DE VISUALIZAR PERFILES, CADA USER SOLO PUEDE VER SU PERFIL
       /*
@@ -106,6 +111,7 @@ export const routes = [
         name: "sign in",
         path: "miembros/*",
         element: <Member />,
+        authority: ["TEAM_LEADER"],
       },
       */
     ],
@@ -119,12 +125,14 @@ export const routes = [
         name: "sign in",
         path: "/sign-in",
         element: <SignIn />,
+        pageAuthority: [],
       },
       {
         icon: <RectangleStackIcon {...icon} />,
         name: "sign up",
         path: "/sign-up",
         element: <SignUp />,
+        pageAuthority: [],
       },
     ],
     subpages: [],
@@ -138,6 +146,7 @@ export const routes = [
         name: "Perfil",
         path: "/perfil",
         element: <Profile />,
+        pageAuthority: ["ADMIN", "TEAM_LEADER"],
       },
       /*
       {
