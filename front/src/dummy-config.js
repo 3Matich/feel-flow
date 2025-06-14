@@ -1,2 +1,6 @@
 // src/dummy-config.js
-export default {};
+export const MotionGlobalConfig = {
+    get: () => ({}),
+    set: () => { },
+};
+  
