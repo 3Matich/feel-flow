@@ -59,12 +59,12 @@ export function NikoNiko() {
   };
 
   const moodIcons = [
-    "/public/icons/1_mood_w.svg",
-    "/public/icons/2_mood_w.svg",
-    "/public/icons/b_p_mood_w.svg",
-    "/public/icons/n_mood_w.svg",
-    "/public/icons/-1_mood_w.svg",
-    "/public/icons/-2_mood_w.svg"
+    "/icons/1_mood_w.svg",
+    "/icons/2_mood_w.svg",
+    "/icons/b_p_mood_w.svg",
+    "/icons/n_mood_w.svg",
+    "/icons/-1_mood_w.svg",
+    "/icons/-2_mood_w.svg"
   ];
 
   const moodDescriptions = [

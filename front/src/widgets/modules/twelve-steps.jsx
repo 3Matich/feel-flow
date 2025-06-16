@@ -22,18 +22,18 @@ export function TwelveSteps() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const stepsIcons = [
-    "/public/icons/12_agradecimiento.svg",
-    "/public/icons/12_amable.svg",
-    "/public/icons/12_disfrutar.svg",
-    "/public/icons/12_risas.svg",
-    "/public/icons/12_descanso.svg",
-    "/public/icons/12_resilience.svg",
-    "/public/icons/12_objetivo.svg",
-    "/public/icons/12_aprendizaje.svg",
-    "/public/icons/12_servicio.svg",
-    "/public/icons/12_social.svg",
-    "/public/icons/12_ejercicio.svg",
-    "/public/icons/12_meditar.svg"
+    "/icons/12_agradecimiento.svg",
+    "/icons/12_amable.svg",
+    "/icons/12_disfrutar.svg",
+    "/icons/12_risas.svg",
+    "/icons/12_descanso.svg",
+    "/icons/12_resilience.svg",
+    "/icons/12_objetivo.svg",
+    "/icons/12_aprendizaje.svg",
+    "/icons/12_servicio.svg",
+    "/icons/12_social.svg",
+    "/icons/12_ejercicio.svg",
+    "/icons/12_meditar.svg"
   ];
 
   const stepsDescriptions = [

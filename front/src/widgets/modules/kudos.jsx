@@ -56,10 +56,10 @@ export function Kudos() {
   };
 
   const kudosIcons = [
-    "/public/icons/Kudos_Energia_Positiva.svg",
-    "/public/icons/Kudos_Resolutor_Estrella.svg",
-    "/public/icons/Kudos_Maestro_Del_detalle.svg",
-    "/public/icons/Kudos_Manos_Amigas.svg",
+    "/icons/Kudos_Energia_Positiva.svg",
+    "/icons/Kudos_Resolutor_Estrella.svg",
+    "/icons/Kudos_Maestro_Del_detalle.svg",
+    "/icons/Kudos_Manos_Amigas.svg",
   ];
 
   const kudosDescriptions = [
