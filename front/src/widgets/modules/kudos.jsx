@@ -58,7 +58,7 @@ export function Kudos() {
     "/icons/Kudos_Energia_Positiva.svg",
     "/icons/Kudos_Resolutor_Estrella.svg",
     "/icons/Kudos_Maestro_Del_detalle.svg",
-    "/icons/Kudos_Manos_Amigas.svg",
+    "/icons/kudos_Manos_Amigas.svg",
   ];
 
   const kudosDescriptions = [
