@@ -62,7 +62,6 @@ export const TwelveStepsSummary = ({ isActive }) => {
 
     const selectMembers = () => {
         const mod = modulesData.find(m => m.moduleDto.id === selectedModule);
-        console.log(modulesData)
 
         if (!mod) return [];
 

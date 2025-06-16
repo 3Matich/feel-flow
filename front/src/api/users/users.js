@@ -112,7 +112,6 @@ export async function JoinToTeam(invitation_link, data) {
 
         if (response.status !== 200) {
             const errorData = await response.json();
-            console.log(errorData);
             return { errors: errorData };
         }
 

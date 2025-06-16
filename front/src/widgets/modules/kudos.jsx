@@ -49,7 +49,6 @@ export function Kudos() {
 
       const response = await createKudosModule(payload);
       alert("✅ Módulo de Kudos creado con éxito");
-      console.log("📦 Respuesta:", response);
     } catch (err) {
       alert(`❌ ${err.message}`);
     }

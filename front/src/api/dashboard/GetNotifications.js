@@ -22,7 +22,6 @@ export async function GetNotifications(token, { from, to, max } = {}) {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log("GetNotifications Success:", data);
         return data; // Se espera un array de objetos: [{ title, body, createdAt }, ... ]
       } else {
         const errorData = await response.json();

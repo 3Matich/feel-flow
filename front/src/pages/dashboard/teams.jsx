@@ -174,7 +174,6 @@ export function Teams() {
     try {
       const result = await createTeam(teamData);
       fetchTeams();
-      console.log("✅ Equipo creado:", result);
 
       setTeams((prev) => [
         ...prev,

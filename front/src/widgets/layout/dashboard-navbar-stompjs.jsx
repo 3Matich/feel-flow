@@ -69,13 +69,13 @@ export function DashboardNavbar({ onLogout, selectedTeam }) {
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, () => {
-      console.log("Conectado al WebSocket para notificaciones");
+      // console.log("Conectado al WebSocket para notificaciones");
       // Suscribirse al tópico, asumiendo que el back envía notificaciones a /topic/notifications/{teamId}
       const subscriptionPath = `/topic/notifications/${selectedTeam.value}`;
       stompClient.subscribe(subscriptionPath, (message) => {
         try {
           const newNotification = JSON.parse(message.body);
-          console.log("Notificación recibida:", newNotification);
+          // console.log("Notificación recibida:", newNotification);
           setNotifications((prev) => [newNotification, ...prev]);
         } catch (error) {
           console.error("Error al parsear la notificación:", error);
@@ -89,7 +89,7 @@ export function DashboardNavbar({ onLogout, selectedTeam }) {
     return () => {
       if (stompClient) {
         stompClient.disconnect(() => {
-          console.log("WebSocket desconectado");
+          // console.log("WebSocket desconectado");
         });
       }
     };

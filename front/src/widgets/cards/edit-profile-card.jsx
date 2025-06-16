@@ -29,12 +29,9 @@ export function ProfileEditCard({ title, description, details, action, isEditing
 
     const handleChange = (e, clave) => {
         setFormData({ ...formData, [clave]: e.target.value });
-        console.log(formData);
     };
 
     const handleSave = () => {
-        console.log("Descripción guardada:", newDescription);
-        console.log("Datos guardados:", formData);
         setIsEditing(!isEditing);
         // Aquí podrías hacer una petición a una API para guardar la descripción
     };

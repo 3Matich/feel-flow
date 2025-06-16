@@ -23,7 +23,6 @@ export function Dashboard({ onLogout }) {
   const { authority } = getUserData();
   const handleSessionDialog = () => setSessionExpired(!sessionExpired);
 
-  console.log(authority)
   return (
     <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text">
       <Sidenav

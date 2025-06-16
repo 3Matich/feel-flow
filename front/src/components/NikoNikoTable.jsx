@@ -81,11 +81,11 @@ export function NikoNikoTable({ nikoDataByMember, selectedMonth }) {
     const normalized = response.toLowerCase();
 
     const moodMap = {
-      "muy bien": { icon: "/public/icons/1_mood_w.svg", color: "bg-green-500" },
-      "bien": { icon: "/public/icons/2_mood_w.svg", color: "bg-green-200" },
-      "normal": { icon: "/public/icons/n_mood_w.svg", color: "bg-gray-300" },
-      "mal": { icon: "/public/icons/-1_mood_w.svg", color: "bg-orange-400" },
-      "muy mal": { icon: "/public/icons/-2_mood_w.svg", color: "bg-red-500" },
+      "muy bien": { icon: "/icons/1_mood_w.svg", color: "bg-green-500" },
+      "bien": { icon: "/icons/2_mood_w.svg", color: "bg-green-200" },
+      "normal": { icon: "/icons/n_mood_w.svg", color: "bg-gray-300" },
+      "mal": { icon: "/icons/-1_mood_w.svg", color: "bg-orange-400" },
+      "muy mal": { icon: "/icons/-2_mood_w.svg", color: "bg-red-500" },
     };
 
     const mood = moodMap[normalized];

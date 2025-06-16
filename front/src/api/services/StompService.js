@@ -22,10 +22,10 @@ export class StompService {
     this.stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {
-        console.log('STOMP debug:', str);
+        // console.log('STOMP debug:', str);
       },
       onConnect: () => {
-        console.log('Conectado al servidor STOMP');
+        // console.log('Conectado al servidor STOMP');
         // Suscribirse al tópico con teamUUID
         this.subscribeToTopic(this.teamUUID);
         // Llamar el callback de "conectado"
@@ -51,7 +51,6 @@ export class StompService {
     this.stompClient.subscribe(topic, (msg) => {
       // msg.body contiene el payload
       const notification = JSON.parse(msg.body);
-      console.log('Notificación recibida:', notification);
       if (this.onNotificationCallback) {
         // Emitir la notificación al callback
         this.onNotificationCallback(notification);
@@ -62,7 +61,7 @@ export class StompService {
   disconnect() {
     if (this.stompClient) {
       this.stompClient.deactivate();
-      console.log('Desconectado de STOMP');
+      // console.log('Desconectado de STOMP');
     }
   }
 }

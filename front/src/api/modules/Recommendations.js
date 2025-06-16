@@ -14,7 +14,6 @@ export async function CreateRecommendations() {
                     "Authorization": `Bearer ${token}`,
                 }
             });
-            console.log(response.status)
             return response.status;
         }
     } catch (error) {

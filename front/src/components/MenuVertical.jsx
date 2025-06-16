@@ -30,7 +30,6 @@ function VerticalMenu() {
         "fa-cog": <FaCog className="text-gray-500" /> // Configuración
     };
 
-    console.log(canAccess("dashboard", authority));
 
 
     return (

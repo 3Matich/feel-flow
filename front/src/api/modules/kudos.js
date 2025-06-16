@@ -41,7 +41,6 @@ export async function createKudosModule({ idTeam, dateAndTimeToPublish, dateAndT
 }
 
 export async function GetKudosSummary(idModule, idRegularUser = "") {
-    console.log("Modulo: " + idModule)
     const endpoint = `${host}/api/v1/summary/kudos?idModule=${idModule}` +
         (idRegularUser ? `&idRegularUser=${idRegularUser}` : "");
 
@@ -56,7 +55,6 @@ export async function GetKudosSummary(idModule, idRegularUser = "") {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log("GetKudosSummary Success: ", data);  // Log para ver la data
             return data; // Array de { badgeName, numberOfBadges }
         } else {
             const errorData = await response.json();
