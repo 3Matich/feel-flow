@@ -1,9 +1,9 @@
 import { host } from "@/configs";
 import { getAuthData } from "../services/session";
 
-const { token } = getAuthData();
 
 export async function CreateRecommendations() {
+    const { token } = getAuthData();
     try {
         if (token) {
 
@@ -22,6 +22,7 @@ export async function CreateRecommendations() {
 }
 
 export async function GetRecommendations() {
+    const { token } = getAuthData();
     try {
         const response = await fetch(`${host}/api/v1/recommendations`, {
             method: "GET",
