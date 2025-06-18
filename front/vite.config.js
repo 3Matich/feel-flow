@@ -4,6 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: './',
   resolve: {
     alias: [
       { find: '@', replacement: '/src' },
@@ -16,5 +17,4 @@ export default defineConfig({
   build: {
     outDir: 'dist'
   },
-  base: '/'
 });
