@@ -4,10 +4,10 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: '/',
   resolve: {
     alias: [
-      { find: '@', replacement: '/src' },
+      { find: '@', replacement: './src' },
       { find: './window-config.mjs', replacement: path.resolve(__dirname, 'src/dummy-config.js') }
     ]
   },
