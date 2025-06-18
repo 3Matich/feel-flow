@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/',
   resolve: {
     alias: [
-      { find: '@', replacement: './src' },
+      { find: '@', replacement: '/src' },
       { find: './window-config.mjs', replacement: path.resolve(__dirname, 'src/dummy-config.js') }
     ]
   },
